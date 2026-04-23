@@ -1,0 +1,112 @@
+﻿[36mvite v8.0.9 [32mbuilding client environment for production...[36m[39m
+[2K
+transforming...Γ£ô 2852 modules transformed.
+node.exe : 
+[33m[lightningcss 
+minify] Unknown at 
+rule: @theme
+At line:1 char:1
++ & "C:\Program 
+Files\nodejs/node.exe" 
+"C:\Program 
+Files\nodejs/node_mo 
+...
++ ~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~
+~~
+    + CategoryInfo     
+         : NotSpecifi  
+  ed: ([33m[lightni   
+ ng...at rule: @the    
+me:String) [], Rem    
+oteException
+    + FullyQualifiedEr 
+   rorId : NativeComm  
+  andError
+ 
+2  |  
+3  |  @layer theme {
+4  |    @theme default 
+{
+   |          ^
+5  |      --font-sans:
+6  |        
+ui-sans-serif, 
+system-ui, sans-serif, 
+"Apple Color 
+Emoji",[39m
+[33m[lightningcss 
+minify] Unknown at 
+rule: @theme
+522 |  
+523 |    /* Deprecated 
+*/
+524 |    @theme 
+default inline 
+reference {
+    |          ^
+525 |      --blur: 8px;
+526 |      --shadow: 0 
+1px 3px 0 rgb(0 0 0 / 
+0.1), 0 1px 2px -1px 
+rgb(0 0 0 / 0.1);[39m
+[33m[lightningcss 
+minify] Unknown at 
+rule: @tailwind
+941 |  
+942 |  @layer 
+utilities {
+943 |    @tailwind 
+utilities;
+    |             ^
+944 |  }
+945 |  [39m
+[33m[lightningcss 
+minify] Unknown at 
+rule: @theme
+944 |  }
+945 |  
+946 |  @theme {
+    |        ^
+947 |    
+--color-primary: 
+#84cc16; /* lime-500 */
+948 |    
+--color-surface: 
+rgba(255, 255, 255, 
+0.05);[39m
+rendering chunks...
+computing gzip size...
+dist/index.html                                         0.45 kB Γöé gzip:   0.29 kB
+dist/assets/index-DEElmE1n.css                         38.34 kB Γöé gzip:   8.79 kB
+dist/assets/howler-DsRVARIL.js                         26.62 kB Γöé gzip:   7.84 kB
+dist/assets/boolean-BFLcLG5Q.js                        47.47 kB Γöé gzip:  16.80 kB
+dist/assets/navmesh-7FV50TrP.js                        55.24 kB Γöé gzip:  10.99 kB
+dist/assets/process-e7zJrg4U.js                        59.12 kB Γöé gzip:  20.38 kB
+dist/assets/gaussian-splat-compression-Ch_Bfmy_.js     82.32 kB Γöé gzip:  23.21 kB
+dist/assets/ui-CDEgDOct.js                             91.29 kB Γöé gzip:  28.33 kB
+dist/assets/opentype-CPoulpgL.js                      170.04 kB Γöé gzip:  50.64 kB
+dist/assets/physics-Bc5kA_aF.js                     1,987.69 kB Γöé gzip: 733.91 kB
+dist/assets/index-Be6XFilO.js                       3,246.30 kB Γöé gzip: 934.94 kB
+
+[32mΓ£ô built in 2.64s[39m
+[33m[plugin 
+builtin:vite-reporter] 
+(!) Some chunks are 
+larger than 500 kB 
+after minification. 
+Consider:
+- Using dynamic 
+import() to code-split 
+the application
+- Use build.rolldownOpt
+ions.output.codeSplitti
+ng to improve 
+chunking: https://rolld
+own.rs/reference/Output
+Options.codeSplitting
+- Adjust chunk size 
+limit for this warning 
+via build.chunkSizeWarn
+ingLimit.[39m

@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { Send, Bot, User, Sparkles, Navigation } from 'lucide-react'
+import { motion, AnimatePresence } from 'motion/react'
+import { Send, Bot, User, Sparkles, ArrowLeft, Brain } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 
 interface Message {
@@ -10,14 +10,15 @@ interface Message {
 }
 
 const suggestions = [
-  "Should I negotiate this price?",
-  "What should I inspect during test drive?",
-  "Is the 2019 model reliable?"
+  'Summarize all risks',
+  'Estimate repair costs',
+  'Market value check',
+  'Should I negotiate?',
 ]
 
 export const ChatPage = () => {
   const [messages, setMessages] = useState<Message[]>([
-    { id: '1', role: 'bot', text: 'Hi! I am your AI Car Expert. I have reviewed your report for the Toyota Prius. How can I help you today?' }
+    { id: '1', role: 'bot', text: "Hi! I'm Sage — your AI car expert. I've reviewed the report for the 2021 Porsche 911. I noticed a service history discrepancy at 32k miles. How can I help you today?" }
   ])
   const [input, setInput] = useState('')
   const [isTyping, setIsTyping] = useState(false)
@@ -35,52 +36,70 @@ export const ChatPage = () => {
     setInput('')
     setIsTyping(true)
 
-    // Mock AI response
     setTimeout(() => {
+      const responses = [
+        'Based on the report, the asking price is $1,200 below market average. The scratched fender repair estimate is $300-$500 at a certified shop. You have solid negotiation leverage here.',
+        'The service gap between 28k and 35k miles is concerning — it could indicate deferred maintenance. I recommend requesting the dealer\'s service records before proceeding.',
+        'Compared to similar 2021 models in your area, this one is priced competitively. The depreciation curve suggests it will hold value well over the next 3 years.',
+      ]
       setMessages(prev => [...prev, {
         id: (Date.now() + 1).toString(),
         role: 'bot',
-        text: 'Based on the report, the asking price is $1,200 below market average due to the scratched fender. Yes, you have room to negotiate.'
+        text: responses[Math.floor(Math.random() * responses.length)]
       }])
       setIsTyping(false)
-    }, 1500)
+    }, 1800)
   }
 
   return (
-    <div className="h-screen bg-stone-900 flex flex-col items-center justify-center relative overflow-hidden font-sans">
-      {/* Abstract Background Elements */}
-      <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-[#84cc16]/10 blur-[150px] rounded-full pointer-events-none" />
-      <div className="absolute bottom-[-10%] right-[-10%] w-[30%] h-[30%] bg-blue-500/10 blur-[150px] rounded-full pointer-events-none" />
+    <div className="h-screen bg-[var(--color-bg-deep)] flex flex-col items-center relative overflow-hidden">
+      {/* Background Orbs */}
+      <div className="glow-orb w-[500px] h-[500px] bg-[var(--color-primary)] opacity-[0.04] top-[-10%] left-[-10%]" />
+      <div className="glow-orb w-[400px] h-[400px] bg-[var(--color-emerald)] opacity-[0.03] bottom-[-10%] right-[-10%]" />
 
       {/* Header */}
-      <div className="absolute top-6 left-6 z-10">
-         <button onClick={() => navigate('/report/123')} className="flex items-center gap-2 text-slate-300 hover:text-white transition-colors">
-           <Navigation className="w-4 h-4 rotate-[-90deg]" /> Back to Report
-         </button>
-      </div>
-
-      <div className="text-center mb-8 z-10 mt-10">
-        <div className="inline-flex items-center gap-2 px-3 py-1 bg-white/5 border border-[#84cc16]/30 rounded-full text-[#84cc16] text-xs font-medium mb-4 shadow-[0_0_10px_rgba(132,204,22,0.2)]">
-          <Sparkles className="w-3 h-3" /> AI Expert
+      <div className="w-full max-w-3xl px-6 pt-6 pb-4 flex items-center justify-between relative z-10">
+        <button onClick={() => navigate('/report/123')} className="flex items-center gap-2 text-sm text-[var(--color-text-muted)] hover:text-white transition-colors">
+          <ArrowLeft size={16} /> Back to Report
+        </button>
+        <div className="flex items-center gap-2">
+          <div className="w-2 h-2 rounded-full bg-[var(--color-emerald)] animate-pulse" />
+          <span className="text-xs text-[var(--color-text-muted)]">Sage AI Online</span>
         </div>
-        <h1 className="text-3xl font-heading font-bold text-slate-50 mb-2">Ask about your vehicle</h1>
-        <p className="text-slate-400">Get negotiation tips, mechanical advice, and market insights.</p>
       </div>
 
-      {/* Chat Container */}
-      <div className="w-full max-w-2xl flex-1 max-h-[60vh] overflow-y-auto hide-scrollbar px-4 pb-32 z-10 flex flex-col gap-6">
+      {/* Title */}
+      <div className="text-center mb-6 z-10 px-6">
+        <div className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--color-bg-glass)] border border-[var(--color-border-glass)] rounded-full text-sm mb-4 backdrop-blur-xl">
+          <Brain size={14} className="text-[var(--color-primary-light)]" />
+          <span className="text-[var(--color-text-secondary)]">Sage AI Expert</span>
+        </div>
+        <h1 className="text-2xl font-bold text-white">Ask about your vehicle</h1>
+      </div>
+
+      {/* Messages */}
+      <div className="w-full max-w-3xl flex-1 overflow-y-auto hide-scrollbar px-6 pb-40 z-10 flex flex-col gap-5">
         <AnimatePresence>
           {messages.map(msg => (
-            <motion.div 
+            <motion.div
               key={msg.id}
-              initial={{ opacity: 0, y: 10, scale: 0.95 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              className={`flex gap-4 ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+              className={`flex gap-3 ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}
             >
-              <div className={`w-8 h-8 rounded-full shrink-0 flex items-center justify-center ${msg.role === 'user' ? 'bg-[#84cc16] text-black' : 'bg-white/10 text-slate-300'}`}>
-                {msg.role === 'user' ? <User className="w-4 h-4" /> : <Bot className="w-4 h-4" />}
+              <div className={`w-8 h-8 rounded-xl shrink-0 flex items-center justify-center ${
+                msg.role === 'user'
+                  ? 'bg-gradient-to-br from-[var(--color-primary)] to-[var(--color-emerald)] text-white'
+                  : 'bg-[var(--color-bg-glass)] border border-[var(--color-border-glass)] text-[var(--color-text-secondary)]'
+              }`}>
+                {msg.role === 'user' ? <User size={14} /> : <Bot size={14} />}
               </div>
-              <div className={`p-4 rounded-2xl text-sm leading-relaxed max-w-[80%] ${msg.role === 'user' ? 'bg-[#84cc16]/10 border border-[#84cc16]/20 text-slate-100' : 'glass-card text-slate-300'}`}>
+              <div className={`px-5 py-4 rounded-2xl text-sm leading-relaxed max-w-[80%] ${
+                msg.role === 'user'
+                  ? 'bg-[var(--color-primary)]/10 border border-[var(--color-primary)]/20 text-white'
+                  : 'glass-card text-[var(--color-text-secondary)]'
+              }`}>
                 {msg.text}
               </div>
             </motion.div>
@@ -88,48 +107,51 @@ export const ChatPage = () => {
         </AnimatePresence>
 
         {isTyping && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex gap-4">
-            <div className="w-8 h-8 rounded-full shrink-0 flex items-center justify-center bg-white/10 text-slate-300">
-              <Bot className="w-4 h-4" />
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex gap-3">
+            <div className="w-8 h-8 rounded-xl shrink-0 flex items-center justify-center bg-[var(--color-bg-glass)] border border-[var(--color-border-glass)] text-[var(--color-text-secondary)]">
+              <Bot size={14} />
             </div>
-            <div className="glass-card p-4 rounded-2xl flex items-center gap-1">
-              <span className="w-2 h-2 rounded-full bg-slate-500 animate-bounce" />
-              <span className="w-2 h-2 rounded-full bg-slate-500 animate-bounce" style={{ animationDelay: '0.2s' }} />
-              <span className="w-2 h-2 rounded-full bg-slate-500 animate-bounce" style={{ animationDelay: '0.4s' }} />
+            <div className="glass-card px-5 py-4 rounded-2xl flex items-center gap-1.5">
+              {[0, 1, 2].map(i => (
+                <span key={i} className="w-2 h-2 rounded-full bg-[var(--color-text-muted)] animate-bounce" style={{ animationDelay: `${i * 0.15}s` }} />
+              ))}
             </div>
           </motion.div>
         )}
         <div ref={bottomRef} />
       </div>
 
-      {/* Floating 21st.dev style Dock */}
-      <div className="fixed bottom-8 w-full max-w-2xl px-4 z-20">
-        <div className="flex flex-wrap gap-2 mb-4 justify-center">
+      {/* Input Dock */}
+      <div className="fixed bottom-0 w-full max-w-3xl px-6 pb-6 pt-4 bg-gradient-to-t from-[var(--color-bg-deep)] via-[var(--color-bg-deep)]/95 to-transparent z-20">
+        {/* Quick Actions */}
+        <div className="flex flex-wrap gap-2 mb-3 justify-center">
           {suggestions.map((s, idx) => (
-            <button 
-              key={idx} 
+            <button
+              key={idx}
               onClick={() => handleSend(s)}
-              className="px-3 py-1.5 text-xs bg-white/5 hover:bg-white/10 border border-white/10 rounded-full text-slate-300 transition-colors backdrop-blur-md"
+              className="px-4 py-2 text-xs bg-[var(--color-bg-glass)] hover:bg-[var(--color-bg-glass-hover)] border border-[var(--color-border-glass)] rounded-full text-[var(--color-text-secondary)] hover:text-white transition-all backdrop-blur-xl"
             >
-              {s}
+              <Sparkles size={10} className="inline mr-1.5 text-[var(--color-primary-light)]" />{s}
             </button>
           ))}
         </div>
-        <div className="glass-card p-2 rounded-full flex items-center shadow-2xl ring-1 ring-white/10">
-          <input 
-            type="text" 
+
+        {/* Input Bar */}
+        <div className="glass-card p-2 rounded-2xl flex items-center shadow-2xl">
+          <input
+            type="text"
             value={input}
             onChange={e => setInput(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && handleSend(input)}
-            placeholder="Ask about the maintenance cost..."
-            className="flex-1 bg-transparent border-none text-slate-50 px-4 py-2 focus:outline-none placeholder-slate-500 text-sm"
+            placeholder="Ask about maintenance costs, negotiation tips..."
+            className="flex-1 bg-transparent border-none text-white px-4 py-3 focus:outline-none placeholder-[var(--color-text-muted)] text-sm"
           />
-          <button 
+          <button
             onClick={() => handleSend(input)}
             disabled={!input.trim()}
-            className="bg-[#84cc16] hover:bg-[#65a30d] disabled:opacity-50 disabled:hover:bg-[#84cc16] text-black w-10 h-10 rounded-full flex items-center justify-center transition-colors"
+            className="liquid-glass-btn w-10 h-10 rounded-xl flex items-center justify-center disabled:opacity-30 disabled:pointer-events-none"
           >
-            <Send className="w-4 h-4" />
+            <Send size={16} className="text-white" />
           </button>
         </div>
       </div>

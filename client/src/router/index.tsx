@@ -21,7 +21,7 @@ export const router = createBrowserRouter([
     element: <DashboardPage />,
   },
   {
-    path: '/verify',
+    path: '/verification',
     element: <VerificationPage />,
   },
   {
