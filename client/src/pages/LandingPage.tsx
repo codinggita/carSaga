@@ -1,13 +1,19 @@
-import { HeroVideoDemo } from '@/components/blocks/animated-video-on-scroll-demo'
-import { SplineShowcase } from '@/components/landing/SplineShowcase'
+import { Navbar } from '@/components/landing/Navbar'
+import { Hero } from '@/components/landing/Hero'
 import { FeatureGrid } from '@/components/landing/FeatureGrid'
+import { HowItWorks } from '@/components/landing/HowItWorks'
+import { CTASection } from '@/components/landing/CTASection'
+import { Footer } from '@/components/landing/Footer'
 
 export const LandingPage = () => {
   return (
-    <main className="min-h-screen bg-stone-900 text-slate-50 flex flex-col">
-      <HeroVideoDemo />
-      <SplineShowcase />
+    <main className="min-h-screen bg-[var(--color-bg-deep)] overflow-x-hidden">
+      <Navbar />
+      <Hero />
       <FeatureGrid />
+      <HowItWorks />
+      <CTASection />
+      <Footer />
     </main>
   )
 }
