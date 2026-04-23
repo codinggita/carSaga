@@ -3,14 +3,15 @@
 
 import * as React from "react"
 import {
-  HTMLMotionProps,
   MotionValue,
-  Variants,
   motion,
   useMotionTemplate,
   useScroll,
   useTransform,
 } from "motion/react"
+
+type HTMLMotionProps<T extends keyof React.JSX.IntrinsicElements> = React.ComponentProps<(typeof motion)[T]>
+type Variants = Record<string, any>
 
 import { cn } from "@/lib/utils"
 

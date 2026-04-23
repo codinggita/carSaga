@@ -3,7 +3,6 @@ import {
   ContainerInset,
   ContainerScroll,
   ContainerSticky,
-  HeroButton,
   HeroVideo,
 } from "@/components/blocks/animated-video-on-scroll"
 
@@ -14,24 +13,28 @@ export const HeroVideoDemo = () => {
         <ContainerSticky
           style={{
             background:
-              "radial-gradient(40% 40% at 50% 20%, #0e19ae 0%, #0b1387 22.92%, #080f67 42.71%, #030526 88.54%)",
+              "radial-gradient(ellipse at 80% 20%, var(--color-surface-container-high) 0%, var(--color-surface-container-low) 30%, var(--color-surface-container-lowest) 70%)",
           }}
-          className="bg-stone-900 px-6 py-10 text-slate-50"
+          className="px-6 py-10 border-none relative overflow-hidden"
         >
-          <ContainerAnimated className="space-y-4 text-center">
-            <h1 className="text-5xl font-medium tracking-tighter md:text-6xl">
-              Don&apos;t Buy Blind.
+          {/* Neon trust sleek bg glow */}
+          <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[var(--color-primary)] opacity-10 blur-[150px] rounded-full pointer-events-none transform translate-x-1/2 -translate-y-1/2"></div>
+          
+          <ContainerAnimated className="space-y-6 text-center md:text-left md:ml-[10vw] relative z-10">
+            <h1 className="text-6xl md:text-8xl font-bold tracking-tighter leading-[0.9] text-[var(--color-primary)] mix-blend-plus-lighter">
+              Don&apos;t <br/> Buy <span className="text-white">Blind.</span>
             </h1>
-            <p className="mx-auto max-w-[42ch] opacity-80">
+            <p className="max-w-[50ch] text-[var(--color-on-surface-variant)] text-xl border-l-[3px] border-[var(--color-secondary)] pl-4">
               Upload car photos, enter your VIN and get a full AI-powered
               verification report — in seconds. Know the car before you own it.
             </p>
           </ContainerAnimated>
 
-          <ContainerInset className="max-h-[450px] w-auto py-6">
+          <ContainerInset className="max-h-[450px] w-full py-12">
             <HeroVideo
               src="https://videos.pexels.com/video-files/8566672/8566672-uhd_2560_1440_30fps.mp4"
               data-src="https://videos.pexels.com/video-files/8566672/8566672-uhd_2560_1440_30fps.mp4"
+              className="shadow-[0px_40px_80px_rgba(37,99,235,0.3)] rounded-3xl opacity-90 mix-blend-screen mix-blend-plus-lighter"
             />
           </ContainerInset>
 
@@ -39,13 +42,11 @@ export const HeroVideoDemo = () => {
             transition={{ delay: 0.4 }}
             outputRange={[-120, 0]}
             inputRange={[0, 0.7]}
-            className="mx-auto mt-2 w-fit"
+            className="md:ml-[15vw] mt-6 w-fit"
           >
-            <HeroButton>
-              <span className="text-sm font-medium text-slate-50">
-                Verify a Car — It&apos;s Free
-              </span>
-            </HeroButton>
+            <button className="liquid-glass-btn px-10 py-5 rounded-2xl text-lg font-bold text-white tracking-wide">
+              Verify a Car — It&apos;s Free
+            </button>
           </ContainerAnimated>
         </ContainerSticky>
       </ContainerScroll>
