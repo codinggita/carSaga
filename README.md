@@ -552,15 +552,199 @@ Frontend runs on `http://localhost:5173` | Backend runs on `http://localhost:500
 
 ---
 
-## 🤝 Contributing
+## 🤝 Contributing & Pull Request Guide
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+### Branch Naming Convention
 
-1. Fork the project
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+```
+<type>/<short-description>
+
+Types:
+  feat/     → New feature
+  fix/      → Bug fix
+  ui/       → UI/styling changes
+  refactor/ → Code refactoring
+  docs/     → Documentation
+  test/     → Tests
+  chore/    → Configs, deps, tooling
+  setup/    → Project scaffolding & initial setup
+```
+
+**Examples:**
+```
+feat/landing-page-hero
+feat/ai-chat-interface
+ui/glassmorphic-sidebar
+fix/vin-lookup-validation
+setup/vite-react-ts-scaffold
+refactor/redux-store-structure
+```
+
+### Commit Message Convention
+
+```
+<prefix>: <short description>
+
+Prefixes:
+  feat:     → New feature
+  fix:      → Bug fix
+  ui:       → Styling / visual
+  refactor: → Code restructure
+  docs:     → Documentation
+  test:     → Adding tests
+  chore:    → Tooling, deps, config
+  setup:    → Initial scaffolding
+  perf:     → Performance improvement
+  a11y:     → Accessibility
+```
+
+### PR Title Format
+
+```
+[<TYPE>] <Component/Area>: <What was done>
+```
+
+### PR Description Template
+
+Every PR should use this template:
+
+```markdown
+## 📌 Summary
+<!-- 1-2 sentence overview of what this PR does -->
+
+## 🔗 Related
+- **Figma Screen:** [Link to specific Figma frame if applicable]
+- **Issue:** #<issue-number> (if any)
+- **Depends on:** #<PR-number> (if any)
+
+## 🧩 Changes Made
+<!-- Bullet list of specific changes -->
+-
+-
+-
+
+## 📸 Screenshots / Recordings
+<!-- Attach before/after screenshots or screen recordings for UI PRs -->
+
+## 🛠️ Tech Details
+<!-- Libraries used, architectural decisions, notable patterns -->
+- **Libraries added:**
+- **Key decisions:**
+
+## ✅ Checklist
+- [ ] Code follows project conventions
+- [ ] Responsive design verified (mobile + desktop)
+- [ ] Dark mode tested
+- [ ] No console errors or warnings
+- [ ] Self-reviewed the diff
+- [ ] Screenshots/recording attached (for UI PRs)
+
+## 🧪 How to Test
+<!-- Step-by-step instructions for the reviewer -->
+1.
+2.
+3.
+```
+
+---
+
+### 📋 PR Plan — All Feature PRs for CarSaga
+
+Below is the full list of PRs to be raised throughout the project, grouped by phase. Use these exact titles and descriptions as templates.
+
+#### Phase 1: Project Setup & Foundation
+
+| # | PR Title | Branch | Description |
+|---|---|---|---|
+| 1 | **[SETUP] Project Scaffold: Vite + React + TypeScript + Tailwind** | `setup/vite-react-ts-scaffold` | Initialize Vite project with React 18, TypeScript, Tailwind CSS, PostCSS, and ESLint + Prettier config. Create `client/` folder structure with `src/`, `public/`, base `index.html`, and `main.tsx` entry point. |
+| 2 | **[SETUP] Backend Scaffold: Node.js + Express + MongoDB** | `setup/express-mongodb-scaffold` | Initialize `server/` with Express app, TypeScript config, Mongoose connection, folder structure (routes, controllers, models, middleware, services, utils), and `.env.example`. |
+| 3 | **[SETUP] UI Library Integration: shadcn/ui + MUI + Design Tokens** | `setup/ui-library-integration` | Install and configure shadcn/ui (`components.json`), MUI theme provider, and global CSS design tokens (colors, typography, spacing, glassmorphic utilities). Set up dark mode theme system with CSS variables. |
+| 4 | **[SETUP] Redux Toolkit + React Router + Axios Config** | `setup/state-routing-api` | Configure Redux store with initial slices (auth, car, chat, report), set up React Router v6 with all route definitions, and create Axios instance with base URL and JWT interceptors. |
+| 5 | **[SETUP] Dev Tooling: Husky + lint-staged + CI Pipeline** | `setup/dev-tooling-ci` | Add Husky pre-commit hooks, lint-staged config, and GitHub Actions CI workflow (`ci.yml`) for lint + type-check + build on push/PR. |
+
+#### Phase 2: Authentication
+
+| # | PR Title | Branch | Description |
+|---|---|---|---|
+| 6 | **[FEAT] Auth Backend: JWT + Google OAuth + User Model** | `feat/auth-backend` | Implement User model (name, email, password, role, avatar), register/login endpoints with bcrypt + JWT, Google OAuth strategy via Passport.js, and auth middleware for protected routes. |
+| 7 | **[FEAT] Auth UI: Glassmorphic Login/Signup + Google OAuth** | `feat/auth-ui` | Build glassmorphic login and signup pages with Framer Motion transitions. Role selector (Buyer/Mechanic/Dealer), Formik + Yup validation, Google OAuth button, and Redux auth slice integration. |
+
+#### Phase 3: Landing Page
+
+| # | PR Title | Branch | Description |
+|---|---|---|---|
+| 8 | **[FEAT] Landing Page: Spline 3D Hero + VIN Input** | `feat/landing-hero` | Create landing page with interactive Spline 3D car model hero section, headline "Don't buy blind. Verify in seconds.", VIN input with instant verify CTA, and Lenis smooth scroll setup. |
+| 9 | **[UI] Landing Page: Feature Grid + Trust Badges + Animations** | `ui/landing-features` | Add animated feature grid (Framer Motion stagger), trust badges section, social proof logos, and footer. Lottie animations for feature icons. Full responsive design. |
+
+#### Phase 4: Dashboard
+
+| # | PR Title | Branch | Description |
+|---|---|---|---|
+| 10 | **[FEAT] Dashboard Layout: Glass Sidebar + Navbar + KPI Cards** | `feat/dashboard-layout` | Build `DashboardLayout.tsx` with glassmorphic sidebar (Dashboard, Verify Car, AI Expert, My Cars, Analytics), top navbar with AI search bar, and animated KPI cards (Cars Checked, Avg. Savings, Risk Score). |
+| 11 | **[FEAT] Dashboard Charts: Maintenance Projections + Live Feed** | `feat/dashboard-charts` | Integrate Recharts/Nivo for Projected Maintenance line chart and Live Verification Feed with status badges (Verified/Flagged/Processing). AnimatedCounter component for KPI numbers. |
+
+#### Phase 5: Car Verification Flow ⭐
+
+| # | PR Title | Branch | Description |
+|---|---|---|---|
+| 12 | **[FEAT] Verify Car: Drag & Drop Photo Upload Zone** | `feat/photo-upload-dnd` | Build multi-photo upload zone with dnd-kit (drag to reorder, drop to upload). `PhotoDropZone.tsx` + `SortablePhotoGrid.tsx`. Cloudinary integration for image upload. Preview thumbnails with remove action. |
+| 13 | **[FEAT] Verify Car: VIN Lookup Tab + Backend Endpoint** | `feat/vin-lookup` | Create tabbed interface (Visual Scan / VIN Lookup). VIN input with Formik + Yup validation. Backend `/api/verify-car` endpoint. Loading states with Lottie spinner → progress → results animation. |
+| 14 | **[FEAT] Verify Car: React Flow Visual Pipeline** | `feat/verification-pipeline` | Build React Flow verification pipeline with custom nodes (Photo Scan → VIN Check → AI Report → Maintenance Plan). Custom node styling, animated edges, and status indicators per step. |
+| 15 | **[FEAT] Verify Car: AI Analysis + Report Generation** | `feat/ai-analysis` | OpenAI integration for car photo analysis and VIN report generation. Backend `/api/generate-report` endpoint. Real-time analysis progress animation on frontend. Confidence scores display. |
+
+#### Phase 6: Vehicle Integrity Report
+
+| # | PR Title | Branch | Description |
+|---|---|---|---|
+| 16 | **[FEAT] Vehicle Report: Score + Condition Breakdown** | `feat/vehicle-report-core` | Build Vehicle Report page with overall score (circular progress), condition breakdown bars (Engine, Transmission, Suspension, Electronics), and animated entry transitions. Backend `/api/reports/:id` endpoint. |
+| 17 | **[FEAT] Vehicle Report: Maintenance Roadmap + Value Trajectory** | `feat/report-charts` | Add Maintenance Roadmap timeline (upcoming services with cost estimates) and Value Trajectory resale prediction chart using Recharts. Responsive chart layouts. |
+| 18 | **[FEAT] Vehicle Report: 3D Model + Maps + Share** | `feat/report-3d-maps` | Integrate Spline 3D car model with annotated issue points, Google Maps for nearest trusted mechanics (`MechanicMap.tsx`), and WhatsApp "Share Report" button. Backend `/api/mechanics/nearby`. |
+
+#### Phase 7: AI Car Expert Chat
+
+| # | PR Title | Branch | Description |
+|---|---|---|---|
+| 19 | **[FEAT] AI Chat: Sage AI Chat Interface** | `feat/ai-chat-ui` | Build 21st.dev-style floating message dock (`ChatDock.tsx`), typewriter effect responses (`TypewriterText.tsx`), suggestion chips, and rich message formatting. Glassmorphic chat bubbles. |
+| 20 | **[FEAT] AI Chat: Backend + OpenAI Integration** | `feat/ai-chat-backend` | Backend `/api/chat` and `/api/chat/history` endpoints. OpenAI GPT integration with car-context-aware system prompt. Chat history persistence in MongoDB (ChatMessage model). Streaming response support. |
+
+#### Phase 8: My Cars & Analytics
+
+| # | PR Title | Branch | Description |
+|---|---|---|---|
+| 21 | **[FEAT] My Cars: Saved Vehicles Library** | `feat/my-cars` | Build My Cars page with saved vehicle cards, search/filter, and quick actions (view report, re-verify, delete). Backend `/api/my-cars` endpoint. Empty state with CTA to verify first car. |
+| 22 | **[FEAT] Analytics: Multi-Car Comparison Dashboard** | `feat/analytics-dashboard` | Rich analytics page with Nivo charts — cost trend comparisons, score radar charts, value depreciation curves. Multi-car selector. Export reports as PDF functionality. |
+
+#### Phase 9: Inspection Booking & Final Polish
+
+| # | PR Title | Branch | Description |
+|---|---|---|---|
+| 23 | **[FEAT] Book Inspection: Scheduling + Razorpay (Future)** | `feat/book-inspection` | Booking form with date/time picker (MUI), location selector (Google Maps), mechanic profile cards. Backend `/api/book-inspection`. Razorpay payment integration (ready but optional). |
+| 24 | **[UI] Global Polish: Animations, Responsive, Accessibility** | `ui/global-polish` | Final responsive pass across all pages (mobile/tablet/desktop). Framer Motion page transitions, micro-animations on interactive elements. Accessibility audit (ARIA labels, keyboard nav, contrast). Toast notification system (Sonner). |
+| 25 | **[DOCS] Final Documentation + Deployment Guide** | `docs/final-documentation` | Update README with live demo link, complete API docs, deployment guide (Vercel + Render/Railway), and contributing guidelines. Add LICENSE file. |
+
+---
+
+### Workflow
+
+```bash
+# 1. Create feature branch from main
+git checkout main
+git pull origin main
+git checkout -b feat/landing-hero
+
+# 2. Make changes, commit with convention
+git add .
+git commit -m "feat: add Spline 3D hero section with interactive car model"
+
+# 3. Push and create PR
+git push origin feat/landing-hero
+# → Open PR on GitHub using the title + description template above
+
+# 4. After review & merge, clean up
+git checkout main
+git pull origin main
+git branch -d feat/landing-hero
+```
 
 ---
 
