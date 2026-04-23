@@ -1,8 +1,6 @@
 import { useParams, useNavigate } from 'react-router-dom'
-import Spline from '@splinetool/react-spline'
-
 import { BarChart, Bar, XAxis, Tooltip, ResponsiveContainer } from 'recharts'
-import { AlertTriangle, MapPin, Search, Navigation } from 'lucide-react'
+import { AlertTriangle, MapPin, Search, ArrowLeft, Shield, CheckCircle, MessageSquare, Share2, Download, Eye } from 'lucide-react'
 
 const maintenanceData = [
   { year: '2026', cost: 450 },
@@ -12,146 +10,202 @@ const maintenanceData = [
   { year: '2030', cost: 2100 },
 ]
 
+const findings = [
+  { label: 'Right fender scratch', severity: 'warning', cost: '$150-$300' },
+  { label: 'Battery health at 87%', severity: 'info', cost: 'Monitor' },
+  { label: 'Tires at 60% tread', severity: 'info', cost: '$400-$600' },
+]
+
 export const ReportPage = () => {
   const { id } = useParams()
   const navigate = useNavigate()
 
   return (
-    <div className="min-h-screen bg-stone-900 text-slate-50">
-      {/* Navbar Minimal */}
-      <nav className="glass-card sticky top-0 z-50 rounded-none border-t-0 border-x-0 border-b border-white/10 px-6 py-4 flex justify-between items-center">
-        <div className="flex items-center gap-2 cursor-pointer" onClick={() => navigate('/dashboard')}>
-           <div className="bg-[#84cc16] text-black w-8 h-8 rounded shrink-0 flex items-center justify-center font-bold">CS</div>
-           <span className="font-bold text-lg hidden sm:block">Report #{id || '123'}</span>
-        </div>
-        <div className="flex gap-3">
-          <button onClick={() => navigate('/chat')} className="border border-[#84cc16] text-[#84cc16] hover:bg-[#84cc16]/10 px-4 py-2 rounded-lg text-sm transition-colors font-medium">Ask Expert</button>
-          <button className="bg-[#84cc16] text-black hover:bg-[#65a30d] px-4 py-2 rounded-lg text-sm font-semibold transition-colors">Share Report</button>
+    <div className="min-h-screen bg-[var(--color-bg-deep)] text-[var(--color-text-primary)]">
+      {/* Navbar */}
+      <nav className="sticky top-0 z-50 bg-[var(--color-bg-deep)]/80 backdrop-blur-2xl border-b border-[var(--color-border-glass)] px-6 py-3.5">
+        <div className="max-w-7xl mx-auto flex justify-between items-center">
+          <div className="flex items-center gap-4">
+            <button onClick={() => navigate('/dashboard')} className="flex items-center gap-2 text-sm text-[var(--color-text-muted)] hover:text-white transition-colors">
+              <ArrowLeft size={16} /> Dashboard
+            </button>
+            <div className="h-5 w-[1px] bg-[var(--color-border-glass)]" />
+            <span className="text-sm font-semibold text-white">Report #{id || '123'}</span>
+          </div>
+          <div className="flex gap-3">
+            <button onClick={() => navigate('/chat')} className="ghost-btn px-4 py-2 rounded-xl text-sm font-medium text-white flex items-center gap-2">
+              <MessageSquare size={14} /> Ask Sage AI
+            </button>
+            <button className="ghost-btn px-4 py-2 rounded-xl text-sm font-medium text-white flex items-center gap-2">
+              <Share2 size={14} /> Share
+            </button>
+            <button className="liquid-glass-btn px-4 py-2 rounded-xl text-sm font-bold text-white flex items-center gap-2">
+              <Download size={14} /> Export PDF
+            </button>
+          </div>
         </div>
       </nav>
 
-      <main className="max-w-7xl mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
-        
-        {/* Left Col: 3D Model & History */}
-        <div className="lg:col-span-2 space-y-8">
-          <section className="glass-card p-6 aspect-[4/3] sm:aspect-video relative overflow-hidden flex flex-col group">
-            <div className="absolute top-4 left-4 z-10 flex gap-2">
-              <span className="bg-amber-500/20 text-amber-500 border border-amber-500/50 px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider backdrop-blur-md">Medium Risk</span>
+      <main className="max-w-7xl mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Left: Main Content */}
+        <div className="lg:col-span-2 space-y-6">
+          {/* Vehicle Overview Card */}
+          <div className="glass-card p-8 relative overflow-hidden">
+            <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-[var(--color-primary)] via-[var(--color-emerald)] to-transparent opacity-50" />
+
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+              <div>
+                <div className="flex items-center gap-3 mb-3">
+                  <span className="verified-badge px-3 py-1 text-xs font-bold flex items-center gap-1.5">
+                    <CheckCircle size={12} /> Verified
+                  </span>
+                  <span className="px-3 py-1 text-xs font-medium rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20">
+                    Medium Risk
+                  </span>
+                </div>
+                <h1 className="text-3xl font-extrabold tracking-tight mb-1">2019 Toyota Prius</h1>
+                <p className="text-[var(--color-text-muted)] text-sm font-mono">VIN: JTDKNAM32X012****</p>
+              </div>
+              <div className="flex gap-4">
+                {[
+                  { label: 'Condition', value: '8.2/10', color: 'var(--color-emerald)' },
+                  { label: 'Market Value', value: '$15.5k', color: 'var(--color-primary-light)' },
+                  { label: 'Issues', value: '1', color: 'var(--color-warning)' },
+                ].map((stat, i) => (
+                  <div key={i} className="kpi-card px-5 py-4 text-center min-w-[90px]">
+                    <p className="text-2xl font-bold" style={{ color: stat.color }}>{stat.value}</p>
+                    <p className="text-[10px] text-[var(--color-text-muted)] mt-1">{stat.label}</p>
+                  </div>
+                ))}
+              </div>
             </div>
-            
-            <div className="w-full flex-grow relative cursor-grab active:cursor-grabbing">
-              {/* Note: This is an interactive generic car model from Spline community */}
-              <Spline scene="https://prod.spline.design/iW9V4hEOMHtz-h8L/scene.splinecode" />
-              
-              {/* Mock Hotspots overlays */}
-              <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
-                 <div className="absolute top-[30%] right-[30%] pointer-events-auto group-hover:scale-110 transition-transform">
-                   <div className="bg-red-500 w-4 h-4 rounded-full animate-ping absolute" />
-                   <div className="bg-red-500 w-4 h-4 rounded-full relative z-10 border-2 border-white cursor-pointer group/hotspot">
-                     <div className="absolute hidden group-hover/hotspot:block bottom-full mb-2 -left-16 w-36 bg-black/80 backdrop-blur-xl p-2 rounded text-xs border border-white/20 whitespace-normal">
-                       Scratch detected on right fender. Estimated repair: $150.
-                     </div>
-                   </div>
-                 </div>
+          </div>
+
+          {/* Visual Analysis */}
+          <div className="glass-card p-6 relative overflow-hidden">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-lg font-bold flex items-center gap-2">
+                <Eye size={18} className="text-[var(--color-primary-light)]" /> Visual Analysis
+              </h3>
+              <span className="text-xs text-[var(--color-text-muted)]">AI-detected findings</span>
+            </div>
+
+            <div className="w-full aspect-video rounded-xl overflow-hidden relative bg-[var(--color-bg-glass)] border border-[var(--color-border-glass)] mb-6">
+              <img src="https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&q=80&w=1200" className="w-full h-full object-cover opacity-60" alt="Car analysis" />
+
+              {/* Hotspot overlay */}
+              <div className="absolute top-[25%] right-[30%]">
+                <div className="bg-amber-500 w-4 h-4 rounded-full animate-ping absolute" />
+                <div className="bg-amber-500 w-4 h-4 rounded-full relative z-10 border-2 border-white cursor-pointer" />
+              </div>
+              <div className="absolute bottom-[30%] left-[20%]">
+                <div className="bg-[var(--color-primary)] w-3 h-3 rounded-full animate-ping absolute opacity-60" />
+                <div className="bg-[var(--color-primary)] w-3 h-3 rounded-full relative z-10 border-2 border-white cursor-pointer" />
+              </div>
+
+              <div className="absolute bottom-0 left-0 right-0 px-6 py-4 bg-gradient-to-t from-black/80 to-transparent flex items-center justify-between">
+                <span className="text-xs text-[var(--color-text-secondary)]">Click hotspots for details</span>
+                <span className="flex items-center gap-1.5 text-xs text-amber-400">
+                  <AlertTriangle size={12} /> 1 Issue Found
+                </span>
               </div>
             </div>
 
-            <div className="pt-4 border-t border-white/10 mt-4 flex justify-between items-center text-sm text-slate-400">
-              <span>Drag to rotate. Scroll to zoom.</span>
-              <span className="flex items-center gap-1 text-red-400"><AlertTriangle className="w-4 h-4" /> 1 Issue Found</span>
+            {/* Findings List */}
+            <div className="space-y-3">
+              {findings.map((f, i) => (
+                <div key={i} className="flex items-center justify-between px-4 py-3 rounded-xl bg-[var(--color-bg-glass)] border border-[var(--color-border-subtle)]">
+                  <div className="flex items-center gap-3">
+                    <div className={`w-2 h-2 rounded-full ${f.severity === 'warning' ? 'bg-amber-400' : 'bg-[var(--color-primary-light)]'}`} />
+                    <span className="text-sm text-white">{f.label}</span>
+                  </div>
+                  <span className="text-xs font-medium text-[var(--color-text-muted)]">{f.cost}</span>
+                </div>
+              ))}
             </div>
-          </section>
+          </div>
 
-          <section className="glass-card p-6">
-            <h3 className="text-xl font-bold mb-6">Estimated Maintenance Cost</h3>
+          {/* Maintenance Cost Chart */}
+          <div className="glass-card p-6">
+            <h3 className="text-lg font-bold mb-6">Projected Maintenance Cost</h3>
             <div className="h-64">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={maintenanceData}>
-                  <XAxis dataKey="year" stroke="#94a3b8" tickLine={false} axisLine={false} dy={10} />
-                  <Tooltip 
-                    cursor={{ fill: 'rgba(255,255,255,0.05)' }} 
-                    contentStyle={{ backgroundColor: '#1e293b', borderColor: 'rgba(255,255,255,0.1)', borderRadius: '8px', color: '#f8fafc' }}
-                    itemStyle={{ color: '#84cc16' }}
+                  <defs>
+                    <linearGradient id="barGrad" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="#2563eb" />
+                      <stop offset="100%" stopColor="#1d4ed8" />
+                    </linearGradient>
+                  </defs>
+                  <XAxis dataKey="year" stroke="rgba(148,163,184,0.4)" tickLine={false} axisLine={false} dy={10} tick={{ fill: 'rgba(148,163,184,0.6)', fontSize: 12 }} />
+                  <Tooltip
+                    cursor={{ fill: 'rgba(255,255,255,0.03)' }}
+                    contentStyle={{ backgroundColor: 'rgba(15,23,42,0.95)', borderColor: 'rgba(148,163,184,0.15)', borderRadius: '12px' }}
+                    itemStyle={{ color: '#60a5fa' }}
+                    formatter={(value: number) => [`$${value}`, 'Est. Cost']}
                   />
-                  <Bar dataKey="cost" fill="#84cc16" radius={[4,4,0,0]} barSize={40} />
+                  <Bar dataKey="cost" fill="url(#barGrad)" radius={[8, 8, 0, 0]} barSize={48} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
-            <p className="text-slate-400 text-sm mt-4 text-center">Spike expected in 2030 due to routine timing belt and water pump replacements based on model history.</p>
-          </section>
+            <p className="text-[var(--color-text-muted)] text-xs mt-4 text-center">Spike in 2030 due to timing belt + water pump replacements based on model history.</p>
+          </div>
         </div>
 
-        {/* Right Col: Details & Maps */}
-        <div className="space-y-8">
-          <section className="glass-card p-6">
-            <h3 className="text-xl font-bold mb-4">Vehicle Specs</h3>
+        {/* Right Sidebar */}
+        <div className="space-y-6">
+          {/* Vehicle Specs */}
+          <div className="glass-card p-6">
+            <h3 className="text-lg font-bold mb-5">Vehicle Specs</h3>
             <dl className="space-y-4 text-sm">
-              <div className="flex justify-between border-b border-white/10 pb-2">
-                <dt className="text-slate-400">VIN</dt>
-                <dd className="font-mono">JTDKNAM32X012****</dd>
-              </div>
-              <div className="flex justify-between border-b border-white/10 pb-2">
-                <dt className="text-slate-400">Make / Model</dt>
-                <dd className="font-semibold">Toyota Prius</dd>
-              </div>
-              <div className="flex justify-between border-b border-white/10 pb-2">
-                <dt className="text-slate-400">Year</dt>
-                <dd>2019</dd>
-              </div>
-              <div className="flex justify-between border-b border-white/10 pb-2">
-                <dt className="text-slate-400">Odometer Estimate</dt>
-                <dd>~45,210 mi</dd>
-              </div>
-              <div className="flex justify-between pb-2">
-                <dt className="text-slate-400">Previous Owners</dt>
-                <dd>2</dd>
-              </div>
+              {[
+                { label: 'VIN', value: 'JTDKNAM32X012****', mono: true },
+                { label: 'Make / Model', value: 'Toyota Prius', bold: true },
+                { label: 'Year', value: '2019' },
+                { label: 'Odometer', value: '~45,210 mi' },
+                { label: 'Previous Owners', value: '2' },
+                { label: 'Last Service', value: '2026-01-15' },
+              ].map((item, i) => (
+                <div key={i} className="flex justify-between items-center pb-3 border-b border-[var(--color-border-subtle)] last:border-0 last:pb-0">
+                  <dt className="text-[var(--color-text-muted)]">{item.label}</dt>
+                  <dd className={`${item.mono ? 'font-mono text-xs' : ''} ${item.bold ? 'font-semibold' : ''} text-white`}>{item.value}</dd>
+                </div>
+              ))}
             </dl>
-          </section>
+          </div>
 
-          <section className="glass-card p-6">
-            <h3 className="text-xl font-bold mb-4 flex items-center justify-between">
-              Nearby Mechanics
-              <Search className="w-5 h-5 text-slate-400" />
-            </h3>
-            <p className="text-slate-400 text-sm mb-4">Book an on-site inspection before purchasing.</p>
-            
-            <div className="w-full h-48 rounded-lg overflow-hidden relative bg-stone-800 border border-white/10">
-               {/* 
-                  Requires Google Maps API Key in a real implementation.
-                  <Map defaultCenter={{lat: 34.05, lng: -118.24}} defaultZoom={13} mapId="DEMO_MAP_ID">
-                    <AdvancedMarker position={{lat: 34.05, lng: -118.24}}>
-                      <Pin background={'#84cc16'} borderColor={'#000'} glyphColor={'#000'} />
-                    </AdvancedMarker>
-                  </Map>
-               */}
-               <div className="absolute inset-x-0 bottom-0 top-1/2 p-4 pt-10 text-center text-sm font-medium bg-gradient-to-t from-black to-transparent flex items-end justify-center">
-                 API Key needed for Maps. Displaying mock data.
-               </div>
-               {/* Mock Map Image */}
-               <img src="https://images.unsplash.com/photo-1524661135-423995f22d0b?q=80&w=600&auto=format&fit=crop" className="w-full h-full object-cover opacity-50" alt="Map mockup" />
-               <MapPin className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 text-[#84cc16] drop-shadow-lg" />
+          {/* Nearby Mechanics */}
+          <div className="glass-card p-6">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-bold">Nearby Mechanics</h3>
+              <Search size={16} className="text-[var(--color-text-muted)]" />
             </div>
+            <p className="text-[var(--color-text-muted)] text-sm mb-4">Book an on-site inspection before purchasing.</p>
 
-            <div className="mt-4 space-y-3">
-              <div className="bg-white/5 p-3 rounded-lg border border-white/10 flex justify-between items-center hover:bg-white/10 cursor-pointer transition-colors">
-                <div>
-                  <div className="font-semibold text-sm">Joe's Auto Repair</div>
-                  <div className="text-xs text-slate-400">2.1 miles away • 4.8★</div>
-                </div>
-                <Navigation className="w-5 h-5 text-[#84cc16]" />
-              </div>
-              <div className="bg-white/5 p-3 rounded-lg border border-white/10 flex justify-between items-center hover:bg-white/10 cursor-pointer transition-colors">
-                <div>
-                  <div className="font-semibold text-sm">Elite Diagnostics</div>
-                  <div className="text-xs text-slate-400">3.5 miles away • 4.9★</div>
-                </div>
-                <Navigation className="w-5 h-5 text-[#84cc16]" />
+            <div className="w-full h-40 rounded-xl overflow-hidden relative bg-[var(--color-bg-glass)] border border-[var(--color-border-glass)] mb-4">
+              <img src="https://images.unsplash.com/photo-1524661135-423995f22d0b?q=80&w=600&auto=format&fit=crop" className="w-full h-full object-cover opacity-40" alt="Map" />
+              <MapPin className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 text-[var(--color-primary-light)] drop-shadow-lg" />
+              <div className="absolute bottom-0 inset-x-0 p-3 bg-gradient-to-t from-black/60 to-transparent text-center text-[10px] text-[var(--color-text-muted)]">
+                Map requires API key • Mock data shown
               </div>
             </div>
-          </section>
+
+            <div className="space-y-2">
+              {[
+                { name: "Joe's Auto Repair", dist: '2.1 mi', rating: '4.8★' },
+                { name: 'Elite Diagnostics', dist: '3.5 mi', rating: '4.9★' },
+              ].map((shop, i) => (
+                <div key={i} className="flex items-center justify-between px-4 py-3 rounded-xl bg-[var(--color-bg-glass)] border border-[var(--color-border-subtle)] hover:bg-[var(--color-bg-glass-hover)] cursor-pointer transition-all">
+                  <div>
+                    <p className="text-sm font-semibold text-white">{shop.name}</p>
+                    <p className="text-xs text-[var(--color-text-muted)]">{shop.dist} • {shop.rating}</p>
+                  </div>
+                  <MapPin size={16} className="text-[var(--color-primary-light)]" />
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
-
       </main>
     </div>
   )

@@ -1,177 +1,204 @@
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
-import { Activity, Car, CheckCircle2, AlertTriangle, User, Search, Settings, HelpCircle, LogOut } from 'lucide-react'
+import { Activity, Car, CheckCircle2, AlertTriangle, User, Search, Settings, HelpCircle, LogOut, Shield, Plus, TrendingUp, MessageSquare, BarChart3 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 
 const monthlyChecks = [
   { name: 'Jan', checks: 4, cost: 400 },
   { name: 'Feb', checks: 3, cost: 300 },
-  { name: 'Mar', checks: 2, cost: 200 },
+  { name: 'Mar', checks: 7, cost: 700 },
   { name: 'Apr', checks: 6, cost: 600 },
-  { name: 'May', checks: 8, cost: 800 },
-  { name: 'Jun', checks: 5, cost: 500 },
+  { name: 'May', checks: 12, cost: 1200 },
+  { name: 'Jun', checks: 8, cost: 800 },
 ]
 
 const recentCars = [
   { id: '1', make: 'Toyota', model: 'Camry', year: 2021, status: 'Verified', risk: 'Low', date: '2026-04-20' },
   { id: '2', make: 'Honda', model: 'Civic', year: 2019, status: 'Flagged', risk: 'High', date: '2026-04-18' },
   { id: '3', make: 'Ford', model: 'Mustang', year: 2022, status: 'Verified', risk: 'Medium', date: '2026-04-10' },
+  { id: '4', make: 'BMW', model: 'X3', year: 2021, status: 'Verified', risk: 'Low', date: '2026-04-05' },
+]
+
+const navItems = [
+  { icon: Activity, label: 'Dashboard', active: true },
+  { icon: Car, label: 'My Cars' },
+  { icon: BarChart3, label: 'Analytics', path: '/analytics' },
+  { icon: MessageSquare, label: 'Sage AI', path: '/chat' },
 ]
 
 export const DashboardPage = () => {
   const navigate = useNavigate()
 
   return (
-    <div className="min-h-screen bg-stone-900 text-slate-50 flex">
+    <div className="min-h-screen bg-[var(--color-bg-deep)] text-[var(--color-text-primary)] flex">
       {/* Glass Sidebar */}
-      <aside className="w-64 glass-sidebar flex flex-col p-6 sticky top-0 h-screen hidden md:flex">
+      <aside className="w-72 glass-sidebar flex flex-col p-6 sticky top-0 h-screen hidden md:flex">
         <div className="flex items-center gap-3 mb-10">
-          <div className="bg-[#84cc16] text-[#030526] p-2 rounded-lg font-bold">CS</div>
-          <span className="text-xl font-heading font-semibold">CarSaga</span>
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[var(--color-primary)] to-[var(--color-emerald)] flex items-center justify-center shadow-lg shadow-[var(--color-primary-glow)]">
+            <Shield size={18} className="text-white" />
+          </div>
+          <span className="text-xl font-bold text-white">Car<span className="gradient-text">Sage</span></span>
         </div>
-        
-        <nav className="flex-1 space-y-2">
-          <button className="w-full flex items-center gap-3 px-4 py-3 rounded-lg bg-white/10 text-white transition-colors">
-            <Activity className="w-5 h-5 text-[#84cc16]" /> Dashboard
-          </button>
-          <button className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:bg-white/5 hover:text-white transition-colors">
-            <Car className="w-5 h-5" /> My Cars
-          </button>
-          <button className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:bg-white/5 hover:text-white transition-colors">
-            <Settings className="w-5 h-5" /> Settings
-          </button>
-          <button className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:bg-white/5 hover:text-white transition-colors">
-            <HelpCircle className="w-5 h-5" /> Support
-          </button>
+
+        <nav className="flex-1 space-y-1">
+          {navItems.map(({ icon: Icon, label, active, path }) => (
+            <button
+              key={label}
+              onClick={() => path && navigate(path)}
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 ${
+                active
+                  ? 'bg-[var(--color-primary)]/10 text-white border border-[var(--color-primary)]/20'
+                  : 'text-[var(--color-text-muted)] hover:bg-[var(--color-bg-glass-hover)] hover:text-white'
+              }`}
+            >
+              <Icon size={18} className={active ? 'text-[var(--color-primary-light)]' : ''} />
+              {label}
+            </button>
+          ))}
         </nav>
-        
-        <div className="mt-auto pt-6 border-t border-white/10">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="bg-stone-700 w-10 h-10 rounded-full flex items-center justify-center">
-              <User className="w-5 h-5" />
+
+        <div className="space-y-1 mb-4">
+          <button className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-[var(--color-text-muted)] hover:bg-[var(--color-bg-glass-hover)] hover:text-white transition-colors">
+            <Settings size={18} /> Settings
+          </button>
+          <button className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-[var(--color-text-muted)] hover:bg-[var(--color-bg-glass-hover)] hover:text-white transition-colors">
+            <HelpCircle size={18} /> Support
+          </button>
+        </div>
+
+        <div className="pt-4 border-t border-[var(--color-border-glass)]">
+          <div className="flex items-center gap-3 mb-3 px-2">
+            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[var(--color-primary)] to-[var(--color-emerald)] flex items-center justify-center text-white font-bold text-sm">
+              RJ
             </div>
             <div className="flex flex-col text-sm">
-              <span className="font-medium">User Account</span>
-              <span className="text-slate-400 text-xs text-ellipsis overflow-hidden">Buyer</span>
+              <span className="font-semibold text-white">Rituraj</span>
+              <span className="text-[var(--color-text-muted)] text-xs">Buyer • Free Plan</span>
             </div>
           </div>
-          <button onClick={() => navigate('/')} className="w-full flex items-center gap-3 px-4 py-2 rounded-lg text-red-400 hover:bg-white/5 transition-colors text-sm font-medium">
-            <LogOut className="w-4 h-4" /> Sign Out
+          <button onClick={() => navigate('/')} className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium text-red-400 hover:bg-red-500/10 transition-colors">
+            <LogOut size={16} /> Sign Out
           </button>
         </div>
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 p-6 md:p-10 max-h-screen overflow-y-auto">
-        {/* Topbar */}
+      <main className="flex-1 p-6 md:p-10 max-h-screen overflow-y-auto hide-scrollbar">
+        {/* Header */}
         <header className="flex justify-between items-center mb-10">
           <div>
-            <h1 className="text-3xl font-bold mb-1">Your Garage</h1>
-            <p className="text-slate-400 text-sm">Overview of your recent car verifications</p>
+            <h1 className="text-3xl font-extrabold tracking-tight mb-1">Your Garage</h1>
+            <p className="text-[var(--color-text-muted)] text-sm">Overview of your recent car verifications</p>
           </div>
           <div className="flex items-center gap-4">
             <div className="relative hidden md:block">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-              <input type="text" placeholder="Search saved cars..." className="bg-black/20 border border-white/10 rounded-full py-2 pl-10 pr-4 text-sm focus:outline-none focus:border-[#84cc16] w-64 text-slate-50" />
+              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--color-text-muted)]" />
+              <input
+                type="text"
+                placeholder="Search cars..."
+                className="bg-[var(--color-bg-glass)] border border-[var(--color-border-glass)] rounded-xl py-2.5 pl-10 pr-4 text-sm focus:outline-none focus:border-[var(--color-primary)] w-56 text-white placeholder-[var(--color-text-muted)] backdrop-blur-xl transition-colors"
+              />
             </div>
-            <button onClick={() => navigate('/verify')} className="bg-[#84cc16] hover:bg-[#65a30d] text-black font-semibold py-2 px-6 rounded-full shadow-[0_0_15px_rgba(132,204,22,0.4)] transition-all">
-              + New Report
+            <button
+              onClick={() => navigate('/verification')}
+              className="liquid-glass-btn px-5 py-2.5 rounded-xl text-sm font-bold text-white flex items-center gap-2"
+            >
+              <Plus size={16} /> New Report
             </button>
           </div>
         </header>
 
-        {/* Dashboard Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div className="glass-card p-6 flex flex-col justify-between">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-slate-400 font-medium">Total Cars Checked</h3>
-              <Car className="w-5 h-5 text-[#84cc16]" />
+        {/* KPI Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-5 mb-8">
+          {[
+            { label: 'Cars Verified', value: '1,432', change: '+12%', icon: Car, color: 'var(--color-primary)' },
+            { label: 'Pending Reports', value: '24', change: '3 new', icon: Activity, color: 'var(--color-warning)' },
+            { label: 'Clean Verified', value: '1,146', change: '80%', icon: CheckCircle2, color: 'var(--color-emerald)' },
+            { label: 'Savings Found', value: '$84.2k', change: '+$12k', icon: TrendingUp, color: 'var(--color-emerald)' },
+          ].map(({ label, value, change, icon: Icon, color }, i) => (
+            <div key={i} className="kpi-card p-6 group">
+              <div className="flex justify-between items-start mb-4">
+                <p className="text-sm text-[var(--color-text-muted)]">{label}</p>
+                <div className="w-9 h-9 rounded-lg flex items-center justify-center" style={{ background: `color-mix(in srgb, ${color} 15%, transparent)` }}>
+                  <Icon size={18} style={{ color }} />
+                </div>
+              </div>
+              <p className="text-3xl font-bold text-white">{value}</p>
+              <p className="text-xs mt-2 font-medium" style={{ color }}>{change}</p>
             </div>
-            <div className="text-4xl font-bold">28</div>
-            <div className="text-[#84cc16] text-sm mt-2 flex items-center gap-1">+12% from last month</div>
-          </div>
-          <div className="glass-card p-6 flex flex-col justify-between">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-slate-400 font-medium">Safe to Buy</h3>
-              <CheckCircle2 className="w-5 h-5 text-emerald-400" />
-            </div>
-            <div className="text-4xl font-bold">19</div>
-            <div className="text-emerald-400 text-sm mt-2 flex items-center gap-1">Highly recommended</div>
-          </div>
-          <div className="glass-card p-6 flex flex-col justify-between">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-slate-400 font-medium">High Risk Flagged</h3>
-              <AlertTriangle className="w-5 h-5 text-red-500" />
-            </div>
-            <div className="text-4xl font-bold">4</div>
-            <div className="text-slate-400 text-sm mt-2 flex items-center gap-1">Avoided bad purchases</div>
-          </div>
+          ))}
         </div>
 
-        {/* Charts & Tables */}
+        {/* Chart + Table */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-          <div className="glass-card p-6 min-h-[350px]">
-            <h3 className="text-lg font-semibold mb-6">Verification Activity</h3>
+          {/* Chart */}
+          <div className="glass-card p-6">
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="text-lg font-bold">Verification Activity</h3>
+              <span className="text-xs text-[var(--color-text-muted)] bg-[var(--color-bg-glass)] px-3 py-1.5 rounded-lg border border-[var(--color-border-glass)]">Last 6 months</span>
+            </div>
             <div className="h-[250px]">
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={monthlyChecks} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                   <defs>
                     <linearGradient id="colorChecks" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#84cc16" stopOpacity={0.3}/>
-                      <stop offset="95%" stopColor="#84cc16" stopOpacity={0}/>
+                      <stop offset="5%" stopColor="#2563eb" stopOpacity={0.3}/>
+                      <stop offset="95%" stopColor="#2563eb" stopOpacity={0}/>
                     </linearGradient>
                   </defs>
-                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" vertical={false} />
-                  <XAxis dataKey="name" stroke="rgba(255,255,255,0.5)" tick={{fill: 'rgba(255,255,255,0.5)', fontSize: 12}} dy={10} axisLine={false} tickLine={false} />
-                  <YAxis stroke="rgba(255,255,255,0.5)" tick={{fill: 'rgba(255,255,255,0.5)', fontSize: 12}} axisLine={false} tickLine={false} />
-                  <Tooltip 
-                    contentStyle={{ backgroundColor: 'rgba(0,0,0,0.8)', borderColor: 'rgba(255,255,255,0.1)', borderRadius: '8px' }}
-                    itemStyle={{ color: '#84cc16' }}
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(148,163,184,0.08)" vertical={false} />
+                  <XAxis dataKey="name" stroke="rgba(148,163,184,0.4)" tick={{fill: 'rgba(148,163,184,0.6)', fontSize: 12}} dy={10} axisLine={false} tickLine={false} />
+                  <YAxis stroke="rgba(148,163,184,0.4)" tick={{fill: 'rgba(148,163,184,0.6)', fontSize: 12}} axisLine={false} tickLine={false} />
+                  <Tooltip
+                    contentStyle={{ backgroundColor: 'rgba(15,23,42,0.95)', borderColor: 'rgba(148,163,184,0.15)', borderRadius: '12px', backdropFilter: 'blur(20px)' }}
+                    itemStyle={{ color: '#60a5fa' }}
                   />
-                  <Area type="monotone" dataKey="checks" stroke="#84cc16" strokeWidth={3} fillOpacity={1} fill="url(#colorChecks)" />
+                  <Area type="monotone" dataKey="checks" stroke="#2563eb" strokeWidth={2.5} fillOpacity={1} fill="url(#colorChecks)" />
                 </AreaChart>
               </ResponsiveContainer>
             </div>
           </div>
 
-          <div className="glass-card p-6 overflow-x-auto">
-            <h3 className="text-lg font-semibold mb-6">Recent Reports</h3>
-            <table className="w-full text-left border-collapse">
-              <thead>
-                <tr className="border-b border-white/10 text-slate-400 text-sm">
-                  <th className="pb-3 font-medium">Vehicle</th>
-                  <th className="pb-3 font-medium text-center">Status</th>
-                  <th className="pb-3 font-medium text-center">Risk</th>
-                  <th className="pb-3 font-medium text-right">Date</th>
-                </tr>
-              </thead>
-              <tbody>
-                {recentCars.map((car) => (
-                  <tr key={car.id} className="border-b border-white/5 hover:bg-white/5 transition-colors cursor-pointer" onClick={() => navigate(`/report/${car.id}`)}>
-                    <td className="py-4">
-                      <div className="font-semibold">{car.make} {car.model}</div>
-                      <div className="text-xs text-slate-400">{car.year}</div>
-                    </td>
-                    <td className="py-4 text-center">
-                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                        car.status === 'Verified' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 
-                        'bg-red-500/10 text-red-400 border border-red-500/20'
-                      }`}>
-                        {car.status}
-                      </span>
-                    </td>
-                    <td className="py-4 text-center">
-                      <span className={`inline-flex items-baseline text-xs ${
-                        car.risk === 'Low' ? 'text-emerald-400' : 
-                        car.risk === 'Medium' ? 'text-amber-400' : 'text-red-500'
-                      }`}>
-                        {car.risk} Risk
-                      </span>
-                    </td>
-                    <td className="py-4 text-right text-sm text-slate-300">{car.date}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          {/* Recent Reports Table */}
+          <div className="glass-card p-6">
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="text-lg font-bold">Recent Reports</h3>
+              <button className="text-xs text-[var(--color-primary-light)] hover:underline">View all</button>
+            </div>
+            <div className="space-y-2">
+              {recentCars.map((car) => (
+                <div
+                  key={car.id}
+                  onClick={() => navigate(`/report/${car.id}`)}
+                  className="flex items-center justify-between px-4 py-3.5 rounded-xl bg-[var(--color-bg-glass)] border border-[var(--color-border-subtle)] hover:bg-[var(--color-bg-glass-hover)] hover:border-[var(--color-border-glass)] cursor-pointer transition-all group"
+                >
+                  <div className="flex items-center gap-4">
+                    <div className="w-10 h-10 rounded-lg bg-[var(--color-bg-elevated)] flex items-center justify-center group-hover:bg-[var(--color-primary)]/10 transition-colors">
+                      <Car size={18} className="text-[var(--color-text-muted)] group-hover:text-[var(--color-primary-light)]" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold text-white">{car.year} {car.make} {car.model}</p>
+                      <p className="text-xs text-[var(--color-text-muted)]">{car.date}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${
+                      car.risk === 'Low' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' :
+                      car.risk === 'Medium' ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20' :
+                      'bg-red-500/10 text-red-400 border border-red-500/20'
+                    }`}>
+                      {car.risk}
+                    </span>
+                    <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${
+                      car.status === 'Verified'
+                        ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
+                        : 'bg-red-500/10 text-red-400 border border-red-500/20'
+                    }`}>
+                      {car.status}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </main>
