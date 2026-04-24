@@ -21,7 +21,7 @@ export const AuthPage = () => {
             <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[var(--color-primary)] to-[var(--color-warning)] flex items-center justify-center shadow-lg shadow-[var(--color-primary-glow)]">
               <Shield size={24} className="text-white" />
             </div>
-            <span className="text-3xl font-bold text-[#0f172a]">Car<span className="gradient-text">Sage</span></span>
+            <span className="text-3xl font-bold text-[#0f172a]">Car<span className="gradient-text">Saga</span></span>
           </div>
           <h1 className="text-5xl font-extrabold text-[#0f172a] leading-[1.1] tracking-tight">
             The Ethereal Guardian of <span className="gradient-text">Automotive Data</span>
@@ -63,7 +63,7 @@ export const AuthPage = () => {
                 <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[var(--color-primary)] to-[var(--color-warning)] flex items-center justify-center shadow-md">
                   <Shield size={18} className="text-white" />
                 </div>
-                <span className="text-xl font-bold text-[#0f172a]">Car<span className="gradient-text">Sage</span></span>
+                <span className="text-xl font-bold text-[#0f172a]">Car<span className="gradient-text">Saga</span></span>
               </div>
               <h2 className="text-2xl font-extrabold text-[#0f172a]">{tab === 'login' ? 'Welcome back' : 'Create account'}</h2>
               <p className="text-sm font-medium text-[var(--color-text-secondary)] mt-1">

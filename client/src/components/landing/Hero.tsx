@@ -105,7 +105,7 @@ export const Hero = () => {
                   <div className="w-3 h-3 rounded-full bg-yellow-500/60" />
                   <div className="w-3 h-3 rounded-full bg-green-500/60" />
                 </div>
-                <span className="text-xs text-[var(--color-text-muted)] font-mono">carsage.ai/dashboard</span>
+                <span className="text-xs text-[var(--color-text-muted)] font-mono">carsaga.ai/dashboard</span>
                 <div />
               </div>
 

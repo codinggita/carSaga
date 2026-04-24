@@ -31,7 +31,7 @@ export const Navbar = () => {
             <Shield size={18} className="text-white" />
           </div>
           <span className="text-xl font-bold tracking-tight text-[#0f172a]">
-            Car<span className="gradient-text">Sage</span>
+            Car<span className="gradient-text">Saga</span>
           </span>
         </Link>
 

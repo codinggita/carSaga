@@ -12,7 +12,7 @@ const navItems = [
   { icon: Activity, label: 'Dashboard', active: true },
   { icon: Car, label: 'My Cars' },
   { icon: BarChart3, label: 'Analytics', path: '/analytics' },
-  { icon: MessageSquare, label: 'Sage AI', path: '/chat' },
+  { icon: MessageSquare, label: 'Saga AI', path: '/chat' },
 ]
 
 export const DashboardPage = () => {
@@ -26,7 +26,7 @@ export const DashboardPage = () => {
           <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[var(--color-primary)] to-[var(--color-warning)] flex items-center justify-center shadow-lg shadow-[var(--color-primary-glow)]">
             <Shield size={18} className="text-white" />
           </div>
-          <span className="text-xl font-bold text-[#0f172a]">Car<span className="gradient-text">Sage</span></span>
+          <span className="text-xl font-bold text-[#0f172a]">Car<span className="gradient-text">Saga</span></span>
         </div>
 
         <nav className="flex-1 space-y-1">

@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 @theme {
-  /* ── CarSage 2026 Color Palette (Warm & Clean UI) ── */
+  /* ── CarSaga 2026 Color Palette (Warm & Clean UI) ── */
   --color-primary: #FE654F;         /* Tomato */
   --color-primary-light: #FED99B;   /* Apricot Peach */
   --color-primary-glow: rgba(254, 101, 79, 0.4);
@@ -18,6 +18,11 @@
   --color-bg-glass-hover: rgba(255, 255, 255, 0.9);
   --color-border-glass: rgba(0, 0, 0, 0.05); /* very subtle dark border */
   --color-border-subtle: rgba(0, 0, 0, 0.03);
+  
+  /* ── Tonal Layering (Stitch Specs) ── */
+  --color-surface-container: rgba(255, 255, 255, 0.4);
+  --color-surface-container-high: rgba(255, 255, 255, 0.8);
+  --color-outline-variant: rgba(0, 0, 0, 0.15); /* Ghost Border */
 
   /* ── Text ── */
   --color-text-primary: #0f172a;
@@ -109,7 +114,7 @@
     border: 1px solid var(--color-border-glass);
     backdrop-filter: blur(24px) saturate(180%);
     -webkit-backdrop-filter: blur(24px) saturate(180%);
-    border-radius: 1rem;
+    border-radius: 0.5rem; /* Stitch ROUND_EIGHT */
     box-shadow:
       0 4px 6px -1px rgba(0, 0, 0, 0.05),
       0 20px 40px -8px rgba(0, 0, 0, 0.05),
@@ -176,8 +181,8 @@
   /* ─── Ghost Button ─── */
   .ghost-btn {
     background: transparent;
-    border: 1px solid var(--color-border-glass);
-    backdrop-filter: blur(8px);
+    border: 1px solid var(--color-outline-variant); /* Ghost Border */
+    backdrop-filter: blur(12px); /* Strengthened Blur */
     transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     cursor: pointer;
   }
@@ -199,10 +204,10 @@
 
   /* ─── KPI Card ─── */
   .kpi-card {
-    background: var(--color-bg-glass);
+    background: var(--color-surface-container-high); /* Structural layer */
     border: 1px solid var(--color-border-glass);
     backdrop-filter: blur(20px) saturate(180%);
-    border-radius: 1rem;
+    border-radius: 0.5rem; /* Stitch ROUND_EIGHT */
     box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
     transition: all 0.3s ease;
   }

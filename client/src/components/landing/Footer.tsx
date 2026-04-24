@@ -12,7 +12,7 @@ export const Footer = () => {
               <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[var(--color-primary)] to-[var(--color-emerald)] flex items-center justify-center">
                 <Shield size={16} className="text-white" />
               </div>
-              <span className="text-lg font-bold text-[#0f172a]">Car<span className="gradient-text">Sage</span></span>
+              <span className="text-lg font-bold text-[#0f172a]">Car<span className="gradient-text">Saga</span></span>
             </Link>
             <p className="text-sm text-[var(--color-text-muted)] leading-relaxed">
               AI-powered used car verification.
@@ -64,7 +64,7 @@ export const Footer = () => {
 
         <div className="mt-12 pt-8 border-t border-[var(--color-border-glass)] flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-xs text-[var(--color-text-muted)]">
-            &copy; {new Date().getFullYear()} CarSage. All rights reserved.
+            &copy; {new Date().getFullYear()} CarSaga. All rights reserved.
           </p>
           <p className="text-xs text-[var(--color-text-muted)]">
             Built with 🧠 AI for the used car revolution.

@@ -18,7 +18,7 @@ const suggestions = [
 
 export const ChatPage = () => {
   const [messages, setMessages] = useState<Message[]>([
-    { id: '1', role: 'bot', text: "Hi! I'm Sage — your AI car expert. I've reviewed the report for the 2021 Porsche 911. I noticed a service history discrepancy at 32k miles. How can I help you today?" }
+    { id: '1', role: 'bot', text: "Hi! I'm Saga — your AI car expert. I've reviewed the report for the 2021 Porsche 911. I noticed a service history discrepancy at 32k miles. How can I help you today?" }
   ])
   const [input, setInput] = useState('')
   const [isTyping, setIsTyping] = useState(false)
@@ -64,7 +64,7 @@ export const ChatPage = () => {
         </button>
         <div className="flex items-center gap-2">
           <div className="w-2.5 h-2.5 rounded-full bg-[var(--color-emerald)] animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
-          <span className="text-xs font-bold text-[var(--color-text-secondary)]">Sage AI Online</span>
+          <span className="text-xs font-bold text-[var(--color-text-secondary)]">Saga AI Online</span>
         </div>
       </div>
 
@@ -72,7 +72,7 @@ export const ChatPage = () => {
       <div className="text-center mb-6 z-10 px-6">
         <div className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-gray-100 shadow-sm rounded-full text-sm mb-4 backdrop-blur-xl">
           <Brain size={14} className="text-[var(--color-primary)]" />
-          <span className="font-bold text-[#0f172a]">Sage AI Expert</span>
+          <span className="font-bold text-[#0f172a]">Saga AI Expert</span>
         </div>
         <h1 className="text-2xl font-extrabold text-[#0f172a]">Ask about your vehicle</h1>
       </div>

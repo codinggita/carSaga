@@ -24,7 +24,7 @@ export const ReportPage = () => {
           </div>
           <div className="flex gap-3">
             <button onClick={() => navigate('/chat')} className="ghost-btn px-4 py-2 rounded-xl text-sm font-bold text-[#0f172a] flex items-center gap-2">
-              <MessageSquare size={14} /> Ask Sage AI
+              <MessageSquare size={14} /> Ask Saga AI
             </button>
             <button className="ghost-btn px-4 py-2 rounded-xl text-sm font-bold text-[#0f172a] flex items-center gap-2">
               <Share2 size={14} /> Share

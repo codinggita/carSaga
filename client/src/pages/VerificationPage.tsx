@@ -1,248 +1,234 @@
 import { useState, useCallback } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
 import { useDropzone } from 'react-dropzone'
-import { CheckCircle2, ArrowRight, ArrowLeft, ImagePlus, Search, Sparkles, Camera } from 'lucide-react'
-import { ReactFlow, Controls, Background, applyNodeChanges, applyEdgeChanges, type Node, type Edge } from '@xyflow/react'
-import '@xyflow/react/dist/style.css'
+import { UploadCloud, Loader2, Search, Sparkles, RefreshCw, Lock, ScanLine, FileText, History, TrendingUp } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 
-const requirements = [
-  { id: 'front', label: 'Front Exterior', desc: 'Direct shot of the front bumper and grille.' },
-  { id: 'left', label: 'Left Side', desc: 'Driver side profile.' },
-  { id: 'right', label: 'Right Side', desc: 'Passenger side profile.' },
-  { id: 'rear', label: 'Rear Exterior', desc: 'Direct shot of the rear bumper and trunk.' },
-  { id: 'interior', label: 'Dashboard & Interior', desc: 'Clear view of odometer and steering wheel.' },
-]
-
 export const VerificationPage = () => {
-  const [stage, setStage] = useState(1)
   const navigate = useNavigate()
-  
-  const [currentReqIndex, setCurrentReqIndex] = useState(0)
-  const [capturedPhotos, setCapturedPhotos] = useState<Record<string, string>>({})
+  const [activeTab, setActiveTab] = useState<'visual' | 'vin'>('visual')
   const [vin, setVin] = useState('')
 
-  const onDropForRequirement = useCallback((acceptedFiles: File[]) => {
-    if (acceptedFiles.length === 0) return
-    const url = URL.createObjectURL(acceptedFiles[0])
-    setCapturedPhotos(prev => ({ ...prev, [requirements[currentReqIndex].id]: url }))
-    // Automatically move to next requirement
-    if (currentReqIndex < requirements.length - 1) {
-      setCurrentReqIndex(prev => prev + 1)
-    }
-  }, [currentReqIndex])
-
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop: onDropForRequirement, accept: { 'image/*': [] }, maxFiles: 1 })
-
-  const initialNodes: Node[] = [
-    { id: '1', position: { x: 50, y: 30 }, data: { label: '📸 AI Scan Completed' }, style: { background: '#FEFEFF', color: '#0f172a', border: '1px solid rgba(254,101,79,0.4)', borderRadius: '12px', padding: '12px 20px', fontSize: '13px', fontFamily: 'Inter', boxShadow: '0 4px 6px rgba(0,0,0,0.05)' } },
-    { id: '2', position: { x: 50, y: 130 }, data: { label: '🔍 VIN Decoded' }, style: { background: '#FEFEFF', color: '#0f172a', border: '1px solid rgba(16,185,129,0.4)', borderRadius: '12px', padding: '12px 20px', fontSize: '13px', fontFamily: 'Inter', boxShadow: '0 4px 6px rgba(0,0,0,0.05)' } },
-    { id: '3', position: { x: 50, y: 230 }, data: { label: '📋 History Checked' }, style: { background: '#FEFEFF', color: '#0f172a', border: '1px solid rgba(254,209,140,0.8)', borderRadius: '12px', padding: '12px 20px', fontSize: '13px', fontFamily: 'Inter', boxShadow: '0 4px 6px rgba(0,0,0,0.05)' } },
-    { id: '4', position: { x: 50, y: 330 }, data: { label: '💰 Valuation Match' }, style: { background: '#FEFEFF', color: '#0f172a', border: '1px solid rgba(16,185,129,0.4)', borderRadius: '12px', padding: '12px 20px', fontSize: '13px', fontFamily: 'Inter', boxShadow: '0 4px 6px rgba(0,0,0,0.05)' } },
-  ]
-  const initialEdges: Edge[] = [
-    { id: 'e1-2', source: '1', target: '2', animated: true, style: { stroke: '#FE654F' } },
-    { id: 'e2-3', source: '2', target: '3', animated: true, style: { stroke: '#10b981' } },
-    { id: 'e3-4', source: '3', target: '4', animated: true, style: { stroke: '#FED18C' } },
-  ]
-  const [nodes, setNodes] = useState<Node[]>(initialNodes)
-  const [edges, setEdges] = useState<Edge[]>(initialEdges)
-
-  const runAnalysis = () => {
-    setStage(3)
-    setTimeout(() => setStage(4), 3000)
-  }
-
-  const stageLabels = ['Visual Scan', 'VIN Lookup', 'Processing', 'Pipeline Analysis']
+  const onDrop = useCallback((acceptedFiles: File[]) => {
+    // In a real app, this would advance the pipeline and process images.
+    console.log("Files dropped", acceptedFiles)
+  }, [])
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop, accept: { 'image/*': [] } })
 
   return (
-    <div className="min-h-screen bg-[var(--color-bg-deep)] text-[var(--color-text-primary)] flex flex-col items-center pt-10 px-4 relative overflow-hidden">
-      {/* Background Decorative */}
-      <div className="glow-orb w-[600px] h-[600px] bg-[var(--color-primary-light)] opacity-20 top-[-100px] right-[-100px]" />
-      <div className="glow-orb w-[400px] h-[400px] bg-[var(--color-warning)] opacity-10 bottom-[-50px] left-[-50px]" />
-
-      {/* Back */}
-      <div className="w-full max-w-4xl mb-6 relative z-10">
-        <button onClick={() => navigate('/dashboard')} className="flex items-center gap-2 text-sm text-[var(--color-text-secondary)] hover:text-[#0f172a] transition-colors">
-          <ArrowLeft size={16} /> Back to Dashboard
-        </button>
-      </div>
-
-      <div className="w-full max-w-4xl relative z-10 text-[var(--color-text-primary)]">
-        {/* Progress Stepper */}
-        <div className="flex justify-between mb-12 relative px-4 text-[#0f172a]">
-          <div className="absolute top-1/2 left-4 right-4 h-[2px] bg-[var(--color-border-glass)] -translate-y-1/2 rounded-full overflow-hidden">
-            <motion.div className="h-full bg-gradient-to-r from-[var(--color-primary-light)] to-[var(--color-primary)]" initial={{ width: 0 }} animate={{ width: `${((stage - 1) / 3) * 100}%` }} transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }} />
+    <div className="min-h-screen flex bg-white text-[#0f172a]">
+      {/* Sidebar navigation wrapper for typical layout spacing (matches user image layout context) */}
+      <div className="w-[80px] md:w-[240px] hidden sm:flex shrink-0 border-r border-[var(--color-border-glass)] bg-gray-50 flex-col py-8 px-4 relative z-20">
+        <div className="flex items-center gap-3 mb-10 px-2 cursor-pointer" onClick={() => navigate('/')}>
+          <div className="w-8 h-8 rounded-lg bg-[var(--color-primary)] flex items-center justify-center shadow-[var(--color-primary-glow)]">
+            <span className="text-white font-bold text-sm">CS</span>
           </div>
-          {stageLabels.map((label, i) => (
-            <div key={i} className="relative z-10 flex flex-col items-center gap-2">
-              <div className={`w-10 h-10 rounded-xl flex items-center justify-center font-bold text-sm transition-all duration-500 border ${
-                stage > i + 1 ? 'bg-[var(--color-primary)] border-[var(--color-primary)] text-white shadow-lg shadow-[var(--color-primary-glow)]' :
-                stage === i + 1 ? 'bg-white border-[var(--color-primary)] text-[var(--color-primary)] shadow-lg shadow-[var(--color-primary-glow)]' :
-                'bg-[var(--color-bg-glass)] border-[var(--color-border-glass)] text-[var(--color-text-muted)]'
-              }`}>
-                {stage > i + 1 ? <CheckCircle2 size={18} /> : i + 1}
-              </div>
-              <span className={`text-[11px] font-bold ${stage >= i + 1 ? 'text-[var(--color-text-primary)]' : 'text-[var(--color-text-muted)]'}`}>{label}</span>
-            </div>
-          ))}
+          <span className="text-xl font-extrabold hidden md:block tracking-tight">Car<span className="text-[var(--color-primary)]">Saga</span></span>
         </div>
 
-        <AnimatePresence mode="wait">
-          {/* Stage 1: AI Guided Image Capture */}
-          {stage === 1 && (
-            <motion.div key="s1" initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }} className="glass-card p-6 md:p-10 flex flex-col md:flex-row gap-8 w-full max-w-4xl bg-white/90 backdrop-blur-xl">
-              
-              {/* Sidebar Checklist */}
-              <div className="w-full md:w-1/3 border-b md:border-b-0 md:border-r border-[var(--color-border-glass)] pb-6 md:pb-0 md:pr-6 shrink-0">
-                <h2 className="text-xl font-extrabold mb-6 flex items-center gap-2 text-[#0f172a]">
-                  <Camera size={20} className="text-[var(--color-primary)]" />
-                  AI Guided Scan
-                </h2>
-                <div className="flex flex-col gap-3">
-                  {requirements.map((req, index) => {
-                    const isCompleted = !!capturedPhotos[req.id];
-                    const isActive = index === currentReqIndex;
-                    return (
-                      <button key={req.id} onClick={() => setCurrentReqIndex(index)} className={`flex items-start gap-3 p-3 rounded-xl text-left transition-colors border ${
-                        isActive ? 'bg-[var(--color-bg-elevated)] border-[var(--color-primary-light)] scale-[1.02] shadow-sm' : 'border-transparent hover:bg-black/5'
-                      }`}>
-                        <div className={`mt-0.5 rounded-full p-1 border flex-shrink-0 transition-all ${isCompleted ? 'bg-[var(--color-emerald)]/10 text-[var(--color-emerald)] border-[var(--color-emerald)]' : isActive ? 'bg-[var(--color-primary)] text-white border-[var(--color-primary)]' : 'bg-[#f1f5f9] text-[var(--color-text-muted)] border-gray-200'}`}>
-                          {isCompleted ? <CheckCircle2 size={14} /> : <div className="w-3.5 h-3.5 flex items-center justify-center text-[10px] font-bold">{index + 1}</div>}
-                        </div>
-                        <div>
-                          <p className={`text-sm font-bold ${isActive || isCompleted ? 'text-[#0f172a]' : 'text-[var(--color-text-muted)]'}`}>{req.label}</p>
-                          <p className={`text-[11px] mt-0.5 leading-relaxed ${isActive ? 'text-[var(--color-text-secondary)]' : 'hidden md:block text-gray-400'}`}>{req.desc}</p>
-                        </div>
-                      </button>
-                    )
-                  })}
-                </div>
-              </div>
+        <nav className="flex flex-col gap-2">
+          <button onClick={() => navigate('/dashboard')} className="flex items-center gap-3 w-full p-3 rounded-xl hover:bg-gray-100 text-gray-500 hover:text-gray-900 transition-colors">
+            <TrendingUp size={18} /> <span className="hidden md:block font-bold text-sm">Dashboard</span>
+          </button>
+          <button className="flex items-center gap-3 w-full p-3 rounded-xl bg-[var(--color-primary)]/10 text-[var(--color-primary)] transition-colors border border-[var(--color-primary)]/20 shadow-sm">
+            <ScanLine size={18} /> <span className="hidden md:block font-bold text-sm">Verify Car</span>
+          </button>
+          <button onClick={() => navigate('/chat')} className="flex items-center gap-3 w-full p-3 rounded-xl hover:bg-gray-100 text-gray-500 hover:text-gray-900 transition-colors">
+            <Sparkles size={18} /> <span className="hidden md:block font-bold text-sm">AI Expert</span>
+          </button>
+          <button onClick={() => navigate('/analytics')} className="flex items-center gap-3 w-full p-3 rounded-xl hover:bg-gray-100 text-gray-500 hover:text-gray-900 transition-colors">
+            <History size={18} /> <span className="hidden md:block font-bold text-sm">Analytics</span>
+          </button>
+        </nav>
+      </div>
 
-              {/* Main Capture Area */}
-              <div className="flex-1 flex flex-col items-center justify-center min-h-[400px]">
-                {capturedPhotos[requirements[currentReqIndex].id] ? (
-                  <div className="w-full aspect-video rounded-2xl overflow-hidden relative group border-2 border-[var(--color-primary-light)] shadow-xl">
-                     <img src={capturedPhotos[requirements[currentReqIndex].id]} alt={requirements[currentReqIndex].label} className="w-full h-full object-cover" />
-                     <div className="absolute top-4 right-4 bg-[var(--color-emerald)] text-white text-xs font-bold px-3 py-1.5 rounded-full flex items-center gap-1 shadow-lg">
-                       <CheckCircle2 size={14} /> AI Accepted
-                     </div>
-                     <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity backdrop-blur-sm">
-                        <button onClick={() => {
-                          const newPhotos = {...capturedPhotos};
-                          delete newPhotos[requirements[currentReqIndex].id];
-                          setCapturedPhotos(newPhotos);
-                        }} className="bg-white/20 hover:bg-white/30 border border-white/50 px-4 py-2 rounded-lg text-white text-sm font-bold flex items-center gap-2 backdrop-blur-md transition-all">
-                          <ImagePlus size={16} /> Retake Photo
-                        </button>
-                     </div>
-                  </div>
-                ) : (
-                  <div {...getRootProps()} className={`w-full aspect-video border-2 border-dashed rounded-2xl p-8 flex flex-col items-center justify-center cursor-pointer transition-all duration-300 ${
-                    isDragActive ? 'border-[var(--color-primary)] bg-[var(--color-primary)]/5 scale-[1.02]' : 'border-gray-300 bg-gray-50 hover:bg-[var(--color-bg-elevated)] hover:border-[var(--color-primary-light)]'
-                  }`}>
-                    <input {...getInputProps()} />
-                    <div className="w-16 h-16 bg-white shadow-sm border border-gray-100 rounded-full flex items-center justify-center mb-4">
-                      <Camera className={`w-8 h-8 ${isDragActive ? 'text-[var(--color-primary)]' : 'text-gray-400'}`} />
-                    </div>
-                    <h3 className="text-lg font-bold text-[#0f172a] mb-1">Capture {requirements[currentReqIndex].label}</h3>
-                    <p className="text-sm font-medium text-[var(--color-text-secondary)] text-center mb-6 max-w-xs">{isDragActive ? "Drop image here..." : `Click or drag a clear photo of the ${requirements[currentReqIndex].label.toLowerCase()}`}</p>
-                    <button className="liquid-glass-btn px-6 py-2.5 rounded-xl text-white text-sm font-bold shadow-md shadow-[var(--color-primary-glow)]">Open Camera</button>
-                  </div>
-                )}
-                
-                <div className="w-full flex justify-between items-center mt-8 pt-6 border-t border-[var(--color-border-glass)]">
-                  <span className="text-sm font-bold text-[var(--color-text-secondary)]">
-                    {Object.keys(capturedPhotos).length} / {requirements.length} Completed
-                  </span>
-
-                  {Object.keys(capturedPhotos).length === requirements.length ? (
-                    <button onClick={() => setStage(2)} className="liquid-glass-btn px-8 py-3.5 rounded-xl text-sm font-bold text-white flex items-center gap-2 shadow-lg shadow-[var(--color-primary-glow)] hover:scale-105 transition-transform">
-                      Continue to VIN <ArrowRight size={16} />
-                    </button>
-                  ) : (
-                    <button onClick={() => {
-                      if (currentReqIndex < requirements.length - 1) setCurrentReqIndex(prev => prev + 1);
-                    }} className="ghost-btn bg-white border-gray-200 hover:border-gray-300 px-6 py-2.5 rounded-xl text-sm font-bold text-[#0f172a] flex items-center gap-2">
-                       Skip Step <ArrowRight size={16} />
-                    </button>
-                  )}
-                </div>
-              </div>
-            </motion.div>
-          )}
-
-          {/* Stage 2: VIN Scan */}
-          {stage === 2 && (
-            <motion.div key="s2" initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }} className="glass-card p-10 flex flex-col items-center text-center bg-white/90 backdrop-blur-xl">
+      <div className="flex-1 flex flex-col md:flex-row p-6 md:p-10 gap-8 h-screen overflow-hidden relative bg-[var(--color-bg-deep)]">
+        
+        {/* Main Workspace Column */}
+        <div className="flex-1 flex flex-col h-full overflow-y-auto pr-2 pb-10 hide-scrollbar z-10">
+          
+          <div className="flex flex-col xl:flex-row justify-between items-start mb-8 gap-4">
+            <div>
               <div className="flex items-center gap-3 mb-2">
-                <Search size={24} className="text-[var(--color-primary)]" />
-                <h2 className="text-2xl font-bold text-[#0f172a]">Vehicle Identification</h2>
+                <span className="flex items-center gap-1.5 px-3 py-1 bg-[#D6EFFF] text-blue-800 rounded-full text-xs font-bold border border-blue-200">
+                  <Sparkles size={12} className="text-blue-600" /> AI Verification Live
+                </span>
+                <span className="text-[var(--color-text-muted)] text-xs font-mono font-medium tracking-wide">REQ-3942</span>
               </div>
-              <p className="text-[var(--color-text-secondary)] text-sm mb-8 max-w-md">Enter the 17-character VIN to fetch history and synchronize with structural photos.</p>
+              <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-[#0f172a] mb-3">Initialize Scan</h1>
+              <p className="text-[var(--color-text-secondary)] text-sm max-w-md font-medium leading-relaxed">
+                Upload high-resolution images or provide a VIN to begin deep neural analysis of the vehicle's history, structural integrity, and market valuation.
+              </p>
+            </div>
+            
+            {/* Toggle tabs imitating screenshot */}
+            <div className="bg-[#0f172a] rounded-2xl p-1 flex items-center shadow-xl shadow-gray-200 shrink-0">
+              <button 
+                onClick={() => setActiveTab('visual')}
+                className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold transition-all duration-300 ${
+                  activeTab === 'visual' ? 'bg-[#1e293b] text-white shadow-md' : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                <ScanLine size={16} /> Visual Scan
+              </button>
+              <button 
+                onClick={() => setActiveTab('vin')}
+                className={`flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-bold transition-all duration-300 ${
+                  activeTab === 'vin' ? 'bg-[#1e293b] text-white shadow-md' : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                <FileText size={16} /> VIN Lookup
+              </button>
+            </div>
+          </div>
 
-              <input
-                type="text"
-                value={vin}
-                onChange={(e) => setVin(e.target.value.toUpperCase())}
-                maxLength={17}
-                placeholder="JTDBT••••••••••••"
-                className="w-full max-w-md bg-white border-2 border-gray-200 rounded-xl p-5 text-center text-2xl font-mono tracking-[0.2em] text-[#0f172a] focus:outline-none focus:border-[var(--color-primary)] focus:ring-4 focus:ring-[var(--color-primary-glow)] transition-all placeholder-gray-300 shadow-inner"
-              />
-
-              <div className="flex gap-4 mt-10 w-full max-w-md">
-                <button onClick={() => setStage(1)} className="ghost-btn bg-white border-gray-200 hover:bg-gray-50 flex-1 py-3.5 rounded-xl text-sm font-bold text-[#0f172a]">Back to Photos</button>
-                <button onClick={runAnalysis} disabled={vin.length < 5} className="liquid-glass-btn flex-1 py-3.5 rounded-xl text-sm font-bold text-white flex items-center justify-center gap-2 disabled:opacity-50 disabled:grayscale transition-all shadow-md">
-                  Start Analysis <Sparkles size={16} />
-                </button>
-              </div>
-            </motion.div>
-          )}
-
-          {/* Stage 3: Processing */}
-          {stage === 3 && (
-            <motion.div key="s3" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} className="flex flex-col items-center justify-center py-24">
-              <div className="relative w-32 h-32 flex items-center justify-center mb-8">
-                <div className="absolute inset-0 border-[4px] border-gray-100 border-t-[var(--color-primary)] rounded-full animate-spin shadow-lg" />
-                <div className="absolute inset-3 border-[4px] border-gray-100 border-b-[var(--color-emerald)] rounded-full animate-spin" style={{ animationDirection: 'reverse', animationDuration: '1.5s' }} />
-                <div className="absolute inset-6 border-[3px] border-gray-100 border-l-[var(--color-warning)] rounded-full animate-spin" style={{ animationDuration: '2s' }} />
-                <Sparkles size={32} className="text-[var(--color-primary)] animate-pulse drop-shadow-md" />
-              </div>
-              <h2 className="text-3xl font-extrabold mb-3 text-[#0f172a] drop-shadow-sm">Synthesizing Report...</h2>
-              <p className="text-[var(--color-text-secondary)] font-medium text-sm bg-white/50 px-4 py-2 rounded-full border border-white/80">Cross-referencing photos with global VIN datasets.</p>
-            </motion.div>
-          )}
-
-          {/* Stage 4: Workflow Overview */}
-          {stage === 4 && (
-            <motion.div key="s4" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="glass-card overflow-hidden flex flex-col h-[600px] bg-white/90 shadow-xl border-gray-200">
-              <div className="p-6 border-b border-gray-200 flex justify-between items-center bg-gray-50/50">
-                <div>
-                  <h2 className="text-xl font-bold text-[#0f172a]">Analysis Pipeline</h2>
-                  <p className="text-[var(--color-text-secondary)] text-sm">Review the AI-generated verification checks.</p>
+          <AnimatePresence mode="wait">
+            {activeTab === 'visual' ? (
+              <motion.div key="visual" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-6 flex-1 flex flex-col">
+                {/* Upload Dropzone */}
+                <div {...getRootProps()} className={`w-full relative bg-gradient-to-br from-[#FEFEFF] to-gray-50/50 p-10 flex flex-col items-center justify-center cursor-pointer transition-all hover:bg-gray-50/80 text-center rounded-3xl shrink-0 ${
+                  isDragActive ? 'border-[var(--color-primary)] border-2 shadow-sm' : 'border-2 border-dashed border-gray-200 hover:border-gray-300'
+                }`}>
+                  <input {...getInputProps()} />
+                  <div className="w-14 h-14 rounded-full bg-[#0f172a] shadow-lg shadow-gray-400/30 flex items-center justify-center mb-5 group-hover:scale-105 transition-transform">
+                    <UploadCloud size={24} className="text-white" />
+                  </div>
+                  <h3 className="text-lg font-extrabold text-[#D6EFFF] drop-shadow-sm" style={{ color: '#8fbce8' /* Matching the light pastel blue of screenshot */ }}>Drag & Drop Vehicle Media</h3>
+                  <p className="text-xs text-gray-400 max-w-xs font-semibold mt-1">Supported formats: JPG, PNG, HEIC. Upload multiple angles for comprehensive structural analysis.</p>
                 </div>
-                <button onClick={() => navigate('/report/123')} className="liquid-glass-btn px-6 py-2.5 rounded-xl text-sm font-bold text-white flex items-center gap-2 shadow-md shadow-[var(--color-primary-glow)]">
-                  View Full Report <ArrowRight size={16} />
+
+                {/* AI Processing Preview Component */}
+                <div className="relative w-full rounded-3xl overflow-hidden bg-[#0a0f1c] aspect-[4/3] shadow-lg border border-gray-200/50 flex-shrink-0 mx-auto max-w-2xl group flex-1 min-h-[300px]">
+                  {/* The Car Image Placeholder */}
+                  <img src="https://images.unsplash.com/photo-1614200187524-dc4b892acf16?q=80&w=1000&auto=format&fit=crop" className="w-full h-full object-cover opacity-70" alt="Car scan" />
+                  
+                  {/* AI Bounding Boxes overlay */}
+                  <div className="absolute inset-0 pointer-events-none">
+                    {/* Scan Line */}
+                    <motion.div 
+                      animate={{ y: ['0%', '100%', '0%'] }} 
+                      transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}
+                      className="w-[120%] -left-[10%] h-[1px] bg-blue-400 shadow-[0_0_15px_#60a5fa] opacity-60 relative"
+                    />
+                    
+                    {/* Bounding Box 1 */}
+                    <div className="absolute top-[35%] left-[25%] w-[120px] h-[80px] border border-blue-300 bg-blue-400/10 rounded-sm">
+                      <div className="absolute -top-7 left-0 bg-blue-300 backdrop-blur-md px-2 py-1 rounded-sm text-[9px] font-mono text-[#0f172a] font-extrabold leading-tight shadow-sm">
+                        headlight_L:<br/>95%
+                      </div>
+                    </div>
+                    
+                    {/* Bounding Box 2 */}
+                    <div className="absolute top-[55%] right-[25%] w-[140px] h-[140px] border border-emerald-400 bg-emerald-400/10 rounded-sm">
+                      <div className="absolute -top-5 left-0 bg-emerald-400 backdrop-blur-md px-2 py-1 rounded-sm text-[9px] font-mono text-[#0f172a] font-extrabold shadow-sm">
+                        Panel_Gap_OK
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Processing Badge */}
+                  <div className="absolute top-4 right-4 bg-[#0f172a]/70 backdrop-blur-xl border border-emerald-500/30 px-3 py-1.5 rounded-full flex items-center gap-2 shadow-lg">
+                    <Loader2 size={12} className="text-emerald-400 animate-spin" />
+                    <span className="text-[10px] font-extrabold text-emerald-400 font-mono tracking-wider">Processing: 42%</span>
+                  </div>
+                </div>
+              </motion.div>
+            ) : (
+              <motion.div key="vin" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="bg-white border border-gray-100 p-12 flex flex-col items-center justify-center text-center rounded-3xl shadow-sm flex-1 min-h-[400px]">
+                <div className="w-16 h-16 rounded-full bg-[#0f172a] shadow-lg shadow-gray-400/20 flex items-center justify-center mb-6">
+                  <Search size={28} className="text-white" />
+                </div>
+                <h3 className="text-2xl font-extrabold mb-2 text-[#0f172a]">VIN Lookup</h3>
+                <p className="text-[var(--color-text-muted)] text-sm mb-10 max-w-sm">Enter the 17-character Vehicle Identification Number to fetch factory specs, history reports, and real-time OEM recalls.</p>
+                <input
+                  type="text"
+                  value={vin}
+                  onChange={(e) => setVin(e.target.value.toUpperCase())}
+                  maxLength={17}
+                  placeholder="JTDBT••••••••••••"
+                  className="w-full max-w-md bg-gray-50 border border-gray-200 rounded-2xl p-6 text-center text-2xl font-mono tracking-[0.2em] text-[#0f172a] focus:outline-none focus:border-[var(--color-primary)] focus:ring-1 focus:ring-[var(--color-primary)] transition-all placeholder-gray-300 shadow-inner"
+                />
+                <button className="bg-[var(--color-primary)] hover:bg-[#eb5a46] text-white w-full max-w-md py-4 rounded-xl text-sm font-bold mt-8 shadow-lg shadow-[var(--color-primary-glow)] transition-all">
+                  Lookup Vehicle Intelligence
                 </button>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+
+        {/* Right Sidebar: Analysis Pipeline */}
+        <div className="w-80 lg:w-[350px] h-full flex flex-col relative rounded-3xl p-8 shrink-0 overflow-hidden bg-gradient-to-b from-[#e5f3ff] via-[#f7fbff] to-white border border-blue-50/50 shadow-sm z-10 hidden md:flex">
+          
+          {/* Background Decor */}
+          <div className="absolute top-0 right-0 w-[200px] h-[200px] bg-white rounded-full blur-[40px] opacity-70 pointer-events-none" />
+          
+          <div className="flex items-center gap-2 mb-12 relative z-10">
+            <Sparkles size={18} className="text-blue-500" />
+            <h3 className="text-lg font-extrabold text-blue-500 tracking-wide">Analysis Pipeline</h3>
+          </div>
+
+          <div className="flex-1 relative z-10">
+            {/* Stepper Timeline Line */}
+            <div className="absolute top-4 bottom-20 left-[5px] w-[2px] bg-gradient-to-b from-blue-200 via-gray-200 to-transparent rounded-full" />
+
+            <div className="space-y-12">
+              {/* Step 1 */}
+              <div className="relative pl-8">
+                <div className="absolute -left-[3px] top-1 w-4 h-4 rounded-full bg-blue-400 ring-4 ring-[#e5f3ff] shadow-sm flex items-center justify-center">
+                  <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
+                </div>
+                
+                <div className="flex justify-between items-start mb-2">
+                  <h4 className="text-sm font-extrabold text-blue-500">Visual Inspection</h4>
+                  <RefreshCw size={14} className="text-blue-400 animate-spin" />
+                </div>
+                
+                <div className="flex items-center gap-3">
+                  <div className="flex-1 h-1.5 bg-blue-100 rounded-full overflow-hidden">
+                     <div className="h-full bg-[#0f172a] rounded-full w-[42%]" />
+                  </div>
+                  <span className="text-[10px] font-extrabold text-gray-500 font-mono">42%</span>
+                </div>
               </div>
-              <div className="flex-1 w-full bg-slate-50/60">
-                <ReactFlow
-                  nodes={nodes}
-                  edges={edges}
-                  onNodesChange={(c) => setNodes((nds) => applyNodeChanges(c, nds))}
-                  onEdgesChange={(c) => setEdges((eds) => applyEdgeChanges(c, eds))}
-                  fitView
-                >
-                  <Background color="rgba(0,0,0,0.05)" gap={20} size={1} />
-                  <Controls className="bg-white border border-gray-200 shadow-sm rounded-xl" />
-                </ReactFlow>
+
+              {/* Step 2 */}
+              <div className="relative pl-8">
+                <div className="absolute left-[1px] top-1.5 w-2 h-2 rounded-full bg-gray-400 ring-4 ring-[#f4f9fe]" />
+                <div className="flex justify-between items-start mb-1">
+                  <h4 className="text-sm font-bold text-gray-400">VIN Decryption</h4>
+                  <FileText size={14} className="text-gray-300" />
+                </div>
+                <p className="text-[11px] text-gray-400/80 font-semibold leading-relaxed">Awaiting visual<br/>confirmation.</p>
               </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+
+              {/* Step 3 */}
+              <div className="relative pl-8">
+                <div className="absolute left-[1px] top-1.5 w-2 h-2 rounded-full bg-gray-400 ring-4 ring-[#f7fbff]" />
+                <div className="flex justify-between items-start mb-1">
+                  <h4 className="text-sm font-bold text-gray-400">History Reconciliation</h4>
+                  <History size={14} className="text-gray-300" />
+                </div>
+                <p className="text-[11px] text-gray-400/80 font-semibold leading-relaxed pr-4">Cross-referencing 40+<br/>global databases.</p>
+              </div>
+
+              {/* Step 4 */}
+              <div className="relative pl-8">
+                <div className="absolute left-[1px] top-1.5 w-2 h-2 rounded-full bg-gray-400 ring-4 ring-white" />
+                <div className="flex justify-between items-start mb-1">
+                  <h4 className="text-sm font-bold text-gray-400">Valuation Synthesis</h4>
+                  <TrendingUp size={14} className="text-gray-300" />
+                </div>
+                <p className="text-[11px] text-gray-400/80 font-semibold leading-relaxed pt-1">Calculating real-time<br/>market delta.</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-auto pt-6 flex items-center justify-center gap-2 text-gray-400/60 relative z-10 border-t border-gray-100">
+            <Lock size={10} />
+            <span className="text-[9px] font-mono font-bold tracking-widest uppercase">End-to-end Encrypted Analysis</span>
+          </div>
+        </div>
       </div>
     </div>
   )
 }
-
