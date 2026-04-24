@@ -33,7 +33,7 @@ export const Hero = () => {
             className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--color-bg-glass)] border border-[var(--color-border-glass)] backdrop-blur-xl text-sm"
           >
             <div className="w-2 h-2 rounded-full bg-[var(--color-emerald)] animate-pulse" />
-            <span className="text-[var(--color-text-secondary)]">Trusted by <span className="text-white font-semibold">1,400+</span> buyers</span>
+            <span className="text-[var(--color-text-secondary)]">Trusted by <span className="text-[#0f172a] font-extrabold">1,400+</span> buyers</span>
           </motion.div>
 
           <motion.h1
@@ -65,8 +65,8 @@ export const Hero = () => {
             <Link to="/verification" className="liquid-glass-btn px-8 py-4 rounded-2xl text-base font-bold text-white inline-flex items-center gap-2.5">
               Start Free Analysis <ArrowRight size={18} />
             </Link>
-            <button className="ghost-btn px-6 py-4 rounded-2xl text-base font-medium text-white inline-flex items-center gap-2.5">
-              <Play size={16} className="text-[var(--color-primary-light)]" /> View Demo
+            <button className="ghost-btn px-6 py-4 rounded-2xl text-base font-bold text-[#0f172a] bg-white border border-gray-200 hover:bg-gray-50 shadow-sm inline-flex items-center gap-2.5">
+              <Play size={16} className="text-[var(--color-primary)]" /> View Demo
             </button>
           </motion.div>
 
@@ -173,8 +173,8 @@ export const Hero = () => {
               <CheckCircle size={16} className="text-[var(--color-emerald)]" />
             </div>
             <div>
-              <p className="text-xs font-semibold text-white">Report Ready</p>
-              <p className="text-[10px] text-[var(--color-text-muted)]">2021 BMW X3 — Clean</p>
+              <p className="text-xs font-bold text-[#0f172a]">Report Ready</p>
+              <p className="text-[10px] font-medium text-[var(--color-text-secondary)]">2021 BMW X3 — Clean</p>
             </div>
           </motion.div>
         </motion.div>

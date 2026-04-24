@@ -12,7 +12,7 @@ export const Footer = () => {
               <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[var(--color-primary)] to-[var(--color-emerald)] flex items-center justify-center">
                 <Shield size={16} className="text-white" />
               </div>
-              <span className="text-lg font-bold text-white">Car<span className="gradient-text">Sage</span></span>
+              <span className="text-lg font-bold text-[#0f172a]">Car<span className="gradient-text">Sage</span></span>
             </Link>
             <p className="text-sm text-[var(--color-text-muted)] leading-relaxed">
               AI-powered used car verification.
@@ -48,11 +48,11 @@ export const Footer = () => {
             },
           ].map((group) => (
             <div key={group.title}>
-              <h4 className="text-sm font-semibold text-white mb-4">{group.title}</h4>
+              <h4 className="text-sm font-extrabold text-[#0f172a] mb-4">{group.title}</h4>
               <ul className="space-y-3">
                 {group.links.map((link) => (
                   <li key={link.label}>
-                    <a href={link.href} className="text-sm text-[var(--color-text-muted)] hover:text-white transition-colors">
+                    <a href={link.href} className="text-sm font-medium text-[var(--color-text-muted)] hover:text-[#0f172a] transition-colors">
                       {link.label}
                     </a>
                   </li>

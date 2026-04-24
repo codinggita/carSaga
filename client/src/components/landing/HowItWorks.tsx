@@ -87,8 +87,8 @@ export const HowItWorks = () => {
                 </span>
               </div>
 
-              <h3 className="text-lg font-bold text-white mb-2">{step.title}</h3>
-              <p className="text-sm text-[var(--color-text-secondary)] leading-relaxed max-w-[240px] mx-auto">
+              <h3 className="text-lg font-bold text-[#0f172a] mb-2">{step.title}</h3>
+              <p className="text-sm font-medium text-[var(--color-text-secondary)] leading-relaxed max-w-[240px] mx-auto">
                 {step.description}
               </p>
 

@@ -1,0 +1,22 @@
+{
+  "monthlyChecks": [
+    { "name": "Jan", "checks": 4, "cost": 400 },
+    { "name": "Feb", "checks": 3, "cost": 300 },
+    { "name": "Mar", "checks": 7, "cost": 700 },
+    { "name": "Apr", "checks": 6, "cost": 600 },
+    { "name": "May", "checks": 12, "cost": 1200 },
+    { "name": "Jun", "checks": 8, "cost": 800 }
+  ],
+  "recentCars": [
+    { "id": "1", "make": "Toyota", "model": "Camry", "year": 2021, "status": "Verified", "risk": "Low", "date": "2026-04-20" },
+    { "id": "2", "make": "Honda", "model": "Civic", "year": 2019, "status": "Flagged", "risk": "High", "date": "2026-04-18" },
+    { "id": "3", "make": "Ford", "model": "Mustang", "year": 2022, "status": "Verified", "risk": "Medium", "date": "2026-04-10" },
+    { "id": "4", "make": "BMW", "model": "X3", "year": 2021, "status": "Verified", "risk": "Low", "date": "2026-04-05" }
+  ],
+  "kpis": [
+    { "label": "Cars Verified", "value": "1,432", "change": "+12%", "iconRef": "Car", "color": "var(--color-primary)" },
+    { "label": "Pending Reports", "value": "24", "change": "3 new", "iconRef": "Activity", "color": "var(--color-warning)" },
+    { "label": "Clean Verified", "value": "1,146", "change": "80%", "iconRef": "CheckCircle2", "color": "var(--color-emerald)" },
+    { "label": "Savings Found", "value": "$84.2k", "change": "+$12k", "iconRef": "TrendingUp", "color": "var(--color-emerald)" }
+  ]
+}

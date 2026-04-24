@@ -53,7 +53,7 @@ const itemVariants = {
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] },
+    transition: { duration: 0.6 },
   },
 }
 
@@ -103,8 +103,8 @@ export const FeatureGrid = () => {
                 <feature.icon size={22} className="text-white" />
               </div>
 
-              <h3 className="text-xl font-bold text-white mb-3">{feature.title}</h3>
-              <p className="text-[var(--color-text-secondary)] text-sm leading-relaxed flex-1">{feature.description}</p>
+              <h3 className="text-xl font-bold text-[#0f172a] mb-3">{feature.title}</h3>
+              <p className="text-[var(--color-text-secondary)] font-medium text-sm leading-relaxed flex-1">{feature.description}</p>
             </motion.div>
           ))}
         </motion.div>
