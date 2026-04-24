@@ -1,4 +1,4 @@
-import React from 'react'
+
 import { motion } from 'motion/react'
 import { Activity, Camera, Maximize } from 'lucide-react'
 
@@ -15,7 +15,7 @@ export const SplineShowcase = () => {
         <motion.div 
           initial={{ opacity: 0, x: -50 }}
           whileInView={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
+          transition={{ duration: 0.8 }}
           className="w-full md:w-5/12 flex flex-col space-y-8 pt-20 md:pt-0 text-center md:text-left z-20"
         >
           <h2 className="text-5xl md:text-7xl font-bold leading-[1.1] tracking-tighter text-white">

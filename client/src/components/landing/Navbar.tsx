@@ -30,24 +30,24 @@ export const Navbar = () => {
           <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[var(--color-primary)] to-[var(--color-emerald)] flex items-center justify-center shadow-lg shadow-[var(--color-primary-glow)] group-hover:shadow-xl group-hover:shadow-[var(--color-primary-glow)] transition-shadow">
             <Shield size={18} className="text-white" />
           </div>
-          <span className="text-xl font-bold tracking-tight text-white">
+          <span className="text-xl font-bold tracking-tight text-[#0f172a]">
             Car<span className="gradient-text">Sage</span>
           </span>
         </Link>
 
         {/* Desktop Nav */}
         <div className="hidden md:flex items-center gap-8">
-          <a href="#features" className="text-sm text-[var(--color-text-secondary)] hover:text-white transition-colors">Features</a>
-          <a href="#how-it-works" className="text-sm text-[var(--color-text-secondary)] hover:text-white transition-colors">How it Works</a>
-          <a href="#pricing" className="text-sm text-[var(--color-text-secondary)] hover:text-white transition-colors">Pricing</a>
-          <Link to="/auth" className="ghost-btn px-4 py-2 rounded-lg text-sm text-white font-medium">Log in</Link>
+          <a href="#features" className="text-sm font-semibold text-[var(--color-text-secondary)] hover:text-[#0f172a] transition-colors">Features</a>
+          <a href="#how-it-works" className="text-sm font-semibold text-[var(--color-text-secondary)] hover:text-[#0f172a] transition-colors">How it Works</a>
+          <a href="#pricing" className="text-sm font-semibold text-[var(--color-text-secondary)] hover:text-[#0f172a] transition-colors">Pricing</a>
+          <Link to="/auth" className="ghost-btn px-4 py-2 rounded-lg text-sm font-bold text-[#0f172a] bg-white border border-gray-200 hover:bg-gray-50 shadow-sm">Log in</Link>
           <Link to="/dashboard" className="liquid-glass-btn px-5 py-2.5 rounded-xl text-sm text-white font-semibold">
             Get Started Free
           </Link>
         </div>
 
         {/* Mobile Toggle */}
-        <button onClick={() => setMobileOpen(!mobileOpen)} className="md:hidden text-white p-2">
+        <button onClick={() => setMobileOpen(!mobileOpen)} className="md:hidden text-[#0f172a] p-2">
           {mobileOpen ? <X size={22} /> : <Menu size={22} />}
         </button>
       </div>
@@ -59,9 +59,9 @@ export const Navbar = () => {
           animate={{ opacity: 1, y: 0 }}
           className="md:hidden bg-[var(--color-bg-deep)]/95 backdrop-blur-2xl border-t border-[var(--color-border-glass)] px-6 py-6 space-y-4"
         >
-          <a href="#features" className="block text-[var(--color-text-secondary)] hover:text-white transition-colors">Features</a>
-          <a href="#how-it-works" className="block text-[var(--color-text-secondary)] hover:text-white transition-colors">How it Works</a>
-          <Link to="/auth" className="block text-white font-medium">Log in</Link>
+          <a href="#features" className="block font-semibold text-[var(--color-text-secondary)] hover:text-[#0f172a] transition-colors">Features</a>
+          <a href="#how-it-works" className="block font-semibold text-[var(--color-text-secondary)] hover:text-[#0f172a] transition-colors">How it Works</a>
+          <Link to="/auth" className="block font-bold text-[#0f172a]">Log in</Link>
           <Link to="/dashboard" className="liquid-glass-btn block text-center px-5 py-3 rounded-xl text-white font-semibold">
             Get Started Free
           </Link>
