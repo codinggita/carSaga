@@ -54,27 +54,27 @@ export const ChatPage = () => {
   return (
     <div className="h-screen bg-[var(--color-bg-deep)] flex flex-col items-center relative overflow-hidden">
       {/* Background Orbs */}
-      <div className="glow-orb w-[500px] h-[500px] bg-[var(--color-primary)] opacity-[0.04] top-[-10%] left-[-10%]" />
-      <div className="glow-orb w-[400px] h-[400px] bg-[var(--color-emerald)] opacity-[0.03] bottom-[-10%] right-[-10%]" />
+      <div className="glow-orb w-[500px] h-[500px] bg-[var(--color-primary-light)] opacity-20 top-[-10%] left-[-10%]" />
+      <div className="glow-orb w-[400px] h-[400px] bg-[var(--color-emerald)] opacity-[0.08] bottom-[-10%] right-[-10%]" />
 
       {/* Header */}
       <div className="w-full max-w-3xl px-6 pt-6 pb-4 flex items-center justify-between relative z-10">
-        <button onClick={() => navigate('/report/123')} className="flex items-center gap-2 text-sm text-[var(--color-text-muted)] hover:text-white transition-colors">
+        <button onClick={() => navigate('/report/123')} className="flex items-center gap-2 text-sm text-[var(--color-text-secondary)] hover:text-[#0f172a] transition-colors font-semibold">
           <ArrowLeft size={16} /> Back to Report
         </button>
         <div className="flex items-center gap-2">
-          <div className="w-2 h-2 rounded-full bg-[var(--color-emerald)] animate-pulse" />
-          <span className="text-xs text-[var(--color-text-muted)]">Sage AI Online</span>
+          <div className="w-2.5 h-2.5 rounded-full bg-[var(--color-emerald)] animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
+          <span className="text-xs font-bold text-[var(--color-text-secondary)]">Sage AI Online</span>
         </div>
       </div>
 
       {/* Title */}
       <div className="text-center mb-6 z-10 px-6">
-        <div className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--color-bg-glass)] border border-[var(--color-border-glass)] rounded-full text-sm mb-4 backdrop-blur-xl">
-          <Brain size={14} className="text-[var(--color-primary-light)]" />
-          <span className="text-[var(--color-text-secondary)]">Sage AI Expert</span>
+        <div className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-gray-100 shadow-sm rounded-full text-sm mb-4 backdrop-blur-xl">
+          <Brain size={14} className="text-[var(--color-primary)]" />
+          <span className="font-bold text-[#0f172a]">Sage AI Expert</span>
         </div>
-        <h1 className="text-2xl font-bold text-white">Ask about your vehicle</h1>
+        <h1 className="text-2xl font-extrabold text-[#0f172a]">Ask about your vehicle</h1>
       </div>
 
       {/* Messages */}
@@ -88,17 +88,17 @@ export const ChatPage = () => {
               transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
               className={`flex gap-3 ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}
             >
-              <div className={`w-8 h-8 rounded-xl shrink-0 flex items-center justify-center ${
+              <div className={`w-8 h-8 rounded-xl shrink-0 flex items-center justify-center shadow-sm ${
                 msg.role === 'user'
-                  ? 'bg-gradient-to-br from-[var(--color-primary)] to-[var(--color-emerald)] text-white'
-                  : 'bg-[var(--color-bg-glass)] border border-[var(--color-border-glass)] text-[var(--color-text-secondary)]'
+                  ? 'bg-gradient-to-br from-[var(--color-primary)] to-[var(--color-primary-light)] text-white'
+                  : 'bg-white border border-gray-100 text-[var(--color-primary)]'
               }`}>
                 {msg.role === 'user' ? <User size={14} /> : <Bot size={14} />}
               </div>
-              <div className={`px-5 py-4 rounded-2xl text-sm leading-relaxed max-w-[80%] ${
+              <div className={`px-5 py-4 rounded-2xl text-sm leading-relaxed max-w-[80%] font-medium ${
                 msg.role === 'user'
-                  ? 'bg-[var(--color-primary)]/10 border border-[var(--color-primary)]/20 text-white'
-                  : 'glass-card text-[var(--color-text-secondary)]'
+                  ? 'bg-[var(--color-primary)] text-white shadow-sm'
+                  : 'bg-white border border-gray-100 text-[#0f172a] shadow-sm'
               }`}>
                 {msg.text}
               </div>
@@ -108,12 +108,12 @@ export const ChatPage = () => {
 
         {isTyping && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex gap-3">
-            <div className="w-8 h-8 rounded-xl shrink-0 flex items-center justify-center bg-[var(--color-bg-glass)] border border-[var(--color-border-glass)] text-[var(--color-text-secondary)]">
+            <div className="w-8 h-8 flex items-center justify-center shrink-0 bg-white border border-gray-100 text-[var(--color-primary)] rounded-xl shadow-sm">
               <Bot size={14} />
             </div>
-            <div className="glass-card px-5 py-4 rounded-2xl flex items-center gap-1.5">
+            <div className="bg-white border border-gray-100 px-5 py-4 rounded-2xl flex items-center gap-1.5 shadow-sm">
               {[0, 1, 2].map(i => (
-                <span key={i} className="w-2 h-2 rounded-full bg-[var(--color-text-muted)] animate-bounce" style={{ animationDelay: `${i * 0.15}s` }} />
+                <span key={i} className="w-2.5 h-2.5 rounded-full bg-[var(--color-primary)] animate-bounce opacity-70" style={{ animationDelay: `${i * 0.15}s` }} />
               ))}
             </div>
           </motion.div>
@@ -122,29 +122,29 @@ export const ChatPage = () => {
       </div>
 
       {/* Input Dock */}
-      <div className="fixed bottom-0 w-full max-w-3xl px-6 pb-6 pt-4 bg-gradient-to-t from-[var(--color-bg-deep)] via-[var(--color-bg-deep)]/95 to-transparent z-20">
+      <div className="fixed bottom-0 w-full max-w-3xl px-6 pb-6 pt-4 bg-gradient-to-t from-[var(--color-bg-deep)] to-transparent z-20">
         {/* Quick Actions */}
         <div className="flex flex-wrap gap-2 mb-3 justify-center">
           {suggestions.map((s, idx) => (
             <button
               key={idx}
               onClick={() => handleSend(s)}
-              className="px-4 py-2 text-xs bg-[var(--color-bg-glass)] hover:bg-[var(--color-bg-glass-hover)] border border-[var(--color-border-glass)] rounded-full text-[var(--color-text-secondary)] hover:text-white transition-all backdrop-blur-xl"
+              className="px-4 py-2 text-xs font-bold bg-white hover:bg-gray-50 border border-gray-100 rounded-full text-[var(--color-text-secondary)] hover:text-[#0f172a] transition-all shadow-sm"
             >
-              <Sparkles size={10} className="inline mr-1.5 text-[var(--color-primary-light)]" />{s}
+              <Sparkles size={10} className="inline mr-1.5 text-[var(--color-primary)]" />{s}
             </button>
           ))}
         </div>
 
         {/* Input Bar */}
-        <div className="glass-card p-2 rounded-2xl flex items-center shadow-2xl">
+        <div className="glass-card p-2 rounded-2xl flex items-center shadow-lg bg-white">
           <input
             type="text"
             value={input}
             onChange={e => setInput(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && handleSend(input)}
             placeholder="Ask about maintenance costs, negotiation tips..."
-            className="flex-1 bg-transparent border-none text-white px-4 py-3 focus:outline-none placeholder-[var(--color-text-muted)] text-sm"
+            className="flex-1 bg-transparent border-none text-[#0f172a] px-4 py-3 font-medium focus:outline-none placeholder-[var(--color-text-muted)] text-sm"
           />
           <button
             onClick={() => handleSend(input)}

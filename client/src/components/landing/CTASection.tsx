@@ -32,10 +32,10 @@ export const CTASection = () => {
               <Sparkles size={24} className="text-white" />
             </motion.div>
 
-            <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-6">
+            <h2 className="text-4xl md:text-5xl font-extrabold text-[#0f172a] tracking-tight mb-6">
               Ready to stop guessing?
             </h2>
-            <p className="text-lg text-[var(--color-text-secondary)] max-w-xl mx-auto mb-10 leading-relaxed">
+            <p className="text-lg font-medium text-[var(--color-text-secondary)] max-w-xl mx-auto mb-10 leading-relaxed">
               Your first report is completely free. No credit card. No commitments. Just clarity before you buy.
             </p>
 
@@ -43,7 +43,7 @@ export const CTASection = () => {
               <Link to="/verification" className="liquid-glass-btn px-10 py-4 rounded-2xl text-base font-bold text-white inline-flex items-center gap-2.5">
                 Start Free Verification <ArrowRight size={18} />
               </Link>
-              <Link to="/auth" className="ghost-btn px-8 py-4 rounded-2xl text-base font-medium text-white">
+              <Link to="/auth" className="ghost-btn px-8 py-4 rounded-2xl text-base font-bold text-[#0f172a] bg-white border border-gray-200 hover:bg-gray-50 shadow-sm">
                 Create Account
               </Link>
             </div>
