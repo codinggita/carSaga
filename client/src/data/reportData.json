@@ -1,31 +1,30 @@
 {
   "maintenanceData": [
-    { "year": "2026", "cost": 450 },
-    { "year": "2027", "cost": 600 },
-    { "year": "2028", "cost": 1200 },
-    { "year": "2029", "cost": 850 },
-    { "year": "2030", "cost": 2100 }
+    { "year": "2026", "cost": 8000 },
+    { "year": "2027", "cost": 12000 },
+    { "year": "2028", "cost": 18000 },
+    { "year": "2029", "cost": 15000 },
+    { "year": "2030", "cost": 35000 }
   ],
   "findings": [
-    { "label": "Right fender scratch", "severity": "warning", "cost": "$150-$300" },
-    { "label": "Battery health at 87%", "severity": "info", "cost": "Monitor" },
-    { "label": "Tires at 60% tread", "severity": "info", "cost": "$400-$600" }
+    { "label": "Battery health at 91%", "severity": "info", "cost": "Monitor" },
+    { "label": "Tyres at 65% tread", "severity": "info", "cost": "₹8,000–₹12,000" }
   ],
   "overviewStats": [
-    { "label": "Condition", "value": "8.2/10", "color": "var(--color-emerald)" },
-    { "label": "Market Value", "value": "$15.5k", "color": "var(--color-primary)" },
-    { "label": "Issues", "value": "1", "color": "var(--color-warning)" }
+    { "label": "Condition", "value": "9.1/10", "color": "var(--color-emerald)" },
+    { "label": "Market Value", "value": "₹12.5L", "color": "var(--color-primary)" },
+    { "label": "Issues", "value": "0", "color": "var(--color-emerald)" }
   ],
   "vehicleSpecs": [
-    { "label": "VIN", "value": "JTDKNAM32X012****", "mono": true },
-    { "label": "Make / Model", "value": "Toyota Prius", "bold": true },
-    { "label": "Year", "value": "2019" },
-    { "label": "Odometer", "value": "~45,210 mi" },
-    { "label": "Previous Owners", "value": "2" },
-    { "label": "Last Service", "value": "2026-01-15" }
+    { "label": "Reg. No.", "value": "MH 12 AB 1234", "mono": true },
+    { "label": "Make / Model", "value": "Toyota Corolla", "bold": true },
+    { "label": "Year", "value": "2023" },
+    { "label": "Odometer", "value": "~22,310 km" },
+    { "label": "Previous Owners", "value": "1" },
+    { "label": "Last Service", "value": "2026-03-10" }
   ],
   "mechanics": [
-    { "name": "Joe's Auto Repair", "dist": "2.1 mi", "rating": "4.8★" },
-    { "name": "Elite Diagnostics", "dist": "3.5 mi", "rating": "4.9★" }
+    { "name": "Sharma Auto Works", "dist": "1.8 km", "rating": "4.8★" },
+    { "name": "CarDekho Service Centre", "dist": "3.2 km", "rating": "4.9★" }
   ]
 }

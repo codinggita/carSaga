@@ -40,7 +40,7 @@ export const Navbar = () => {
           <a href="#features" className="text-sm font-semibold text-[var(--color-text-secondary)] hover:text-[#0f172a] transition-colors">Features</a>
           <a href="#how-it-works" className="text-sm font-semibold text-[var(--color-text-secondary)] hover:text-[#0f172a] transition-colors">How it Works</a>
           <a href="#pricing" className="text-sm font-semibold text-[var(--color-text-secondary)] hover:text-[#0f172a] transition-colors">Pricing</a>
-          <Link to="/auth" className="ghost-btn px-4 py-2 rounded-lg text-sm font-bold text-[#0f172a] bg-white border border-gray-200 hover:bg-gray-50 shadow-sm">Log in</Link>
+          <Link to="/sign-in" className="ghost-btn px-4 py-2 rounded-lg text-sm font-bold text-[#0f172a] bg-white border border-gray-200 hover:bg-gray-50 shadow-sm">Log in</Link>
           <Link to="/dashboard" className="liquid-glass-btn px-5 py-2.5 rounded-xl text-sm text-white font-semibold">
             Get Started Free
           </Link>
@@ -61,7 +61,7 @@ export const Navbar = () => {
         >
           <a href="#features" className="block font-semibold text-[var(--color-text-secondary)] hover:text-[#0f172a] transition-colors">Features</a>
           <a href="#how-it-works" className="block font-semibold text-[var(--color-text-secondary)] hover:text-[#0f172a] transition-colors">How it Works</a>
-          <Link to="/auth" className="block font-bold text-[#0f172a]">Log in</Link>
+          <Link to="/sign-in" className="block font-bold text-[#0f172a]">Log in</Link>
           <Link to="/dashboard" className="liquid-glass-btn block text-center px-5 py-3 rounded-xl text-white font-semibold">
             Get Started Free
           </Link>

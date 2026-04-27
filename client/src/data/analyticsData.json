@@ -1,27 +1,27 @@
 {
   "costOverTime": [
-    { "year": "2026", "car1": 450, "car2": 300 },
-    { "year": "2027", "car1": 600, "car2": 700 },
-    { "year": "2028", "car1": 1200, "car2": 750 },
-    { "year": "2029", "car1": 850, "car2": 900 },
-    { "year": "2030", "car1": 2100, "car2": 1100 }
+    { "year": "2026", "car1": 15000, "car2": 12000 },
+    { "year": "2027", "car1": 22000, "car2": 18000 },
+    { "year": "2028", "car1": 28000, "car2": 24000 },
+    { "year": "2029", "car1": 25000, "car2": 30000 },
+    { "year": "2030", "car1": 30000, "car2": 22000 }
   ],
   "categoryCompare": [
-    { "subject": "Reliability", "A": 80, "B": 90, "fullMark": 100 },
-    { "subject": "Safety", "A": 95, "B": 85, "fullMark": 100 },
-    { "subject": "Cost to Own", "A": 70, "B": 88, "fullMark": 100 },
-    { "subject": "Features", "A": 90, "B": 75, "fullMark": 100 },
-    { "subject": "Value Hold", "A": 60, "B": 65, "fullMark": 100 }
+    { "subject": "Reliability", "A": 92, "B": 85, "fullMark": 100 },
+    { "subject": "Safety", "A": 95, "B": 88, "fullMark": 100 },
+    { "subject": "Cost to Own", "A": 88, "B": 78, "fullMark": 100 },
+    { "subject": "Features", "A": 82, "B": 80, "fullMark": 100 },
+    { "subject": "Value Hold", "A": 85, "B": 65, "fullMark": 100 }
   ],
   "headToHead": {
-    "car1": { "name": "Toyota Prius", "year": "2019", "color": "var(--color-primary)" },
-    "car2": { "name": "Honda Civic", "year": "2020", "color": "var(--color-emerald)" },
+    "car1": { "name": "Toyota Corolla", "year": "2023", "color": "var(--color-primary)" },
+    "car2": { "name": "Hyundai i20", "year": "2023", "color": "var(--color-emerald)" },
     "features": [
-      { "feature": "Asking Price", "a": "$15,500", "b": "$16,200" },
-      { "feature": "Mileage", "a": "45,210 mi", "b": "38,100 mi" },
-      { "feature": "Issues Found", "a": "1 (Cosmetic)", "aClass": "text-amber-500", "b": "0", "bClass": "text-[var(--color-emerald)]" },
-      { "feature": "5-Year Maint. Cost", "a": "$5,200", "b": "$3,750" },
-      { "feature": "Condition Score", "a": "8.2/10", "aClass": "text-[var(--color-primary)]", "b": "9.0/10", "bClass": "text-[var(--color-emerald)]" }
+      { "feature": "Asking Price", "a": "₹12,50,000", "b": "₹9,80,000" },
+      { "feature": "Mileage", "a": "22,310 km", "b": "18,500 km" },
+      { "feature": "Issues Found", "a": "0", "aClass": "text-[var(--color-emerald)]", "b": "1 (Cosmetic)", "bClass": "text-amber-500" },
+      { "feature": "5-Year Maint. Cost", "a": "₹1,20,000", "b": "₹85,000" },
+      { "feature": "Condition Score", "a": "9.1/10", "aClass": "text-[var(--color-primary)]", "b": "8.5/10", "bClass": "text-[var(--color-emerald)]" }
     ]
   }
 }

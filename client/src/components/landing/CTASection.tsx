@@ -43,7 +43,7 @@ export const CTASection = () => {
               <Link to="/verification" className="liquid-glass-btn px-10 py-4 rounded-2xl text-base font-bold text-white inline-flex items-center gap-2.5">
                 Start Free Verification <ArrowRight size={18} />
               </Link>
-              <Link to="/auth" className="ghost-btn px-8 py-4 rounded-2xl text-base font-bold text-[#0f172a] bg-white border border-gray-200 hover:bg-gray-50 shadow-sm">
+              <Link to="/register" className="ghost-btn px-8 py-4 rounded-2xl text-base font-bold text-[#0f172a] bg-white border border-gray-200 hover:bg-gray-50 shadow-sm">
                 Create Account
               </Link>
             </div>
