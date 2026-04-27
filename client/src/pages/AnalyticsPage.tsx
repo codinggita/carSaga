@@ -74,11 +74,11 @@ export const AnalyticsPage = () => {
               <LineChart data={analyticsData.costOverTime} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.05)" vertical={false} />
                 <XAxis dataKey="year" stroke="rgba(0,0,0,0.2)" tick={{ fill: '#475569', fontSize: 12 }} dy={10} axisLine={false} tickLine={false} />
-                <YAxis stroke="rgba(0,0,0,0.2)" tick={{ fill: '#475569', fontSize: 12 }} axisLine={false} tickLine={false} />
-                <Tooltip {...tooltipStyle} />
+                <YAxis stroke="rgba(0,0,0,0.2)" tick={{ fill: '#475569', fontSize: 12 }} axisLine={false} tickLine={false} tickFormatter={(v: number) => `₹${(v / 1000).toFixed(0)}k`} />
+                <Tooltip {...tooltipStyle} formatter={(value: number) => [`₹${value.toLocaleString('en-IN')}`, undefined]} />
                 <Legend iconType="circle" wrapperStyle={{ fontSize: '12px', paddingTop: '16px', color: '#0f172a', fontWeight: 'bold' }} />
-                <Line type="monotone" name="Prius" dataKey="car1" stroke="#FE654F" strokeWidth={3} dot={{ r: 4, strokeWidth: 2, fill: '#fff' }} />
-                <Line type="monotone" name="Civic" dataKey="car2" stroke="#10b981" strokeWidth={3} dot={{ r: 4, strokeWidth: 2, fill: '#fff' }} />
+                <Line type="monotone" name="Corolla" dataKey="car1" stroke="#FE654F" strokeWidth={3} dot={{ r: 4, strokeWidth: 2, fill: '#fff' }} />
+                <Line type="monotone" name="i20" dataKey="car2" stroke="#10b981" strokeWidth={3} dot={{ r: 4, strokeWidth: 2, fill: '#fff' }} />
               </LineChart>
             </ResponsiveContainer>
           </div>
@@ -93,8 +93,8 @@ export const AnalyticsPage = () => {
                 <PolarGrid stroke="rgba(0,0,0,0.05)" />
                 <PolarAngleAxis dataKey="subject" tick={{ fill: '#475569', fontSize: 11, fontWeight: 'bold' }} />
                 <PolarRadiusAxis angle={30} domain={[0, 100]} tick={false} axisLine={false} />
-                <Radar name="Prius" dataKey="A" stroke="#FE654F" fill="#FE654F" fillOpacity={0.2} strokeWidth={3} />
-                <Radar name="Civic" dataKey="B" stroke="#10b981" fill="#10b981" fillOpacity={0.2} strokeWidth={3} />
+                <Radar name="Corolla" dataKey="A" stroke="#FE654F" fill="#FE654F" fillOpacity={0.2} strokeWidth={3} />
+                <Radar name="i20" dataKey="B" stroke="#10b981" fill="#10b981" fillOpacity={0.2} strokeWidth={3} />
                 <Tooltip contentStyle={tooltipStyle.contentStyle} />
                 <Legend iconType="circle" wrapperStyle={{ fontSize: '12px', paddingTop: '16px', color: '#0f172a', fontWeight: 'bold' }} />
               </RadarChart>

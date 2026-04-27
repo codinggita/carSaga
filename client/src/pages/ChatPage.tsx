@@ -1,7 +1,8 @@
 import { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
-import { Send, Bot, User, Sparkles, ArrowLeft, Brain } from 'lucide-react'
+import { Send, Bot, User, Sparkles, ArrowLeft, Brain, Loader2 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
+import api from '../services/api'
 
 interface Message {
   id: string
@@ -17,8 +18,9 @@ const suggestions = [
 ]
 
 export const ChatPage = () => {
+  const [chatId, setChatId] = useState<string | null>(null);
   const [messages, setMessages] = useState<Message[]>([
-    { id: '1', role: 'bot', text: "Hi! I'm Saga — your AI car expert. I've reviewed the report for the 2021 Porsche 911. I noticed a service history discrepancy at 32k miles. How can I help you today?" }
+    { id: 'initial', role: 'bot', text: "Hi! I'm Saga — your AI car expert. I can review inspection reports, estimate repairs, and help you negotiate safely. How can I help you today?" }
   ])
   const [input, setInput] = useState('')
   const [isTyping, setIsTyping] = useState(false)
@@ -26,29 +28,52 @@ export const ChatPage = () => {
   const navigate = useNavigate()
 
   useEffect(() => {
+    // Generate a fresh chat session on the backend
+    const initChat = async () => {
+      try {
+        const { data } = await api.post('/chat');
+        setChatId(data._id);
+      } catch (err) {
+        console.error("Failed to initialize chat session", err);
+      }
+    };
+    initChat();
+  }, []);
+
+  useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages, isTyping])
 
-  const handleSend = (text: string) => {
-    if (!text.trim()) return
-    const userMsg: Message = { id: Date.now().toString(), role: 'user', text }
-    setMessages(prev => [...prev, userMsg])
-    setInput('')
-    setIsTyping(true)
+  const handleSend = async (text: string) => {
+    if (!text.trim() || !chatId) return;
 
-    setTimeout(() => {
-      const responses = [
-        'Based on the report, the asking price is $1,200 below market average. The scratched fender repair estimate is $300-$500 at a certified shop. You have solid negotiation leverage here.',
-        'The service gap between 28k and 35k miles is concerning — it could indicate deferred maintenance. I recommend requesting the dealer\'s service records before proceeding.',
-        'Compared to similar 2021 models in your area, this one is priced competitively. The depreciation curve suggests it will hold value well over the next 3 years.',
-      ]
-      setMessages(prev => [...prev, {
-        id: (Date.now() + 1).toString(),
-        role: 'bot',
-        text: responses[Math.floor(Math.random() * responses.length)]
-      }])
-      setIsTyping(false)
-    }, 1800)
+    // Optimistically add user msg
+    const tempId = Date.now().toString();
+    setMessages(prev => [...prev, { id: tempId, role: 'user', text }]);
+    setInput('');
+    setIsTyping(true);
+
+    try {
+      const { data } = await api.post(`/chat/${chatId}/message`, { text });
+      
+      // Update with exact backend state formatting
+      const refreshedMessages = data.messages.map((m: any) => ({
+        id: m._id,
+        role: m.role,
+        text: m.text
+      }));
+      
+      // Preserve the initial welcome text
+      setMessages([
+        { id: 'initial', role: 'bot', text: "Hi! I'm Saga — your AI car expert. I can review inspection reports, estimate repairs, and help you negotiate safely. How can I help you today?" },
+        ...refreshedMessages
+      ]);
+    } catch (err) {
+      console.error("Sending message failed", err);
+      setMessages(prev => [...prev, { id: Date.now().toString(), role: 'bot', text: 'Error connecting to AI Server. Please try again later.' }]);
+    } finally {
+      setIsTyping(false);
+    }
   }
 
   return (
@@ -148,10 +173,10 @@ export const ChatPage = () => {
           />
           <button
             onClick={() => handleSend(input)}
-            disabled={!input.trim()}
+            disabled={!input.trim() || !chatId || isTyping}
             className="liquid-glass-btn w-10 h-10 rounded-xl flex items-center justify-center disabled:opacity-30 disabled:pointer-events-none"
           >
-            <Send size={16} className="text-white" />
+            {isTyping && !input ? <Loader2 size={16} className="text-white animate-spin" /> : <Send size={16} className="text-white" />}
           </button>
         </div>
       </div>

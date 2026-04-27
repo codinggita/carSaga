@@ -1,19 +1,79 @@
-import { useState, useCallback } from 'react'
+import { useState } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
-import { useDropzone } from 'react-dropzone'
-import { UploadCloud, Loader2, Search, Sparkles, RefreshCw, Lock, ScanLine, FileText, History, TrendingUp } from 'lucide-react'
+import { Loader2, Search, Sparkles, RefreshCw, Lock, ScanLine, FileText, History, TrendingUp, CheckCircle2, ImagePlus } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
+import api from '../services/api'
 
 export const VerificationPage = () => {
   const navigate = useNavigate()
   const [activeTab, setActiveTab] = useState<'visual' | 'vin'>('visual')
   const [vin, setVin] = useState('')
+  const [registration, setRegistration] = useState('')
+  const [isProcessing, setIsProcessing] = useState(false)
+  const [uploads, setUploads] = useState<Record<string, string | null>>({
+    front: null,
+    rear: null,
+    side: null,
+    interior: null,
+    engine: null,
+    underbody: null,
+  })
 
-  const onDrop = useCallback((acceptedFiles: File[]) => {
-    // In a real app, this would advance the pipeline and process images.
-    console.log("Files dropped", acceptedFiles)
-  }, [])
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop, accept: { 'image/*': [] } })
+  const uploadCount = Object.values(uploads).filter(Boolean).length;
+  const isFormValid = uploadCount === 6 && registration.trim().length > 0;
+
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>, slotId: string) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const url = URL.createObjectURL(file);
+      setUploads(prev => ({
+        ...prev,
+        [slotId]: url
+      }));
+    }
+  }
+
+  const GUIDE_SLOTS = [
+    { id: 'front', label: 'Front Profile', desc: 'Full grill and headlights' },
+    { id: 'rear', label: 'Rear Profile', desc: 'Bumper and tail lights' },
+    { id: 'side', label: 'Side Profile', desc: 'Doors and panel gaps' },
+    { id: 'interior', label: 'Interior/Dash', desc: 'Odometer and steering' },
+    { id: 'engine', label: 'Engine Bay', desc: 'Fluid caps and belts' },
+    { id: 'underbody', label: 'Underbody', desc: 'Rust and frame check' },
+  ]
+
+  const handleCreateReport = async () => {
+    if (!vin && activeTab === 'vin') return;
+    setIsProcessing(true);
+    
+    try {
+      // Locked to demo vehicle specified by user
+      const make = 'Toyota';
+      const model = 'Corolla';
+      const year = 2023;
+      const riskLevel = Math.random() > 0.8 ? 'medium' : 'low';
+      
+      const payload = {
+        vin: activeTab === 'vin' ? vin : registration,
+        make,
+        model,
+        year,
+        status: 'verified',
+        riskLevel
+      };
+      
+      await api.post('/cars', payload);
+      
+      // Artificial delay for UI effect
+      await new Promise((resume) => setTimeout(resume, 1500));
+      
+      navigate(`/dashboard`);
+    } catch (err) {
+      console.error('Failed to create report', err);
+      setIsProcessing(false);
+    }
+  };
+
 
   return (
     <div className="min-h-screen flex bg-white text-[#0f172a]">
@@ -85,53 +145,94 @@ export const VerificationPage = () => {
           <AnimatePresence mode="wait">
             {activeTab === 'visual' ? (
               <motion.div key="visual" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-6 flex-1 flex flex-col">
-                {/* Upload Dropzone */}
-                <div {...getRootProps()} className={`w-full relative bg-gradient-to-br from-[#FEFEFF] to-gray-50/50 p-10 flex flex-col items-center justify-center cursor-pointer transition-all hover:bg-gray-50/80 text-center rounded-3xl shrink-0 ${
-                  isDragActive ? 'border-[var(--color-primary)] border-2 shadow-sm' : 'border-2 border-dashed border-gray-200 hover:border-gray-300'
-                }`}>
-                  <input {...getInputProps()} />
-                  <div className="w-14 h-14 rounded-full bg-[#0f172a] shadow-lg shadow-gray-400/30 flex items-center justify-center mb-5 group-hover:scale-105 transition-transform">
-                    <UploadCloud size={24} className="text-white" />
-                  </div>
-                  <h3 className="text-lg font-extrabold text-[#D6EFFF] drop-shadow-sm" style={{ color: '#8fbce8' /* Matching the light pastel blue of screenshot */ }}>Drag & Drop Vehicle Media</h3>
-                  <p className="text-xs text-gray-400 max-w-xs font-semibold mt-1">Supported formats: JPG, PNG, HEIC. Upload multiple angles for comprehensive structural analysis.</p>
-                </div>
-
-                {/* AI Processing Preview Component */}
-                <div className="relative w-full rounded-3xl overflow-hidden bg-[#0a0f1c] aspect-[4/3] shadow-lg border border-gray-200/50 flex-shrink-0 mx-auto max-w-2xl group flex-1 min-h-[300px]">
-                  {/* The Car Image Placeholder */}
-                  <img src="https://images.unsplash.com/photo-1614200187524-dc4b892acf16?q=80&w=1000&auto=format&fit=crop" className="w-full h-full object-cover opacity-70" alt="Car scan" />
-                  
-                  {/* AI Bounding Boxes overlay */}
-                  <div className="absolute inset-0 pointer-events-none">
-                    {/* Scan Line */}
-                    <motion.div 
-                      animate={{ y: ['0%', '100%', '0%'] }} 
-                      transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}
-                      className="w-[120%] -left-[10%] h-[1px] bg-blue-400 shadow-[0_0_15px_#60a5fa] opacity-60 relative"
+                
+                {/* Registration & AI Guide Header Combined */}
+                <div className="flex flex-col gap-4 bg-white px-6 py-5 rounded-2xl shadow-sm border border-gray-100">
+                  <div className="flex flex-col gap-2 border-b border-gray-100 pb-5">
+                    <label htmlFor="reg-input" className="text-sm font-extrabold text-[#0f172a]">Registration Number <span className="text-red-500">*</span></label>
+                    <input
+                      id="reg-input"
+                      type="text"
+                      value={registration}
+                      onChange={(e) => setRegistration(e.target.value.toUpperCase())}
+                      placeholder="e.g. MH 12 AB 1234"
+                      className="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 text-lg font-mono tracking-wider text-[#0f172a] focus:outline-none focus:border-[var(--color-primary)] focus:ring-1 focus:ring-[var(--color-primary)] transition-all placeholder-gray-400"
                     />
-                    
-                    {/* Bounding Box 1 */}
-                    <div className="absolute top-[35%] left-[25%] w-[120px] h-[80px] border border-blue-300 bg-blue-400/10 rounded-sm">
-                      <div className="absolute -top-7 left-0 bg-blue-300 backdrop-blur-md px-2 py-1 rounded-sm text-[9px] font-mono text-[#0f172a] font-extrabold leading-tight shadow-sm">
-                        headlight_L:<br/>95%
-                      </div>
-                    </div>
-                    
-                    {/* Bounding Box 2 */}
-                    <div className="absolute top-[55%] right-[25%] w-[140px] h-[140px] border border-emerald-400 bg-emerald-400/10 rounded-sm">
-                      <div className="absolute -top-5 left-0 bg-emerald-400 backdrop-blur-md px-2 py-1 rounded-sm text-[9px] font-mono text-[#0f172a] font-extrabold shadow-sm">
-                        Panel_Gap_OK
-                      </div>
-                    </div>
                   </div>
 
-                  {/* Processing Badge */}
-                  <div className="absolute top-4 right-4 bg-[#0f172a]/70 backdrop-blur-xl border border-emerald-500/30 px-3 py-1.5 rounded-full flex items-center gap-2 shadow-lg">
-                    <Loader2 size={12} className="text-emerald-400 animate-spin" />
-                    <span className="text-[10px] font-extrabold text-emerald-400 font-mono tracking-wider">Processing: 42%</span>
+                  <div className="flex items-center justify-between pt-1">
+                    <div>
+                      <h3 className="text-lg font-extrabold text-[#0f172a]">AI Upload Guide <span className="text-red-500">*</span></h3>
+                      <p className="text-xs font-semibold text-[var(--color-text-secondary)] mt-0.5">Please provide images for all critical verification zones.</p>
+                    </div>
+                    <div className="flex flex-col items-end">
+                      <span className="text-sm font-extrabold text-[var(--color-primary)]">{uploadCount} / 6 Zones</span>
+                      <div className="w-32 h-2 bg-gray-100 rounded-full mt-2 overflow-hidden">
+                        <motion.div 
+                          initial={{ width: 0 }}
+                          animate={{ width: `${(uploadCount / 6) * 100}%` }}
+                          className="h-full bg-[var(--color-primary)] rounded-full"
+                        />
+                      </div>
+                    </div>
                   </div>
                 </div>
+
+                {/* Upload Guide Grid */}
+                <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 shrink-0">
+                  {GUIDE_SLOTS.map((slot) => {
+                    const isUploaded = !!uploads[slot.id]
+                    return (
+                      <label 
+                        key={slot.id}
+                        className={`relative group h-40 rounded-2xl border-2 transition-all cursor-pointer overflow-hidden flex flex-col items-center justify-center p-4 text-center ${
+                          isUploaded 
+                            ? 'border-[var(--color-primary)] bg-[var(--color-primary)]/5' 
+                            : 'border-dashed border-gray-200 hover:border-[var(--color-primary)] bg-white'
+                        }`}
+                      >
+                        <input 
+                          type="file" 
+                          accept="image/*" 
+                          className="hidden" 
+                          onChange={(e) => handleFileUpload(e, slot.id)} 
+                        />
+                        {isUploaded && uploads[slot.id] ? (
+                          <>
+                            <img src={uploads[slot.id] as string} alt={slot.label} className="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-80" />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
+                            <div className="relative z-10 flex flex-col items-center h-full justify-end pb-2">
+                              <CheckCircle2 size={24} className="text-[var(--color-primary)] drop-shadow-md mb-1" />
+                              <span className="text-xs font-bold text-white drop-shadow-md">{slot.label} recorded</span>
+                            </div>
+                          </>
+                        ) : (
+                          <>
+                            <ImagePlus size={28} className="text-gray-300 mb-2 group-hover:text-[var(--color-primary)] transition-colors" />
+                            <h4 className="text-sm font-bold text-[#0f172a]">{slot.label}</h4>
+                            <p className="text-[10px] font-semibold text-[var(--color-text-secondary)] mt-1">{slot.desc}</p>
+                          </>
+                        )}
+                      </label>
+                    )
+                  })}
+                </div>
+
+                {/* Action button if completely uploaded */}
+                <button 
+                  onClick={handleCreateReport} 
+                  disabled={!isFormValid || isProcessing}
+                  className={`w-full py-4.5 rounded-2xl text-sm font-bold flex justify-center items-center gap-2 transition-all shadow-lg mt-auto ${
+                    isFormValid 
+                      ? 'liquid-glass-btn text-white shadow-[var(--color-primary-glow)] hover:opacity-90' 
+                      : 'bg-white text-gray-400 cursor-not-allowed shadow-sm border border-gray-100'
+                  }`}
+                >
+                  {isProcessing ? <><Loader2 size={18} className="animate-spin" /> Running Deep Neural Scan...</> 
+                  : isFormValid ? 'Initiate Deep Neural Scan' 
+                  : registration.trim().length === 0 ? 'Enter Registration Number to proceed'
+                  : `Upload ${6 - uploadCount} more images to proceed`}
+                </button>
               </motion.div>
             ) : (
               <motion.div key="vin" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="bg-white border border-gray-100 p-12 flex flex-col items-center justify-center text-center rounded-3xl shadow-sm flex-1 min-h-[400px]">
@@ -145,11 +246,16 @@ export const VerificationPage = () => {
                   value={vin}
                   onChange={(e) => setVin(e.target.value.toUpperCase())}
                   maxLength={17}
+                  disabled={isProcessing}
                   placeholder="JTDBT••••••••••••"
-                  className="w-full max-w-md bg-gray-50 border border-gray-200 rounded-2xl p-6 text-center text-2xl font-mono tracking-[0.2em] text-[#0f172a] focus:outline-none focus:border-[var(--color-primary)] focus:ring-1 focus:ring-[var(--color-primary)] transition-all placeholder-gray-300 shadow-inner"
+                  className="w-full max-w-md bg-gray-50 border border-gray-200 rounded-2xl p-6 text-center text-2xl font-mono tracking-[0.2em] text-[#0f172a] focus:outline-none focus:border-[var(--color-primary)] focus:ring-1 focus:ring-[var(--color-primary)] transition-all placeholder-gray-300 shadow-inner disabled:opacity-50"
                 />
-                <button className="bg-[var(--color-primary)] hover:bg-[#eb5a46] text-white w-full max-w-md py-4 rounded-xl text-sm font-bold mt-8 shadow-lg shadow-[var(--color-primary-glow)] transition-all">
-                  Lookup Vehicle Intelligence
+                <button 
+                  onClick={handleCreateReport} 
+                  disabled={isProcessing}
+                  className="bg-[var(--color-primary)] hover:bg-[#eb5a46] text-white w-full max-w-md py-4 rounded-xl text-sm font-bold mt-8 shadow-lg shadow-[var(--color-primary-glow)] transition-all flex justify-center items-center gap-2 cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed"
+                >
+                  {isProcessing ? <><Loader2 size={18} className="animate-spin" /> Processing AI Models...</> : 'Lookup Vehicle Intelligence'}
                 </button>
               </motion.div>
             )}

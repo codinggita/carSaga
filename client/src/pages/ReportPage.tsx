@@ -1,6 +1,11 @@
+import { useEffect, useState, useRef } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { BarChart, Bar, XAxis, Tooltip, ResponsiveContainer } from 'recharts'
-import { AlertTriangle, MapPin, Search, ArrowLeft, CheckCircle, MessageSquare, Share2, Download, Eye } from 'lucide-react'
+import { AlertTriangle, MapPin, Search, ArrowLeft, CheckCircle, MessageSquare, Share2, Download, Eye, Loader2 } from 'lucide-react'
+import api from '../services/api'
+import { getCarImage } from '../utils/imageUtils'
+import jsPDF from 'jspdf'
+import html2canvas from 'html2canvas'
 
 import reportData from '../data/reportData.json'
 
@@ -9,6 +14,70 @@ const { maintenanceData, findings } = reportData;
 export const ReportPage = () => {
   const { id } = useParams()
   const navigate = useNavigate()
+  const [carData, setCarData] = useState<any>(null)
+  const [isLoading, setIsLoading] = useState(true)
+  const [isExporting, setIsExporting] = useState(false)
+  const reportRef = useRef<HTMLDivElement>(null)
+
+  const handleExportPDF = async () => {
+    if (!reportRef.current) return;
+    setIsExporting(true);
+    try {
+      const canvas = await html2canvas(reportRef.current, {
+        scale: 2,
+        useCORS: true,
+        allowTaint: true,
+        backgroundColor: '#f8fafc',
+        logging: false,
+      });
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = pdf.internal.pageSize.getHeight();
+      const imgWidth = pdfWidth - 16; // 8mm margin each side
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      let heightLeft = imgHeight;
+      let position = 8; // top margin
+
+      pdf.addImage(imgData, 'PNG', 8, position, imgWidth, imgHeight);
+      heightLeft -= (pdfHeight - 16);
+
+      while (heightLeft > 0) {
+        position = heightLeft - imgHeight + 8;
+        pdf.addPage();
+        pdf.addImage(imgData, 'PNG', 8, position, imgWidth, imgHeight);
+        heightLeft -= (pdfHeight - 16);
+      }
+
+      const fileName = carData 
+        ? `CarSaga_Report_${carData.year}_${carData.make}_${carData.model}.pdf`
+        : `CarSaga_Report.pdf`;
+      pdf.save(fileName);
+    } catch (err) {
+      console.error('PDF export failed', err);
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
+  useEffect(() => {
+    const checkAuthAndFetch = async () => {
+      try {
+        const { data } = await api.get(`/cars/${id}`);
+        setCarData(data);
+      } catch (err) {
+        console.error('Failed to fetch car details, logging out or navigating back', err);
+        navigate('/dashboard');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    if (id) checkAuthAndFetch();
+  }, [id, navigate]);
+
+  if (isLoading) {
+    return <div className="min-h-screen bg-[var(--color-bg-deep)] flex items-center justify-center"><Loader2 className="w-10 h-10 text-[var(--color-primary)] animate-spin" /></div>;
+  }
 
   return (
     <div className="min-h-screen bg-[var(--color-bg-deep)] text-[var(--color-text-primary)]">
@@ -29,14 +98,14 @@ export const ReportPage = () => {
             <button className="ghost-btn px-4 py-2 rounded-xl text-sm font-bold text-[#0f172a] flex items-center gap-2">
               <Share2 size={14} /> Share
             </button>
-            <button className="liquid-glass-btn px-4 py-2 rounded-xl text-sm font-bold text-white flex items-center gap-2">
-              <Download size={14} /> Export PDF
+            <button onClick={handleExportPDF} disabled={isExporting} className="liquid-glass-btn px-4 py-2 rounded-xl text-sm font-bold text-white flex items-center gap-2 disabled:opacity-70">
+              {isExporting ? <><Loader2 size={14} className="animate-spin" /> Exporting...</> : <><Download size={14} /> Export PDF</>}
             </button>
           </div>
         </div>
       </nav>
 
-      <main className="max-w-7xl mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-3 gap-8 relative z-10">
+      <main ref={reportRef} className="max-w-7xl mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-3 gap-8 relative z-10">
         <div className="glow-orb w-[600px] h-[600px] bg-[var(--color-primary-light)] opacity-20 top-[10%] left-[-100px] absolute pointer-events-none" />
         
         {/* Left: Main Content */}
@@ -48,15 +117,20 @@ export const ReportPage = () => {
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
               <div>
                 <div className="flex items-center gap-3 mb-3">
-                  <span className="verified-badge px-3 py-1 text-xs font-extrabold flex items-center gap-1.5 bg-emerald-50 text-emerald-600 border border-emerald-100">
-                    <CheckCircle size={12} /> Verified
+                  <span className={`verified-badge px-3 py-1 text-xs font-extrabold flex items-center gap-1.5 ${
+                    carData?.status === 'verified' ? 'bg-emerald-50 text-emerald-600 border border-emerald-100' : 'bg-amber-50 text-amber-600 border border-amber-100'
+                  }`}>
+                    {carData?.status === 'verified' && <CheckCircle size={12} />} 
+                    <span className="capitalize">{carData?.status || 'Pending'}</span>
                   </span>
-                  <span className="px-3 py-1 text-xs font-extrabold rounded-full bg-amber-50 text-amber-600 border border-amber-100">
-                    Medium Risk
+                  <span className={`px-3 py-1 text-xs font-extrabold rounded-full capitalize ${
+                    carData?.riskLevel === 'low' ? 'bg-emerald-50 text-emerald-600 border border-emerald-100' : carData?.riskLevel === 'high' ? 'bg-red-50 text-red-600 border border-red-100' : 'bg-amber-50 text-amber-600 border border-amber-100'
+                  }`}>
+                    {carData?.riskLevel || 'Medium'} Risk
                   </span>
                 </div>
-                <h1 className="text-3xl font-extrabold tracking-tight mb-1 text-[#0f172a]">2019 Toyota Prius</h1>
-                <p className="text-[var(--color-text-secondary)] text-sm font-mono font-medium">VIN: JTDKNAM32X012****</p>
+                <h1 className="text-3xl font-extrabold tracking-tight mb-1 text-[#0f172a]">{carData?.year} {carData?.make} {carData?.model}</h1>
+                <p className="text-[var(--color-text-secondary)] text-sm font-mono font-medium drop-shadow-sm uppercase">Reg: {carData?.vin || 'MH 12 AB 1234'}</p>
               </div>
               <div className="flex gap-4">
                 {reportData.overviewStats.map((stat, i) => (
@@ -79,7 +153,7 @@ export const ReportPage = () => {
             </div>
 
             <div className="w-full aspect-video rounded-xl overflow-hidden relative bg-gray-100 border border-gray-200 mb-6">
-              <img src="https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&q=80&w=1200" className="w-full h-full object-cover opacity-90" alt="Car analysis" />
+              <img src={getCarImage(carData?.make, carData?.model)} className="w-full h-full object-cover opacity-90" alt="Car analysis" />
 
               {/* Hotspot overlay */}
               <div className="absolute top-[25%] right-[30%]">
@@ -94,7 +168,7 @@ export const ReportPage = () => {
               <div className="absolute bottom-0 left-0 right-0 px-6 py-4 bg-gradient-to-t from-black/80 to-transparent flex items-center justify-between">
                 <span className="text-xs text-gray-200 font-medium">Click hotspots for details</span>
                 <span className="flex items-center gap-1.5 text-xs text-amber-400 font-bold">
-                  <AlertTriangle size={12} /> 1 Issue Found
+                  <AlertTriangle size={12} /> 0 Issues Found
                 </span>
               </div>
             </div>
@@ -130,13 +204,13 @@ export const ReportPage = () => {
                     cursor={{ fill: 'rgba(0,0,0,0.02)' }}
                     contentStyle={{ backgroundColor: 'rgba(255,255,255,0.95)', borderColor: 'var(--color-border-glass)', borderRadius: '12px', color: '#0f172a', fontWeight: 'bold', boxShadow: '0 4px 12px rgba(0,0,0,0.05)' }}
                     itemStyle={{ color: '#FE654F', fontWeight: 'extrabold' }}
-                    formatter={(value: any) => [`$${value}`, 'Est. Cost']}
+                    formatter={(value: any) => [`₹${value.toLocaleString('en-IN')}`, 'Est. Cost']}
                   />
                   <Bar dataKey="cost" fill="url(#barGrad)" radius={[8, 8, 0, 0]} barSize={48} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
-            <p className="text-[var(--color-text-secondary)] text-xs mt-4 text-center font-medium">Spike in 2030 due to timing belt + water pump replacements based on model history.</p>
+            <p className="text-[var(--color-text-secondary)] text-xs mt-4 text-center font-medium">Spike in 2030 due to timing belt + water pump replacements based on Toyota Corolla service history.</p>
           </div>
         </div>
 
@@ -146,12 +220,26 @@ export const ReportPage = () => {
           <div className="glass-card p-6 bg-white">
             <h3 className="text-lg font-extrabold mb-5 text-[#0f172a]">Vehicle Specs</h3>
             <dl className="space-y-4 text-sm">
-              {reportData.vehicleSpecs.map((item: any, i: number) => (
-                <div key={i} className="flex justify-between items-center pb-3 border-b border-gray-100 last:border-0 last:pb-0">
-                  <dt className="text-[var(--color-text-secondary)] font-medium">{item.label}</dt>
-                  <dd className={`${item.mono ? 'font-mono text-xs' : ''} ${item.bold ? 'font-extrabold' : 'font-bold'} text-[#0f172a]`}>{item.value}</dd>
-                </div>
-              ))}
+              <div className="flex justify-between items-center pb-3 border-b border-gray-100">
+                <dt className="text-[var(--color-text-secondary)] font-medium">Reg. No.</dt>
+                <dd className="font-mono text-xs font-bold text-[#0f172a]">{carData?.vin || 'MH 12 AB 1234'}</dd>
+              </div>
+              <div className="flex justify-between items-center pb-3 border-b border-gray-100">
+                <dt className="text-[var(--color-text-secondary)] font-medium">Make / Model</dt>
+                <dd className="font-extrabold text-[#0f172a]">{carData?.make} {carData?.model}</dd>
+              </div>
+              <div className="flex justify-between items-center pb-3 border-b border-gray-100">
+                <dt className="text-[var(--color-text-secondary)] font-medium">Year</dt>
+                <dd className="font-extrabold text-[#0f172a]">{carData?.year}</dd>
+              </div>
+              <div className="flex justify-between items-center pb-3 border-b border-gray-100">
+                <dt className="text-[var(--color-text-secondary)] font-medium">Odometer</dt>
+                <dd className="font-bold text-[#0f172a]">~22,310 km</dd>
+              </div>
+              <div className="flex justify-between items-center pb-3 border-b border-gray-100">
+                <dt className="text-[var(--color-text-secondary)] font-medium">Previous Owners</dt>
+                <dd className="font-bold text-[#0f172a]">1</dd>
+              </div>
             </dl>
           </div>
 

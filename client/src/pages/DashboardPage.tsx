@@ -1,6 +1,12 @@
+import { useEffect, useState } from 'react'
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
-import { Activity, Car, CheckCircle2, Search, Settings, HelpCircle, LogOut, Shield, Plus, TrendingUp, MessageSquare, BarChart3 } from 'lucide-react'
+import { Activity, Car, CheckCircle2, Search, Settings, HelpCircle, LogOut, Shield, Plus, TrendingUp, MessageSquare, BarChart3, Loader2 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
+import { useSelector, useDispatch } from 'react-redux'
+import type { RootState } from '../store'
+import { logout } from '../store/authSlice'
+import api from '../services/api'
+import { getCarImage } from '../utils/imageUtils'
 
 import dashboardData from '../data/dashboardData.json'
 
@@ -15,8 +21,42 @@ const navItems = [
   { icon: MessageSquare, label: 'Saga AI', path: '/chat' },
 ]
 
+export interface Vehicle {
+  _id: string;
+  make: string;
+  model: string;
+  year: number;
+  status: 'pending' | 'verified' | 'flagged';
+  riskLevel: 'low' | 'medium' | 'high';
+  createdAt: string;
+}
+
 export const DashboardPage = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { user } = useSelector((state: RootState) => state.auth);
+  
+  const [vehicles, setVehicles] = useState<Vehicle[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchCars = async () => {
+      try {
+        const { data } = await api.get('/cars');
+        setVehicles(data);
+      } catch (error) {
+        console.error("Failed to load cars", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchCars();
+  }, []);
+
+  const handleLogout = () => {
+    dispatch(logout());
+    navigate('/sign-in');
+  };
 
   return (
     <div className="min-h-screen bg-[var(--color-bg-deep)] text-[var(--color-text-primary)] flex">
@@ -61,11 +101,11 @@ export const DashboardPage = () => {
               RJ
             </div>
             <div className="flex flex-col text-sm">
-              <span className="font-semibold text-[#0f172a]">Rituraj</span>
-              <span className="text-[var(--color-text-muted)] text-xs">Buyer • Free Plan</span>
+              <span className="font-semibold text-[#0f172a]">{user?.name || 'User'}</span>
+              <span className="text-[var(--color-text-muted)] text-xs capitalize">{user?.role || 'Buyer'} • Free Plan</span>
             </div>
           </div>
-          <button onClick={() => navigate('/')} className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium text-red-500 hover:bg-red-500/10 transition-colors">
+          <button onClick={handleLogout} className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium text-red-500 hover:bg-red-500/10 transition-colors">
             <LogOut size={16} /> Sign Out
           </button>
         </div>
@@ -155,33 +195,38 @@ export const DashboardPage = () => {
               <button className="text-xs text-[var(--color-primary)] hover:underline font-semibold">View all</button>
             </div>
             <div className="space-y-2">
-              {dashboardData.recentCars.map((car) => (
+              {isLoading ? (
+                <div className="flex justify-center p-8"><Loader2 className="animate-spin text-[var(--color-primary)]" /></div>
+              ) : vehicles.length === 0 ? (
+                <div className="text-center p-8 text-[var(--color-text-muted)] text-sm">No vehicles added yet. Start a new report!</div>
+              ) : vehicles.map((car) => (
                 <div
-                  key={car.id}
-                  onClick={() => navigate(`/report/${car.id}`)}
+                  key={car._id}
+                  onClick={() => navigate(`/report/${car._id}`)}
                   className="flex items-center justify-between px-4 py-3.5 rounded-xl bg-white border border-gray-100 hover:bg-gray-50 hover:border-gray-200 cursor-pointer transition-all group shadow-sm"
                 >
                   <div className="flex items-center gap-4">
-                    <div className="w-10 h-10 rounded-lg bg-gray-50 flex items-center justify-center group-hover:bg-[var(--color-primary)]/10 transition-colors border border-gray-100">
-                      <Car size={18} className="text-gray-400 group-hover:text-[var(--color-primary)]" />
+                    <div className="w-12 h-12 rounded-lg bg-gray-50 flex items-center justify-center overflow-hidden border border-gray-100 shrink-0 shadow-sm relative group-hover:border-[var(--color-primary)]/50 transition-colors">
+                      <img src={getCarImage(car.make, car.model)} alt={`${car.make} ${car.model}`} className="w-full h-full object-cover" />
                     </div>
                     <div>
                       <p className="text-sm font-bold text-[#0f172a]">{car.year} {car.make} {car.model}</p>
-                      <p className="text-xs text-[var(--color-text-secondary)]">{car.date}</p>
+                      <p className="text-xs text-[var(--color-text-secondary)]">{new Date(car.createdAt).toLocaleDateString()}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
-                    <span className={`text-[11px] font-bold px-2.5 py-1 rounded-full ${
-                      car.risk === 'Low' ? 'bg-emerald-50 text-emerald-600 border border-emerald-100' :
-                      car.risk === 'Medium' ? 'bg-amber-50 text-amber-600 border border-amber-100' :
+                    <span className={`text-[11px] font-bold px-2.5 py-1 rounded-full capitalize ${
+                      car.riskLevel === 'low' ? 'bg-emerald-50 text-emerald-600 border border-emerald-100' :
+                      car.riskLevel === 'medium' ? 'bg-amber-50 text-amber-600 border border-amber-100' :
                       'bg-red-50 text-red-600 border border-red-100'
                     }`}>
-                      {car.risk} Risk
+                      {car.riskLevel} Risk
                     </span>
-                    <span className={`text-[11px] font-bold px-2.5 py-1 rounded-full ${
-                      car.status === 'Verified'
+                    <span className={`text-[11px] font-bold px-2.5 py-1 rounded-full capitalize ${
+                      car.status === 'verified'
                         ? 'bg-emerald-50 text-emerald-600 border border-emerald-100'
-                        : 'bg-red-50 text-red-600 border border-red-100'
+                        : car.status === 'flagged' ? 'bg-red-50 text-red-600 border border-red-100'
+                        : 'bg-amber-50 text-amber-600 border border-amber-100'
                     }`}>
                       {car.status}
                     </span>

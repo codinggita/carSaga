@@ -1,22 +1,22 @@
 @import "tailwindcss";
 
 @theme {
-  /* ── CarSaga 2026 Color Palette (Warm & Clean UI) ── */
-  --color-primary: #FE654F;         /* Tomato */
-  --color-primary-light: #FED99B;   /* Apricot Peach */
-  --color-primary-glow: rgba(254, 101, 79, 0.4);
-  --color-emerald: #10b981;         /* Verified / Trust Green */
-  --color-emerald-glow: rgba(16, 185, 129, 0.35);
-  --color-warning: #FED18C;         /* Apricot Cream */
+  /* ── CarSaga 2026 Color Palette (Earthy Light UI) ── */
+  --color-primary: #8AAA79;         /* Sage Green */
+  --color-primary-light: #657153;   /* Dusty Olive */
+  --color-primary-glow: rgba(138, 170, 121, 0.4);
+  --color-emerald: #8AAA79;         /* Sage Green */
+  --color-emerald-glow: rgba(138, 170, 121, 0.35);
+  --color-warning: #837569;         /* Taupe */
   --color-danger: #ef4444;          /* Flagged Red */
 
-  /* ── Surfaces (Clean Light Mode features) ── */
-  --color-bg-deep: #FEFEFF;         /* White Page background */
-  --color-bg-card: rgba(255, 255, 255, 0.7); /* glass on white */
-  --color-bg-elevated: rgba(214, 239, 255, 0.4); /* Pale sky for elevation */
+  /* ── Surfaces (Earthy/Light Mode features) ── */
+  --color-bg-deep: #D1D5DE;         /* Pale Slate (1) */
+  --color-bg-card: rgba(255, 255, 255, 0.75); 
+  --color-bg-elevated: rgba(183, 182, 194, 0.4); /* Pale Slate (2) */
   --color-bg-glass: rgba(255, 255, 255, 0.6);
   --color-bg-glass-hover: rgba(255, 255, 255, 0.9);
-  --color-border-glass: rgba(0, 0, 0, 0.05); /* very subtle dark border */
+  --color-border-glass: rgba(0, 0, 0, 0.05); 
   --color-border-subtle: rgba(0, 0, 0, 0.03);
   
   /* ── Tonal Layering (Stitch Specs) ── */
@@ -25,9 +25,9 @@
   --color-outline-variant: rgba(0, 0, 0, 0.15); /* Ghost Border */
 
   /* ── Text ── */
-  --color-text-primary: #0f172a;
+  --color-text-primary: #1e293b;
   --color-text-secondary: #475569;
-  --color-text-muted: #94a3b8;
+  --color-text-muted: #64748b;
 
   /* ── Typography ── */
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
@@ -142,7 +142,7 @@
 
   /* ─── Liquid Glass Button ─── */
   .liquid-glass-btn {
-    background: linear-gradient(135deg, var(--color-primary), #FB7A6A);
+    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-light));
     position: relative;
     overflow: hidden;
     border: none;

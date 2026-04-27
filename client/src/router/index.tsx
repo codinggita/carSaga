@@ -1,6 +1,7 @@
 import { createBrowserRouter } from 'react-router-dom'
 import { LandingPage } from '@/pages/LandingPage'
-import { AuthPage } from '@/pages/AuthPage'
+import { SignInPage } from '@/pages/SignInPage'
+import { RegisterPage } from '@/pages/RegisterPage'
 import { DashboardPage } from '@/pages/DashboardPage'
 import { VerificationPage } from '@/pages/VerificationPage'
 import { ReportPage } from '@/pages/ReportPage'
@@ -13,8 +14,12 @@ export const router = createBrowserRouter([
     element: <LandingPage />,
   },
   {
-    path: '/auth',
-    element: <AuthPage />,
+    path: '/sign-in',
+    element: <SignInPage />,
+  },
+  {
+    path: '/register',
+    element: <RegisterPage />,
   },
   {
     path: '/dashboard',
