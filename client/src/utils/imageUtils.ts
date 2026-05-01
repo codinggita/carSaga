@@ -1,4 +1,9 @@
-export const getCarImage = (make?: string, model?: string) => {
+export const getCarImage = (make?: string, model?: string, brandImage?: string) => {
+  // If we have a brand logo from the API, use it
+  if (brandImage) {
+    return brandImage;
+  }
+
   if (!make || !model) {
     return '/toyota-corolla-2023.jpg';
   }

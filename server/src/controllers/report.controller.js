@@ -30,3 +30,14 @@ exports.getReportById = async (req, res, next) => {
     next(err);
   }
 };
+
+// GET /api/reports/car/:carId
+exports.getReportByCarId = async (req, res, next) => {
+  try {
+    const report = await Report.findOne({ car: req.params.carId }).sort({ createdAt: -1 }).populate('car');
+    if (!report) return res.status(404).json({ message: 'Report not found for this car' });
+    res.status(200).json(report);
+  } catch (err) {
+    next(err);
+  }
+};

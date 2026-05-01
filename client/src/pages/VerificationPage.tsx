@@ -1,15 +1,20 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
-import { Loader2, Search, Sparkles, RefreshCw, Lock, ScanLine, FileText, History, TrendingUp, CheckCircle2, ImagePlus } from 'lucide-react'
+import { Loader2, Search, Sparkles, RefreshCw, Lock, ScanLine, FileText, History, TrendingUp, CheckCircle2, ImagePlus, AlertCircle } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import api from '../services/api'
+import { CarSelector } from '../components/CarSelector'
+import carDatabaseService from '../services/carDatabase.service'
 
 export const VerificationPage = () => {
   const navigate = useNavigate()
   const [activeTab, setActiveTab] = useState<'visual' | 'vin'>('visual')
   const [vin, setVin] = useState('')
+  const [location, setLocation] = useState('')
   const [registration, setRegistration] = useState('')
   const [isProcessing, setIsProcessing] = useState(false)
+  const [isFetchingChallan, setIsFetchingChallan] = useState(false)
+  const [challanInfo, setChallanInfo] = useState<any>(null)
   const [uploads, setUploads] = useState<Record<string, string | null>>({
     front: null,
     rear: null,
@@ -20,7 +25,8 @@ export const VerificationPage = () => {
   })
 
   const uploadCount = Object.values(uploads).filter(Boolean).length;
-  const isFormValid = uploadCount === 6 && registration.trim().length > 0;
+  const [selectedCar, setSelectedCar] = useState({ make: '', model: '', year: 2023, brandImage: '' });
+  const isFormValid = uploadCount === 6 && registration.trim().length > 0 && selectedCar.make !== '';
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>, slotId: string) => {
     const file = e.target.files?.[0];
@@ -30,6 +36,21 @@ export const VerificationPage = () => {
         ...prev,
         [slotId]: url
       }));
+    }
+  }
+
+  const handleCheckChallan = async () => {
+    if (!registration) return;
+    setIsFetchingChallan(true);
+    setChallanInfo(null);
+    try {
+      const data = await carDatabaseService.getChallan(registration);
+      setChallanInfo(data);
+    } catch (err) {
+      console.error('Failed to fetch challan info', err);
+      setChallanInfo({ totalChallan: 0, statusMessage: "Could not retrieve records" });
+    } finally {
+      setIsFetchingChallan(false);
     }
   }
 
@@ -44,30 +65,35 @@ export const VerificationPage = () => {
 
   const handleCreateReport = async () => {
     if (!vin && activeTab === 'vin') return;
+    if (!selectedCar.make) return;
     setIsProcessing(true);
     
     try {
-      // Locked to demo vehicle specified by user
-      const make = 'Toyota';
-      const model = 'Corolla';
-      const year = 2023;
-      const riskLevel = Math.random() > 0.8 ? 'medium' : 'low';
+      const riskLevel = challanInfo?.totalChallan > 0 ? 'high' : (Math.random() > 0.8 ? 'medium' : 'low');
       
       const payload = {
         vin: activeTab === 'vin' ? vin : registration,
-        make,
-        model,
-        year,
+        make: selectedCar.make,
+        model: selectedCar.model,
+        year: selectedCar.year,
         status: 'verified',
-        riskLevel
+        riskLevel,
+        location: location,
+        brandImage: selectedCar.brandImage,
+        challanStatus: challanInfo ? {
+          totalChallan: challanInfo.totalChallan || 0,
+          statusMessage: challanInfo.statusMessage || 'No data',
+          result: challanInfo.result || null,
+        } : undefined,
       };
       
-      await api.post('/cars', payload);
+      const { data } = await api.post('/cars', payload);
       
       // Artificial delay for UI effect
       await new Promise((resume) => setTimeout(resume, 1500));
       
-      navigate(`/dashboard`);
+      // Navigate to the auto-generated report
+      navigate(`/report/${data.car._id}`);
     } catch (err) {
       console.error('Failed to create report', err);
       setIsProcessing(false);
@@ -148,16 +174,51 @@ export const VerificationPage = () => {
                 
                 {/* Registration & AI Guide Header Combined */}
                 <div className="flex flex-col gap-4 bg-white px-6 py-5 rounded-2xl shadow-sm border border-gray-100">
-                  <div className="flex flex-col gap-2 border-b border-gray-100 pb-5">
-                    <label htmlFor="reg-input" className="text-sm font-extrabold text-[#0f172a]">Registration Number <span className="text-red-500">*</span></label>
-                    <input
-                      id="reg-input"
-                      type="text"
-                      value={registration}
-                      onChange={(e) => setRegistration(e.target.value.toUpperCase())}
-                      placeholder="e.g. MH 12 AB 1234"
-                      className="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 text-lg font-mono tracking-wider text-[#0f172a] focus:outline-none focus:border-[var(--color-primary)] focus:ring-1 focus:ring-[var(--color-primary)] transition-all placeholder-gray-400"
-                    />
+                  <div className="flex flex-col gap-4 border-b border-gray-100 pb-5">
+                    <div className="flex flex-col gap-2">
+                      <label htmlFor="reg-input" className="text-sm font-extrabold text-[#0f172a]">Registration Number <span className="text-red-500">*</span></label>
+                      <div className="flex gap-2">
+                        <input
+                          id="reg-input"
+                          type="text"
+                          value={registration}
+                          onChange={(e) => {
+                            setRegistration(e.target.value.toUpperCase());
+                            setChallanInfo(null);
+                          }}
+                          placeholder="e.g. MH 12 AB 1234"
+                          className="flex-1 bg-gray-50 border border-gray-200 rounded-xl p-3 text-lg font-mono tracking-wider text-[#0f172a] focus:outline-none focus:border-[var(--color-primary)] focus:ring-1 focus:ring-[var(--color-primary)] transition-all placeholder-gray-400"
+                        />
+                        <button 
+                          onClick={handleCheckChallan}
+                          disabled={isFetchingChallan || !registration}
+                          className="bg-[#0f172a] hover:bg-[#1e293b] text-white px-4 rounded-xl font-bold text-sm transition-colors flex items-center justify-center min-w-[120px] disabled:opacity-50"
+                        >
+                          {isFetchingChallan ? <Loader2 size={16} className="animate-spin" /> : 'Check Challans'}
+                        </button>
+                      </div>
+                      {challanInfo && (
+                        <div className={`text-sm p-3 rounded-lg border flex items-start gap-2 mt-1 ${challanInfo.totalChallan > 0 ? 'bg-red-50 border-red-200 text-red-800' : 'bg-green-50 border-green-200 text-green-800'}`}>
+                          {challanInfo.totalChallan > 0 ? <AlertCircle size={16} className="mt-0.5 shrink-0" /> : <CheckCircle2 size={16} className="mt-0.5 shrink-0" />}
+                          <div>
+                            <span className="font-bold">{challanInfo.statusMessage}</span>
+                            {challanInfo.totalChallan > 0 && <span className="block text-xs mt-0.5">Found {challanInfo.totalChallan} pending challan(s). Review before verification.</span>}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <label htmlFor="loc-input" className="text-sm font-extrabold text-[#0f172a]">Location</label>
+                      <input
+                        id="loc-input"
+                        type="text"
+                        value={location}
+                        onChange={(e) => setLocation(e.target.value)}
+                        placeholder="e.g. Mumbai, MH"
+                        className="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 text-lg text-[#0f172a] focus:outline-none focus:border-[var(--color-primary)] focus:ring-1 focus:ring-[var(--color-primary)] transition-all placeholder-gray-400"
+                      />
+                    </div>
+                    <CarSelector onSelect={setSelectedCar} disabled={isProcessing} />
                   </div>
 
                   <div className="flex items-center justify-between pt-1">
@@ -250,6 +311,17 @@ export const VerificationPage = () => {
                   placeholder="JTDBT••••••••••••"
                   className="w-full max-w-md bg-gray-50 border border-gray-200 rounded-2xl p-6 text-center text-2xl font-mono tracking-[0.2em] text-[#0f172a] focus:outline-none focus:border-[var(--color-primary)] focus:ring-1 focus:ring-[var(--color-primary)] transition-all placeholder-gray-300 shadow-inner disabled:opacity-50"
                 />
+                <input
+                  type="text"
+                  value={location}
+                  onChange={(e) => setLocation(e.target.value)}
+                  disabled={isProcessing}
+                  placeholder="Location (e.g. Mumbai, MH)"
+                  className="w-full max-w-md bg-gray-50 border border-gray-200 rounded-2xl p-4 mt-4 text-center text-lg text-[#0f172a] focus:outline-none focus:border-[var(--color-primary)] focus:ring-1 focus:ring-[var(--color-primary)] transition-all placeholder-gray-300 shadow-inner disabled:opacity-50"
+                />
+                <div className="w-full max-w-md mt-4 text-left">
+                  <CarSelector onSelect={setSelectedCar} disabled={isProcessing} />
+                </div>
                 <button 
                   onClick={handleCreateReport} 
                   disabled={isProcessing}

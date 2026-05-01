@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
 import { Send, Bot, User, Sparkles, ArrowLeft, Brain, Loader2 } from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import api from '../services/api'
 
 interface Message {
@@ -18,7 +18,11 @@ const suggestions = [
 ]
 
 export const ChatPage = () => {
+  const [searchParams] = useSearchParams();
+  const carId = searchParams.get('car');
+  
   const [chatId, setChatId] = useState<string | null>(null);
+  const [carName, setCarName] = useState<string>('');
   const [messages, setMessages] = useState<Message[]>([
     { id: 'initial', role: 'bot', text: "Hi! I'm Saga — your AI car expert. I can review inspection reports, estimate repairs, and help you negotiate safely. How can I help you today?" }
   ])
@@ -28,17 +32,34 @@ export const ChatPage = () => {
   const navigate = useNavigate()
 
   useEffect(() => {
-    // Generate a fresh chat session on the backend
-    const initChat = async () => {
+    const init = async () => {
       try {
-        const { data } = await api.post('/chat');
+        // Create a chat session
+        const { data } = await api.post('/chat', { reportId: null });
         setChatId(data._id);
+
+        // If we have a car context, fetch the car name
+        if (carId) {
+          try {
+            const { data: car } = await api.get(`/cars/${carId}`);
+            const name = `${car.year} ${car.make} ${car.model}`;
+            setCarName(name);
+            // Add context message
+            setMessages(prev => [...prev, {
+              id: 'context',
+              role: 'bot',
+              text: `I can see you're asking about your **${name}**. I have the full verification report loaded. What would you like to know?`
+            }]);
+          } catch {
+            // Car not found, continue without context
+          }
+        }
       } catch (err) {
         console.error("Failed to initialize chat session", err);
       }
     };
-    initChat();
-  }, []);
+    init();
+  }, [carId]);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -47,7 +68,6 @@ export const ChatPage = () => {
   const handleSend = async (text: string) => {
     if (!text.trim() || !chatId) return;
 
-    // Optimistically add user msg
     const tempId = Date.now().toString();
     setMessages(prev => [...prev, { id: tempId, role: 'user', text }]);
     setInput('');
@@ -56,18 +76,15 @@ export const ChatPage = () => {
     try {
       const { data } = await api.post(`/chat/${chatId}/message`, { text });
       
-      // Update with exact backend state formatting
       const refreshedMessages = data.messages.map((m: any) => ({
         id: m._id,
         role: m.role,
         text: m.text
       }));
       
-      // Preserve the initial welcome text
-      setMessages([
-        { id: 'initial', role: 'bot', text: "Hi! I'm Saga — your AI car expert. I can review inspection reports, estimate repairs, and help you negotiate safely. How can I help you today?" },
-        ...refreshedMessages
-      ]);
+      // Preserve welcome + context messages
+      const systemMsgs = messages.filter(m => m.id === 'initial' || m.id === 'context');
+      setMessages([...systemMsgs, ...refreshedMessages]);
     } catch (err) {
       console.error("Sending message failed", err);
       setMessages(prev => [...prev, { id: Date.now().toString(), role: 'bot', text: 'Error connecting to AI Server. Please try again later.' }]);
@@ -75,6 +92,9 @@ export const ChatPage = () => {
       setIsTyping(false);
     }
   }
+
+  const backPath = carId ? `/report/${carId}` : '/dashboard';
+  const backLabel = carId ? 'Back to Report' : 'Back to Dashboard';
 
   return (
     <div className="h-screen bg-[var(--color-bg-deep)] flex flex-col items-center relative overflow-hidden">
@@ -84,8 +104,8 @@ export const ChatPage = () => {
 
       {/* Header */}
       <div className="w-full max-w-3xl px-6 pt-6 pb-4 flex items-center justify-between relative z-10">
-        <button onClick={() => navigate('/report/123')} className="flex items-center gap-2 text-sm text-[var(--color-text-secondary)] hover:text-[#0f172a] transition-colors font-semibold">
-          <ArrowLeft size={16} /> Back to Report
+        <button onClick={() => navigate(backPath)} className="flex items-center gap-2 text-sm text-[var(--color-text-secondary)] hover:text-[#0f172a] transition-colors font-semibold">
+          <ArrowLeft size={16} /> {backLabel}
         </button>
         <div className="flex items-center gap-2">
           <div className="w-2.5 h-2.5 rounded-full bg-[var(--color-emerald)] animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
@@ -99,7 +119,9 @@ export const ChatPage = () => {
           <Brain size={14} className="text-[var(--color-primary)]" />
           <span className="font-bold text-[#0f172a]">Saga AI Expert</span>
         </div>
-        <h1 className="text-2xl font-extrabold text-[#0f172a]">Ask about your vehicle</h1>
+        <h1 className="text-2xl font-extrabold text-[#0f172a]">
+          {carName ? `Ask about your ${carName}` : 'Ask about your vehicle'}
+        </h1>
       </div>
 
       {/* Messages */}

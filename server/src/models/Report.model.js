@@ -25,6 +25,10 @@ const reportSchema = new mongoose.Schema(
       odometerEstimate: { type: String, default: '' },
     },
     summary: { type: String, default: '' },
+    challanData: {
+      totalChallan: { type: Number, default: 0 },
+      statusMessage: { type: String, default: '' },
+    },
   },
   { timestamps: true }
 );

@@ -1,18 +1,12 @@
 import { useEffect, useState } from 'react'
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
-import { Activity, Car, CheckCircle2, Search, Settings, HelpCircle, LogOut, Shield, Plus, TrendingUp, MessageSquare, BarChart3, Loader2 } from 'lucide-react'
+import { Activity, Car, CheckCircle2, Search, Settings, HelpCircle, LogOut, Shield, Plus, TrendingUp, MessageSquare, BarChart3, Loader2, AlertTriangle } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import type { RootState } from '../store'
 import { logout } from '../store/authSlice'
 import api from '../services/api'
 import { getCarImage } from '../utils/imageUtils'
-
-import dashboardData from '../data/dashboardData.json'
-
-const iconMap: Record<string, any> = {
-  Car, Activity, CheckCircle2, TrendingUp
-}
 
 const navItems = [
   { icon: Activity, label: 'Dashboard', active: true },
@@ -29,6 +23,17 @@ export interface Vehicle {
   status: 'pending' | 'verified' | 'flagged';
   riskLevel: 'low' | 'medium' | 'high';
   createdAt: string;
+  brandImage?: string;
+  challanStatus?: { totalChallan: number; statusMessage: string };
+}
+
+interface AnalyticsSummary {
+  totalCars: number;
+  verified: number;
+  flagged: number;
+  pending: number;
+  totalReports: number;
+  monthlyChecks: { name: string; checks: number }[];
 }
 
 export const DashboardPage = () => {
@@ -37,26 +42,46 @@ export const DashboardPage = () => {
   const { user } = useSelector((state: RootState) => state.auth);
   
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
+  const [analytics, setAnalytics] = useState<AnalyticsSummary | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const fetchCars = async () => {
+    const fetchData = async () => {
       try {
-        const { data } = await api.get('/cars');
-        setVehicles(data);
+        const [carsRes, analyticsRes] = await Promise.all([
+          api.get('/cars'),
+          api.get('/analytics/summary'),
+        ]);
+        setVehicles(carsRes.data);
+        setAnalytics(analyticsRes.data);
       } catch (error) {
-        console.error("Failed to load cars", error);
+        console.error("Failed to load data", error);
       } finally {
         setIsLoading(false);
       }
     };
-    fetchCars();
+    fetchData();
   }, []);
 
   const handleLogout = () => {
     dispatch(logout());
     navigate('/sign-in');
   };
+
+  // Build KPIs from live data
+  const kpis = analytics ? [
+    { label: 'Cars Verified', value: analytics.totalCars.toString(), change: `${analytics.verified} verified`, icon: Car, color: 'var(--color-primary)' },
+    { label: 'Pending Reports', value: analytics.pending.toString(), change: `${analytics.totalReports} total reports`, icon: Activity, color: 'var(--color-warning)' },
+    { label: 'Clean Verified', value: analytics.verified.toString(), change: analytics.totalCars > 0 ? `${Math.round((analytics.verified / analytics.totalCars) * 100)}% pass rate` : '0%', icon: CheckCircle2, color: 'var(--color-emerald)' },
+    { label: 'Flagged', value: analytics.flagged.toString(), change: analytics.flagged > 0 ? 'Review needed' : 'All clear', icon: AlertTriangle, color: analytics.flagged > 0 ? '#ef4444' : 'var(--color-emerald)' },
+  ] : [
+    { label: 'Cars Verified', value: '0', change: 'Start verifying!', icon: Car, color: 'var(--color-primary)' },
+    { label: 'Pending Reports', value: '0', change: 'No reports yet', icon: Activity, color: 'var(--color-warning)' },
+    { label: 'Clean Verified', value: '0', change: '0%', icon: CheckCircle2, color: 'var(--color-emerald)' },
+    { label: 'Flagged', value: '0', change: 'All clear', icon: AlertTriangle, color: 'var(--color-emerald)' },
+  ];
+
+  const chartData = analytics?.monthlyChecks || [];
 
   return (
     <div className="min-h-screen bg-[var(--color-bg-deep)] text-[var(--color-text-primary)] flex">
@@ -98,7 +123,7 @@ export const DashboardPage = () => {
         <div className="pt-4 border-t border-[var(--color-border-glass)]">
           <div className="flex items-center gap-3 mb-3 px-2">
             <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[var(--color-primary-light)] to-[var(--color-primary)] flex items-center justify-center text-white font-bold text-sm">
-              RJ
+              {user?.name?.[0]?.toUpperCase() || 'U'}
             </div>
             <div className="flex flex-col text-sm">
               <span className="font-semibold text-[#0f172a]">{user?.name || 'User'}</span>
@@ -141,8 +166,8 @@ export const DashboardPage = () => {
 
         {/* KPI Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-5 mb-8 relative z-10">
-          {dashboardData.kpis.map((kpi, i) => {
-            const Icon = iconMap[kpi.iconRef] || Activity;
+          {kpis.map((kpi, i) => {
+            const Icon = kpi.icon;
             return (
               <div key={i} className="kpi-card p-6 group bg-white">
                 <div className="flex justify-between items-start mb-4">
@@ -167,24 +192,30 @@ export const DashboardPage = () => {
               <span className="text-xs text-[var(--color-text-secondary)] bg-gray-50 px-3 py-1.5 rounded-lg border border-gray-100">Last 6 months</span>
             </div>
             <div className="h-[250px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={dashboardData.monthlyChecks} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                  <defs>
-                    <linearGradient id="colorChecks" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#FE654F" stopOpacity={0.2}/>
-                      <stop offset="95%" stopColor="#FE654F" stopOpacity={0}/>
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.05)" vertical={false} />
-                  <XAxis dataKey="name" stroke="rgba(0,0,0,0.2)" tick={{fill: '#475569', fontSize: 12}} dy={10} axisLine={false} tickLine={false} />
-                  <YAxis stroke="rgba(0,0,0,0.2)" tick={{fill: '#475569', fontSize: 12}} axisLine={false} tickLine={false} />
-                  <Tooltip
-                    contentStyle={{ backgroundColor: 'rgba(255,255,255,0.95)', borderColor: 'var(--color-border-glass)', borderRadius: '12px', backdropFilter: 'blur(20px)', color: '#0f172a', fontWeight: 'bold', boxShadow: '0 4px 6px rgba(0,0,0,0.05)' }}
-                    itemStyle={{ color: '#FE654F', fontWeight: 'bold' }}
-                  />
-                  <Area type="monotone" dataKey="checks" stroke="#FE654F" strokeWidth={3} fillOpacity={1} fill="url(#colorChecks)" />
-                </AreaChart>
-              </ResponsiveContainer>
+              {chartData.length > 0 ? (
+                <ResponsiveContainer width="100%" height="100%">
+                  <AreaChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                    <defs>
+                      <linearGradient id="colorChecks" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="#FE654F" stopOpacity={0.2}/>
+                        <stop offset="95%" stopColor="#FE654F" stopOpacity={0}/>
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.05)" vertical={false} />
+                    <XAxis dataKey="name" stroke="rgba(0,0,0,0.2)" tick={{fill: '#475569', fontSize: 12}} dy={10} axisLine={false} tickLine={false} />
+                    <YAxis stroke="rgba(0,0,0,0.2)" tick={{fill: '#475569', fontSize: 12}} axisLine={false} tickLine={false} />
+                    <Tooltip
+                      contentStyle={{ backgroundColor: 'rgba(255,255,255,0.95)', borderColor: 'var(--color-border-glass)', borderRadius: '12px', backdropFilter: 'blur(20px)', color: '#0f172a', fontWeight: 'bold', boxShadow: '0 4px 6px rgba(0,0,0,0.05)' }}
+                      itemStyle={{ color: '#FE654F', fontWeight: 'bold' }}
+                    />
+                    <Area type="monotone" dataKey="checks" stroke="#FE654F" strokeWidth={3} fillOpacity={1} fill="url(#colorChecks)" />
+                  </AreaChart>
+                </ResponsiveContainer>
+              ) : (
+                <div className="h-full flex items-center justify-center text-[var(--color-text-muted)] text-sm">
+                  No verification activity yet. Start by verifying a car!
+                </div>
+              )}
             </div>
           </div>
 
@@ -192,7 +223,7 @@ export const DashboardPage = () => {
           <div className="glass-card p-6 bg-white">
             <div className="flex justify-between items-center mb-6">
               <h3 className="text-lg font-bold text-[#0f172a]">Recent Reports</h3>
-              <button className="text-xs text-[var(--color-primary)] hover:underline font-semibold">View all</button>
+              <button onClick={() => navigate('/analytics')} className="text-xs text-[var(--color-primary)] hover:underline font-semibold">View all</button>
             </div>
             <div className="space-y-2">
               {isLoading ? (
@@ -207,7 +238,7 @@ export const DashboardPage = () => {
                 >
                   <div className="flex items-center gap-4">
                     <div className="w-12 h-12 rounded-lg bg-gray-50 flex items-center justify-center overflow-hidden border border-gray-100 shrink-0 shadow-sm relative group-hover:border-[var(--color-primary)]/50 transition-colors">
-                      <img src={getCarImage(car.make, car.model)} alt={`${car.make} ${car.model}`} className="w-full h-full object-cover" />
+                      <img src={getCarImage(car.make, car.model, car.brandImage)} alt={`${car.make} ${car.model}`} className="w-full h-full object-cover" />
                     </div>
                     <div>
                       <p className="text-sm font-bold text-[#0f172a]">{car.year} {car.make} {car.model}</p>

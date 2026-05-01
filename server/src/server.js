@@ -11,6 +11,7 @@ const reportRoutes = require('./routes/report.routes');
 const chatRoutes = require('./routes/chat.routes');
 const mechanicRoutes = require('./routes/mechanic.routes');
 const analyticsRoutes = require('./routes/analytics.routes');
+const carDatabaseRoutes = require('./routes/carDatabase.routes');
 
 // Middleware imports
 const { errorHandler, notFound } = require('./middlewares/error.middleware');
@@ -37,6 +38,7 @@ app.use('/api/reports', reportRoutes);
 app.use('/api/chat', chatRoutes);
 app.use('/api/mechanics', mechanicRoutes);
 app.use('/api/analytics', analyticsRoutes);
+app.use('/api/car-database', carDatabaseRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {
