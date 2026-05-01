@@ -11,6 +11,13 @@ const carSchema = new mongoose.Schema(
     photos: [{ type: String }], // Array of upload paths / URLs
     status: { type: String, enum: ['pending', 'verified', 'flagged'], default: 'pending' },
     riskLevel: { type: String, enum: ['low', 'medium', 'high'], default: 'low' },
+    location: { type: String, default: '' },
+    brandImage: { type: String, default: '' },
+    challanStatus: {
+      totalChallan: { type: Number, default: 0 },
+      statusMessage: { type: String, default: '' },
+      result: { type: mongoose.Schema.Types.Mixed, default: null },
+    },
   },
   { timestamps: true }
 );
