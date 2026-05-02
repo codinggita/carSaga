@@ -22,3 +22,10 @@ exports.getVehicleHistory = async (vin) => {
     lastServiceDate: '2025-11-15',
   };
 };
+
+// Mock 3rd party API (e.g., Cashfree or Surepass) to fetch Official Plate Number
+exports.getOfficialPlateByVIN = async (vin) => {
+  // In a real scenario, this would call an external API using the VIN
+  // Returning a mock plate number based on the VIN string for demonstration
+  return "MH 12 AB 1234"; 
+};

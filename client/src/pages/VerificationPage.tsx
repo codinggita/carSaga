@@ -237,6 +237,18 @@ export const VerificationPage = () => {
                       </div>
                     </div>
                   </div>
+
+                  {/* Photo Instructions for AI Accuracy */}
+                  <div className="bg-blue-50 border border-blue-100 rounded-xl p-4 mt-2">
+                    <h4 className="text-sm font-bold text-blue-800 mb-2 flex items-center gap-2">
+                      <AlertCircle size={16} /> Photo Instructions for Best AI Accuracy:
+                    </h4>
+                    <ul className="list-disc pl-5 text-xs text-blue-700 space-y-1 font-medium">
+                      <li>Ensure the car is centered and facing the camera directly.</li>
+                      <li>Avoid direct glare or shadows on the license plate area.</li>
+                      <li>The license plate must be clean and free of dirt or covers.</li>
+                    </ul>
+                  </div>
                 </div>
 
                 {/* Upload Guide Grid */}
