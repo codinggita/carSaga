@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
-import { ArrowLeft, User, Mail, Shield, Award, Edit3, Key, Camera, Loader2, CheckCircle2, AlertCircle, X, Lock } from 'lucide-react'
+import { ArrowLeft, User, Mail, Edit3, Key, Camera, Loader2, CheckCircle2, AlertCircle, X, Lock } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { motion, AnimatePresence } from 'motion/react'
@@ -27,7 +27,7 @@ export const ProfilePage = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    let timer: NodeJS.Timeout;
+    let timer: ReturnType<typeof setTimeout>;
     if (otpCooldown > 0) {
       timer = setInterval(() => setOtpCooldown(prev => prev - 1), 1000);
     }
