@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
-import { Send, Bot, User, Sparkles, ArrowLeft, Brain, Loader2 } from 'lucide-react'
+import { Send, User, Sparkles, ArrowLeft, Brain, Loader2 } from 'lucide-react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import api from '../services/api'
 
@@ -94,7 +94,6 @@ export const ChatPage = () => {
   }
 
   const backPath = carId ? `/report/${carId}` : '/dashboard';
-  const backLabel = carId ? 'Back to Report' : 'Back to Dashboard';
 
   return (
     <div className="h-[100dvh] bg-[var(--color-bg-deep)] flex flex-col relative overflow-hidden">
