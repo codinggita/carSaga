@@ -21,6 +21,7 @@
     { "source": "/sitemap.xml", "destination": "/sitemap.xml" },
     { "source": "/manifest.json", "destination": "/manifest.json" },
     { "source": "/og-image.png", "destination": "/og-image.png" },
+    { "source": "/google5247bceafde32786.html", "destination": "/google5247bceafde32786.html" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
