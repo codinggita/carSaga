@@ -111,3 +111,44 @@ exports.getMe = async (req, res, next) => {
     next(err);
   }
 };
+
+// PATCH /api/auth/profile
+exports.updateProfile = async (req, res, next) => {
+  try {
+    const { name, currentPassword, newPassword, avatar } = req.body;
+    const user = await User.findById(req.user.id);
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    // Update name if provided
+    if (name) user.name = name;
+
+    // Update avatar if provided
+    if (avatar) user.avatar = avatar;
+
+    // Handle password change
+    if (newPassword) {
+      // If user has a password (not a Google-only user), they must provide the current one
+      if (user.password && !currentPassword) {
+        return res.status(400).json({ message: 'Current password is required to set a new one' });
+      }
+
+      if (user.password && !(await user.comparePassword(currentPassword))) {
+        return res.status(401).json({ message: 'Current password is incorrect' });
+      }
+
+      user.password = newPassword;
+    }
+
+    await user.save();
+
+    res.status(200).json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      avatar: user.avatar,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
