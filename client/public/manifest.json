@@ -1,0 +1,19 @@
+{
+  "name": "CarSaga",
+  "short_name": "CarSaga",
+  "description": "AI-powered used car verification platform. Upload photos, enter a VIN, and get a full condition and history report in seconds.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f8fafc",
+  "theme_color": "#0f172a",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["auto", "business", "utilities"]
+}
