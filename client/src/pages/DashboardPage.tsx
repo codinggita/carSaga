@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
-import { Activity, Car, CheckCircle2, Search, Settings, HelpCircle, LogOut, Shield, Plus, TrendingUp, MessageSquare, BarChart3, Loader2, AlertTriangle } from 'lucide-react'
+import { Activity, Car, CheckCircle2, Search, Settings, HelpCircle, LogOut, Shield, Plus, MessageSquare, BarChart3, Loader2, AlertTriangle } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import type { RootState } from '../store'
@@ -9,8 +9,8 @@ import api from '../services/api'
 import { getCarImage } from '../utils/imageUtils'
 
 const navItems = [
-  { icon: Activity, label: 'Dashboard', active: true },
-  { icon: Car, label: 'My Cars' },
+  { icon: Activity, label: 'Dashboard', active: true, path: '/dashboard' },
+  { icon: Car, label: 'My Cars', path: '/my-cars' },
   { icon: BarChart3, label: 'Analytics', path: '/analytics' },
   { icon: MessageSquare, label: 'Saga AI', path: '/chat' },
 ]
@@ -86,15 +86,15 @@ export const DashboardPage = () => {
   return (
     <div className="min-h-screen bg-[var(--color-bg-deep)] text-[var(--color-text-primary)] flex">
       {/* Glass Sidebar */}
-      <aside className="w-72 glass-sidebar flex flex-col p-6 sticky top-0 h-screen hidden md:flex">
-        <div className="flex items-center gap-3 mb-10">
+      <aside className="w-72 glass-sidebar flex flex-col p-6 sticky top-0 h-[100dvh] hidden md:flex border-r border-[var(--color-border-glass)]">
+        <div className="flex items-center gap-3 mb-10 shrink-0">
           <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[var(--color-primary)] to-[var(--color-warning)] flex items-center justify-center shadow-lg shadow-[var(--color-primary-glow)]">
             <Shield size={18} className="text-white" />
           </div>
           <span className="text-xl font-bold text-[#0f172a]">Car<span className="gradient-text">Saga</span></span>
         </div>
 
-        <nav className="flex-1 space-y-1">
+        <nav className="flex-1 space-y-1 overflow-y-auto hide-scrollbar">
           {navItems.map(({ icon: Icon, label, active, path }) => (
             <button
               key={label}
@@ -111,28 +111,30 @@ export const DashboardPage = () => {
           ))}
         </nav>
 
-        <div className="space-y-1 mb-4">
-          <button className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-[var(--color-text-muted)] hover:bg-black/5 hover:text-[#0f172a] transition-colors">
-            <Settings size={18} /> Settings
-          </button>
-          <button className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-[var(--color-text-muted)] hover:bg-black/5 hover:text-[#0f172a] transition-colors">
-            <HelpCircle size={18} /> Support
-          </button>
-        </div>
-
-        <div className="pt-4 border-t border-[var(--color-border-glass)]">
-          <div className="flex items-center gap-3 mb-3 px-2">
-            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[var(--color-primary-light)] to-[var(--color-primary)] flex items-center justify-center text-white font-bold text-sm">
-              {user?.name?.[0]?.toUpperCase() || 'U'}
-            </div>
-            <div className="flex flex-col text-sm">
-              <span className="font-semibold text-[#0f172a]">{user?.name || 'User'}</span>
-              <span className="text-[var(--color-text-muted)] text-xs capitalize">{user?.role || 'Buyer'} • Free Plan</span>
-            </div>
+        <div className="shrink-0 mt-auto pt-6">
+          <div className="space-y-1 mb-4">
+            <button onClick={() => navigate('/profile')} className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-[var(--color-text-muted)] hover:bg-black/5 hover:text-[#0f172a] transition-colors">
+              <Settings size={18} /> Settings & Profile
+            </button>
+            <button className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-[var(--color-text-muted)] hover:bg-black/5 hover:text-[#0f172a] transition-colors">
+              <HelpCircle size={18} /> Support
+            </button>
           </div>
-          <button onClick={handleLogout} className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium text-red-500 hover:bg-red-500/10 transition-colors">
-            <LogOut size={16} /> Sign Out
-          </button>
+
+          <div className="pt-4 border-t border-[var(--color-border-glass)]">
+            <div className="flex items-center gap-3 mb-3 px-2">
+              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[var(--color-primary-light)] to-[var(--color-primary)] flex items-center justify-center text-white font-bold text-sm">
+                {user?.name?.[0]?.toUpperCase() || 'U'}
+              </div>
+              <div className="flex flex-col text-sm overflow-hidden">
+                <span className="font-semibold text-[#0f172a] truncate">{user?.name || 'User'}</span>
+                <span className="text-[var(--color-text-muted)] text-xs capitalize truncate">{user?.role || 'Buyer'} • Free Plan</span>
+              </div>
+            </div>
+            <button onClick={handleLogout} className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium text-red-500 hover:bg-red-500/10 transition-colors">
+              <LogOut size={16} /> Sign Out
+            </button>
+          </div>
         </div>
       </aside>
 

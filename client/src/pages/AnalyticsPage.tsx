@@ -4,7 +4,6 @@ import { ArrowLeft, TrendingUp, Scale, Loader2 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import api from '../services/api'
 
-import analyticsDataFallback from '../data/analyticsData.json'
 
 const tooltipStyle = {
   contentStyle: { backgroundColor: 'rgba(255,255,255,0.95)', borderColor: 'var(--color-border-glass)', borderRadius: '12px', color: '#0f172a', fontWeight: 'bold' },
@@ -54,25 +53,31 @@ export const AnalyticsPage = () => {
   }, [car1Id, car2Id]);
 
   // Build display data
-  const useFallback = !comparisonData;
   const c1 = comparisonData?.car1;
   const c2 = comparisonData?.car2;
 
-  const headToHead = useFallback ? analyticsDataFallback.headToHead : {
-    car1: { name: `${c1.car.make} ${c1.car.model}`, year: c1.car.year.toString(), color: 'var(--color-primary)' },
-    car2: { name: `${c2.car.make} ${c2.car.model}`, year: c2.car.year.toString(), color: 'var(--color-emerald)' },
-    features: [
+  // Empty state if no data
+  if (cars.length >= 2 && !comparisonData) {
+    // Only return empty state JSX if we have cars but haven't fetched comparison yet
+    // The main render handles the loading spinner
+  }
+
+  const headToHead = {
+    car1: { name: c1 ? `${c1.car.make} ${c1.car.model}` : '', year: c1 ? c1.car.year.toString() : '', color: 'var(--color-primary)' },
+    car2: { name: c2 ? `${c2.car.make} ${c2.car.model}` : '', year: c2 ? c2.car.year.toString() : '', color: 'var(--color-emerald)' },
+    features: c1 && c2 ? [
       { feature: 'Risk Level', a: c1.car.riskLevel?.toUpperCase(), aClass: c1.car.riskLevel === 'low' ? 'text-[var(--color-emerald)]' : 'text-amber-500', b: c2.car.riskLevel?.toUpperCase(), bClass: c2.car.riskLevel === 'low' ? 'text-[var(--color-emerald)]' : 'text-amber-500' },
       { feature: 'Status', a: c1.car.status, b: c2.car.status },
       { feature: 'Odometer', a: c1.report?.vehicleSpecs?.odometerEstimate || 'N/A', b: c2.report?.vehicleSpecs?.odometerEstimate || 'N/A' },
       { feature: 'Issues Found', a: (c1.report?.issues?.length ?? 0).toString(), aClass: (c1.report?.issues?.length ?? 0) === 0 ? 'text-[var(--color-emerald)]' : 'text-amber-500', b: (c2.report?.issues?.length ?? 0).toString(), bClass: (c2.report?.issues?.length ?? 0) === 0 ? 'text-[var(--color-emerald)]' : 'text-amber-500' },
       { feature: 'Condition Score', a: c1.report ? `${(c1.report.overallScore / 10).toFixed(1)}/10` : 'N/A', aClass: 'text-[var(--color-primary)]', b: c2.report ? `${(c2.report.overallScore / 10).toFixed(1)}/10` : 'N/A', bClass: 'text-[var(--color-emerald)]' },
       { feature: 'Challans', a: c1.car.challanStatus?.totalChallan?.toString() || '0', b: c2.car.challanStatus?.totalChallan?.toString() || '0' },
-    ],
+    ] : [],
   };
 
   // Build maintenance comparison chart data
-  const costOverTime = useFallback ? analyticsDataFallback.costOverTime : (() => {
+  const costOverTime = (() => {
+    if (!c1 || !c2) return [];
     const f1 = c1.report?.maintenanceForecast || [];
     const f2 = c2.report?.maintenanceForecast || [];
     const maxLen = Math.max(f1.length, f2.length);
@@ -88,16 +93,16 @@ export const AnalyticsPage = () => {
   })();
 
   // Build radar chart data
-  const categoryCompare = useFallback ? analyticsDataFallback.categoryCompare : [
+  const categoryCompare = c1 && c2 ? [
     { subject: 'Condition', A: c1.report?.overallScore || 0, B: c2.report?.overallScore || 0, fullMark: 100 },
     { subject: 'Low Issues', A: Math.max(0, 100 - (c1.report?.issues?.length || 0) * 20), B: Math.max(0, 100 - (c2.report?.issues?.length || 0) * 20), fullMark: 100 },
     { subject: 'Clean Challan', A: (c1.car.challanStatus?.totalChallan || 0) === 0 ? 100 : 30, B: (c2.car.challanStatus?.totalChallan || 0) === 0 ? 100 : 30, fullMark: 100 },
     { subject: 'Low Risk', A: c1.car.riskLevel === 'low' ? 95 : c1.car.riskLevel === 'medium' ? 60 : 25, B: c2.car.riskLevel === 'low' ? 95 : c2.car.riskLevel === 'medium' ? 60 : 25, fullMark: 100 },
     { subject: 'Verified', A: c1.car.status === 'verified' ? 100 : 40, B: c2.car.status === 'verified' ? 100 : 40, fullMark: 100 },
-  ];
+  ] : [];
 
-  const car1Label = useFallback ? 'Corolla' : `${c1?.car.make}`;
-  const car2Label = useFallback ? 'i20' : `${c2?.car.make}`;
+  const car1Label = `${c1?.car.make || 'Car 1'}`;
+  const car2Label = `${c2?.car.make || 'Car 2'}`;
 
   const selectClass = "bg-white border border-gray-200 rounded-xl px-4 py-2.5 text-sm font-bold text-[#0f172a] focus:outline-none focus:border-[var(--color-primary)] focus:ring-1 focus:ring-[var(--color-primary)] appearance-none min-w-[200px]";
 
@@ -132,14 +137,20 @@ export const AnalyticsPage = () => {
 
       {isLoading || isComparing ? (
         <div className="flex justify-center py-20"><Loader2 className="w-10 h-10 text-[var(--color-primary)] animate-spin" /></div>
-      ) : cars.length < 2 && !useFallback ? (
+      ) : cars.length < 2 ? (
         <div className="max-w-7xl mx-auto text-center py-20 relative z-10">
           <p className="text-lg font-bold text-[#0f172a] mb-2">Need at least 2 verified cars to compare</p>
-          <p className="text-sm text-[var(--color-text-muted)] mb-6">Showing demo comparison data below.</p>
+          <p className="text-sm text-[var(--color-text-muted)] mb-6">Add more cars to your garage to unlock comparison analytics.</p>
+        </div>
+      ) : !comparisonData ? (
+        <div className="max-w-7xl mx-auto text-center py-20 relative z-10">
+          <p className="text-lg font-bold text-[#0f172a] mb-2">Select cars to compare</p>
+          <p className="text-sm text-[var(--color-text-muted)] mb-6">Choose two cars from the dropdowns above to see head-to-head analytics.</p>
         </div>
       ) : null}
 
-      <main className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 relative z-10">
+      {comparisonData && (
+        <main className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 relative z-10">
         {/* Head-to-Head Table */}
         <section className="glass-card p-6 md:col-span-2 overflow-x-auto relative bg-white">
           <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-[var(--color-primary)] via-[var(--color-emerald)] to-transparent opacity-40" />
@@ -187,7 +198,7 @@ export const AnalyticsPage = () => {
                 <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.05)" vertical={false} />
                 <XAxis dataKey="year" stroke="rgba(0,0,0,0.2)" tick={{ fill: '#475569', fontSize: 12 }} dy={10} axisLine={false} tickLine={false} />
                 <YAxis stroke="rgba(0,0,0,0.2)" tick={{ fill: '#475569', fontSize: 12 }} axisLine={false} tickLine={false} tickFormatter={(v: number) => `₹${(v / 1000).toFixed(0)}k`} />
-                <Tooltip {...tooltipStyle} formatter={(value: number) => [`₹${value.toLocaleString('en-IN')}`, undefined]} />
+                <Tooltip {...tooltipStyle} formatter={(value: any) => [`₹${Number(value).toLocaleString('en-IN')}`, undefined]} />
                 <Legend iconType="circle" wrapperStyle={{ fontSize: '12px', paddingTop: '16px', color: '#0f172a', fontWeight: 'bold' }} />
                 <Line type="monotone" name={car1Label} dataKey="car1" stroke="#FE654F" strokeWidth={3} dot={{ r: 4, strokeWidth: 2, fill: '#fff' }} />
                 <Line type="monotone" name={car2Label} dataKey="car2" stroke="#10b981" strokeWidth={3} dot={{ r: 4, strokeWidth: 2, fill: '#fff' }} />
@@ -214,6 +225,7 @@ export const AnalyticsPage = () => {
           </div>
         </section>
       </main>
+      )}
     </div>
   )
 }

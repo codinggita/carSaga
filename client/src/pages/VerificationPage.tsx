@@ -26,7 +26,7 @@ export const VerificationPage = () => {
 
   const uploadCount = Object.values(uploads).filter(Boolean).length;
   const [selectedCar, setSelectedCar] = useState({ make: '', model: '', year: 2023, brandImage: '' });
-  const isFormValid = uploadCount === 6 && registration.trim().length > 0 && selectedCar.make !== '';
+  const isFormValid = uploadCount >= 0 && registration.trim().length > 0 && selectedCar.make !== '';
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>, slotId: string) => {
     const file = e.target.files?.[0];
