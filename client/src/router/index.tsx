@@ -7,11 +7,21 @@ import { VerificationPage } from '@/pages/VerificationPage'
 import { ReportPage } from '@/pages/ReportPage'
 import { ChatPage } from '@/pages/ChatPage'
 import { AnalyticsPage } from '@/pages/AnalyticsPage'
+import { MyCarsPage } from '@/pages/MyCarsPage'
+import { ProfilePage } from '@/pages/ProfilePage'
 
 export const router = createBrowserRouter([
   {
     path: '/',
     element: <LandingPage />,
+  },
+  {
+    path: '/profile',
+    element: <ProfilePage />,
+  },
+  {
+    path: '/my-cars',
+    element: <MyCarsPage />,
   },
   {
     path: '/sign-in',

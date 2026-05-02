@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { BarChart, Bar, XAxis, Tooltip, ResponsiveContainer } from 'recharts'
-import { AlertTriangle, MapPin, Search, ArrowLeft, CheckCircle, MessageSquare, Share2, Download, Eye, Loader2, Shield, FileWarning } from 'lucide-react'
+import { AlertTriangle, MapPin, Search, ArrowLeft, CheckCircle, MessageSquare, Share2, Download, Eye, Loader2, FileWarning } from 'lucide-react'
 import api from '../services/api'
 import { getCarImage } from '../utils/imageUtils'
 import jsPDF from 'jspdf'
