@@ -112,10 +112,12 @@ exports.getMe = async (req, res, next) => {
   }
 };
 
+const { sendEmail } = require('../utils/mailer');
+
 // PATCH /api/auth/profile
 exports.updateProfile = async (req, res, next) => {
   try {
-    const { name, currentPassword, newPassword, avatar } = req.body;
+    const { name, currentPassword, newPassword, avatar, otp } = req.body;
     const user = await User.findById(req.user.id);
     if (!user) return res.status(404).json({ message: 'User not found' });
 
@@ -127,15 +129,25 @@ exports.updateProfile = async (req, res, next) => {
 
     // Handle password change
     if (newPassword) {
-      // If user has a password (not a Google-only user), they must provide the current one
+      // 1. Check current password
       if (user.password && !currentPassword) {
-        return res.status(400).json({ message: 'Current password is required to set a new one' });
+        return res.status(400).json({ message: 'Current password is required' });
       }
-
       if (user.password && !(await user.comparePassword(currentPassword))) {
         return res.status(401).json({ message: 'Current password is incorrect' });
       }
 
+      // 2. Check OTP
+      if (!otp) {
+        return res.status(400).json({ message: 'OTP is required for password changes' });
+      }
+      if (user.otpCode !== otp || user.otpExpires < Date.now()) {
+        return res.status(401).json({ message: 'Invalid or expired OTP' });
+      }
+
+      // Clear OTP and set new password
+      user.otpCode = null;
+      user.otpExpires = null;
       user.password = newPassword;
     }
 
@@ -148,6 +160,34 @@ exports.updateProfile = async (req, res, next) => {
       role: user.role,
       avatar: user.avatar,
     });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// POST /api/auth/send-otp
+exports.sendOtp = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.user.id);
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    user.otpCode = otp;
+    user.otpExpires = Date.now() + 10 * 60 * 1000; // 10 minutes
+    await user.save();
+
+    const html = `
+      <div style="font-family: sans-serif; padding: 20px; border: 1px solid #eee; border-radius: 10px; max-width: 500px;">
+        <h2 style="color: #4CAF50;">CarSaga Verification</h2>
+        <p>Your OTP code for changing your password is:</p>
+        <div style="font-size: 32px; font-weight: bold; letter-spacing: 5px; color: #333; margin: 20px 0;">${otp}</div>
+        <p style="color: #666; font-size: 14px;">This code expires in 10 minutes. If you didn't request this, please ignore this email.</p>
+      </div>
+    `;
+
+    await sendEmail(user.email, 'CarSaga: Your OTP Code', html);
+
+    res.status(200).json({ message: 'OTP sent to your email' });
   } catch (err) {
     next(err);
   }

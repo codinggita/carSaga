@@ -9,6 +9,8 @@ const userSchema = new mongoose.Schema(
     googleId: { type: String, default: null }, // Google OAuth subject ID
     role: { type: String, enum: ['buyer', 'mechanic', 'dealer'], default: 'buyer' },
     avatar: { type: String, default: '' },
+    otpCode: { type: String, default: null },
+    otpExpires: { type: Date, default: null },
   },
   { timestamps: true }
 );
