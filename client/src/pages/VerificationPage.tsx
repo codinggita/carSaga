@@ -301,10 +301,11 @@ export const VerificationPage = () => {
                       : 'bg-white text-gray-400 cursor-not-allowed shadow-sm border border-gray-100'
                   }`}
                 >
-                  {isProcessing ? <><Loader2 size={18} className="animate-spin" /> Running Deep Neural Scan...</> 
-                  : isFormValid ? 'Initiate Deep Neural Scan' 
+                  {isProcessing ? <><Loader2 size={18} className="animate-spin" /> Running Deep Neural Scan...</>
+                  : isFormValid ? 'Initiate Deep Neural Scan'
                   : registration.trim().length === 0 ? 'Enter Registration Number to proceed'
-                  : `Upload ${6 - uploadCount} more images to proceed`}
+                  : selectedCar.make === '' ? 'Select a vehicle make to proceed'
+                  : `Upload ${6 - uploadCount} more image${6 - uploadCount > 1 ? 's' : ''} to proceed`}
                 </button>
               </motion.div>
             ) : (
