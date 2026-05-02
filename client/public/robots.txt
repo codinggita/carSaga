@@ -1,0 +1,15 @@
+# CarSaga SEO - robots.txt
+# https://www.robotstxt.org/
+
+User-agent: *
+Allow: /
+Disallow: /dashboard
+Disallow: /profile
+Disallow: /my-cars
+Disallow: /verification
+Disallow: /report/
+Disallow: /chat
+Disallow: /analytics
+
+# Sitemaps
+Sitemap: https://car-saga-udz6.vercel.app/sitemap.xml
