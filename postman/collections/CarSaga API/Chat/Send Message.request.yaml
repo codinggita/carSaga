@@ -1,0 +1,22 @@
+$kind: http-request
+name: Send Message
+method: POST
+url: '{{baseUrl}}/api/chat/{{chatId}}/message'
+order: 2000
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: '{{authToken}}'
+headers:
+  - key: Content-Type
+    value: application/json
+pathVariables:
+  - key: chatId
+    value: '{{chatId}}'
+body:
+  type: json
+  content: |-
+    {
+      "text": "Is this car worth buying?"
+    }

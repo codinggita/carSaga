@@ -1,0 +1,10 @@
+$kind: http-request
+name: Get My Reports
+method: GET
+url: '{{baseUrl}}/api/reports'
+order: 1000
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: '{{authToken}}'

@@ -1,0 +1,28 @@
+$kind: http-request
+name: Create Mechanic
+method: POST
+url: '{{baseUrl}}/api/mechanics'
+order: 3000
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: '{{authToken}}'
+headers:
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "name": "Raj Auto Works",
+      "address": "123 Main St, Mumbai",
+      "phone": "+91-9876543210",
+      "rating": 4.5,
+      "specializations": ["Engine", "Transmission"],
+      "location": {
+        "type": "Point",
+        "coordinates": [72.8777, 19.0760]
+      },
+      "available": true
+    }
