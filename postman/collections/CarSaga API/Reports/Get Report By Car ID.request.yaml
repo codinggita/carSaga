@@ -1,0 +1,13 @@
+$kind: http-request
+name: Get Report By Car ID
+method: GET
+url: '{{baseUrl}}/api/reports/car/{{carId}}'
+order: 4000
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: '{{authToken}}'
+pathVariables:
+  - key: carId
+    value: '{{carId}}'

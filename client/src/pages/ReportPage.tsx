@@ -7,13 +7,13 @@ import { getCarImage } from '../utils/imageUtils'
 import jsPDF from 'jspdf'
 import html2canvas from 'html2canvas'
 
-import reportDataFallback from '../data/reportData.json'
 
 export const ReportPage = () => {
   const { id } = useParams()
   const navigate = useNavigate()
   const [carData, setCarData] = useState<any>(null)
   const [reportData, setReportData] = useState<any>(null)
+  const [mechanics, setMechanics] = useState<any[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [isExporting, setIsExporting] = useState(false)
   const reportRef = useRef<HTMLDivElement>(null)
@@ -71,8 +71,16 @@ export const ReportPage = () => {
           const { data: report } = await api.get(`/reports/car/${id}`);
           setReportData(report);
         } catch {
-          // No report found, will use fallback
+          // No report found
           setReportData(null);
+        }
+
+        // Fetch mechanics from API
+        try {
+          const { data: mechanicsData } = await api.get('/mechanics');
+          setMechanics(mechanicsData);
+        } catch {
+          setMechanics([]);
         }
       } catch (err) {
         console.error('Failed to fetch car details', err);
@@ -88,13 +96,15 @@ export const ReportPage = () => {
     return <div className="min-h-screen bg-[var(--color-bg-deep)] flex items-center justify-center"><Loader2 className="w-10 h-10 text-[var(--color-primary)] animate-spin" /></div>;
   }
 
-  // Derive display data from live report or fallback
-  const overallScore = reportData?.overallScore ?? 91;
+  // Derive display data from live API responses
+  const overallScore = reportData?.overallScore ?? 0;
   const issues = reportData?.issues || [];
-  const maintenanceData = reportData?.maintenanceForecast?.map((f: any) => ({ year: f.year, cost: f.estimatedCost })) || reportDataFallback.maintenanceData;
+  const maintenanceData = reportData?.maintenanceForecast?.map((f: any) => ({ year: f.year, cost: f.estimatedCost })) || [];
   const vehicleSpecs = reportData?.vehicleSpecs || {};
   const summary = reportData?.summary || '';
   const challan = reportData?.challanData || carData?.challanStatus;
+  // Odometer: prefer report's AI estimate, fall back to the car's actual mileage field
+  const odometerDisplay = vehicleSpecs.odometerEstimate || (carData?.mileage != null ? `${carData.mileage.toLocaleString('en-IN')} km` : 'N/A');
 
   const overviewStats = [
     { label: 'Condition', value: `${(overallScore / 10).toFixed(1)}/10`, color: overallScore >= 80 ? 'var(--color-emerald)' : overallScore >= 60 ? 'var(--color-warning)' : 'var(--color-primary)' },
@@ -268,12 +278,14 @@ export const ReportPage = () => {
               </div>
               <div className="flex justify-between items-center pb-3 border-b border-gray-100">
                 <dt className="text-[var(--color-text-secondary)] font-medium">Odometer</dt>
-                <dd className="font-bold text-[#0f172a]">{vehicleSpecs.odometerEstimate || '~22,310 km'}</dd>
+                <dd className="font-bold text-[#0f172a]">{odometerDisplay}</dd>
               </div>
+              {vehicleSpecs.previousOwners != null && (
               <div className="flex justify-between items-center pb-3 border-b border-gray-100">
                 <dt className="text-[var(--color-text-secondary)] font-medium">Previous Owners</dt>
-                <dd className="font-bold text-[#0f172a]">{vehicleSpecs.previousOwners ?? 1}</dd>
+                <dd className="font-bold text-[#0f172a]">{vehicleSpecs.previousOwners}</dd>
               </div>
+              )}
               {carData?.location && (
                 <div className="flex justify-between items-center pb-3 border-b border-gray-100">
                   <dt className="text-[var(--color-text-secondary)] font-medium">Location</dt>
@@ -316,11 +328,16 @@ export const ReportPage = () => {
             </div>
 
             <div className="space-y-2">
-              {reportDataFallback.mechanics.map((shop, i) => (
+              {mechanics.length === 0 ? (
+                <p className="text-xs text-center text-[var(--color-text-muted)] py-3">No mechanics found nearby.</p>
+              ) : mechanics.map((shop: any, i: number) => (
                 <div key={i} className="flex items-center justify-between px-4 py-3 rounded-xl bg-gray-50 border border-gray-100 hover:bg-gray-100 hover:border-gray-200 cursor-pointer transition-all">
                   <div>
                     <p className="text-sm font-extrabold text-[#0f172a]">{shop.name}</p>
-                    <p className="text-xs text-[var(--color-text-secondary)] font-bold">{shop.dist} • <span className="text-amber-500">{shop.rating}</span></p>
+                    <p className="text-xs text-[var(--color-text-secondary)] font-bold">
+                      {shop.address}
+                      {shop.rating ? <> • <span className="text-amber-500">{shop.rating}★</span></> : null}
+                    </p>
                   </div>
                   <div className="w-8 h-8 rounded-full bg-[var(--color-primary)]/10 flex items-center justify-center">
                     <MapPin size={14} className="text-[var(--color-primary)]" />
