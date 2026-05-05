@@ -104,10 +104,10 @@ export const AnalyticsPage = () => {
   const car1Label = `${c1?.car.make || 'Car 1'}`;
   const car2Label = `${c2?.car.make || 'Car 2'}`;
 
-  const selectClass = "bg-white border border-gray-200 rounded-xl px-4 py-2.5 text-sm font-bold text-[#0f172a] focus:outline-none focus:border-[var(--color-primary)] focus:ring-1 focus:ring-[var(--color-primary)] appearance-none min-w-[200px]";
+  const selectClass = "bg-white border border-gray-200 rounded-xl px-4 py-2.5 text-sm font-bold text-[#0f172a] focus:outline-none focus:border-[var(--color-primary)] focus:ring-1 focus:ring-[var(--color-primary)] appearance-none w-full sm:min-w-[200px]";
 
   return (
-    <div className="min-h-screen bg-[var(--color-bg-deep)] text-[var(--color-text-primary)] p-6 md:p-10 relative overflow-hidden">
+    <div className="min-h-screen bg-[var(--color-bg-deep)] text-[var(--color-text-primary)] p-4 sm:p-6 md:p-10 relative overflow-hidden">
       <div className="glow-orb w-[500px] h-[500px] bg-[var(--color-primary-light)] opacity-20 top-0 right-0" />
 
       <header className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 max-w-7xl mx-auto relative z-10 gap-4">
@@ -116,18 +116,18 @@ export const AnalyticsPage = () => {
             <ArrowLeft size={18} className="text-[#0f172a]" />
           </button>
           <div>
-            <h1 className="text-3xl font-extrabold tracking-tight mb-1 text-[#0f172a]">Comparison Analytics</h1>
+            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight mb-1 text-[#0f172a]">Comparison Analytics</h1>
             <p className="text-[var(--color-text-muted)] text-sm">Side-by-side comparison to aid your purchase decision.</p>
           </div>
         </div>
 
         {/* Car Selectors */}
         {cars.length >= 2 && (
-          <div className="flex items-center gap-3">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3 w-full sm:w-auto">
             <select value={car1Id} onChange={(e) => setCar1Id(e.target.value)} className={selectClass}>
               {cars.map(c => <option key={c._id} value={c._id}>{c.year} {c.make} {c.model}</option>)}
             </select>
-            <span className="text-sm font-bold text-[var(--color-text-muted)]">vs</span>
+            <span className="text-sm font-bold text-[var(--color-text-muted)] text-center hidden sm:block">vs</span>
             <select value={car2Id} onChange={(e) => setCar2Id(e.target.value)} className={selectClass}>
               {cars.map(c => <option key={c._id} value={c._id}>{c.year} {c.make} {c.model}</option>)}
             </select>
@@ -150,7 +150,7 @@ export const AnalyticsPage = () => {
       ) : null}
 
       {comparisonData && (
-        <main className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 relative z-10">
+        <main className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 relative z-10">
         {/* Head-to-Head Table */}
         <section className="glass-card p-6 md:col-span-2 overflow-x-auto relative bg-white">
           <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-[var(--color-primary)] via-[var(--color-emerald)] to-transparent opacity-40" />

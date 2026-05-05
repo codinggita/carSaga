@@ -84,9 +84,9 @@ export const DashboardPage = () => {
   const chartData = analytics?.monthlyChecks || [];
 
   return (
-    <div className="min-h-screen bg-[var(--color-bg-deep)] text-[var(--color-text-primary)] flex">
-      {/* Glass Sidebar */}
-      <aside className="w-72 glass-sidebar flex flex-col p-6 sticky top-0 h-[100dvh] hidden md:flex border-r border-[var(--color-border-glass)]">
+    <div className="min-h-screen bg-[var(--color-bg-deep)] text-[var(--color-text-primary)] flex pb-16 md:pb-0">
+      {/* Glass Sidebar — hidden on mobile, replaced by bottom nav */}
+      <aside className="w-72 glass-sidebar hidden md:flex flex-col p-6 sticky top-0 h-[100dvh] border-r border-[var(--color-border-glass)]">
         <div className="flex items-center gap-3 mb-10 shrink-0">
           <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[var(--color-primary)] to-[var(--color-warning)] flex items-center justify-center shadow-lg shadow-[var(--color-primary-glow)]">
             <Shield size={18} className="text-white" />
@@ -139,14 +139,20 @@ export const DashboardPage = () => {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 p-6 md:p-10 max-h-screen overflow-y-auto hide-scrollbar relative">
+      <main className="flex-1 p-4 sm:p-6 md:p-10 max-h-screen overflow-y-auto hide-scrollbar relative">
         <div className="glow-orb w-[600px] h-[600px] bg-[var(--color-primary-light)] opacity-20 top-[-100px] right-[-100px]" />
         
         {/* Header */}
-        <header className="flex justify-between items-center mb-10 relative z-10">
+        <header className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 sm:mb-10 relative z-10 gap-4">
           <div>
-            <h1 className="text-3xl font-extrabold tracking-tight mb-1 text-[#0f172a]">Your Garage</h1>
-            <p className="text-[var(--color-text-muted)] text-sm">Overview of your recent car verifications</p>
+            <div className="flex items-center gap-3 md:hidden mb-2">
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[var(--color-primary)] to-[var(--color-warning)] flex items-center justify-center shadow-md">
+                <Shield size={14} className="text-white" />
+              </div>
+              <span className="text-lg font-bold text-[#0f172a]">Car<span className="gradient-text">Saga</span></span>
+            </div>
+            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight mb-1 text-[#0f172a]">Your Garage</h1>
+            <p className="text-[var(--color-text-muted)] text-xs sm:text-sm">Overview of your recent car verifications</p>
           </div>
           <div className="flex items-center gap-4">
             <div className="relative hidden md:block">
@@ -167,18 +173,18 @@ export const DashboardPage = () => {
         </header>
 
         {/* KPI Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-5 mb-8 relative z-10">
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-5 mb-8 relative z-10">
           {kpis.map((kpi, i) => {
             const Icon = kpi.icon;
             return (
-              <div key={i} className="kpi-card p-6 group bg-white">
+              <div key={i} className="kpi-card p-4 sm:p-6 group bg-white">
                 <div className="flex justify-between items-start mb-4">
                   <p className="text-sm font-semibold text-[var(--color-text-secondary)]">{kpi.label}</p>
                   <div className="w-9 h-9 rounded-xl flex items-center justify-center transition-all" style={{ background: `color-mix(in srgb, ${kpi.color} 10%, transparent)` }}>
                     <Icon size={18} style={{ color: kpi.color }} />
                   </div>
                 </div>
-                <p className="text-3xl font-extrabold text-[#0f172a]">{kpi.value}</p>
+                <p className="text-2xl sm:text-3xl font-extrabold text-[#0f172a]">{kpi.value}</p>
                 <p className="text-xs mt-2 font-medium" style={{ color: kpi.color }}>{kpi.change}</p>
               </div>
             );
@@ -270,6 +276,20 @@ export const DashboardPage = () => {
           </div>
         </div>
       </main>
+
+      {/* Mobile Bottom Navigation */}
+      <nav className="mobile-bottom-nav md:hidden">
+        {navItems.map(({ icon: Icon, label, active, path }) => (
+          <button
+            key={label}
+            onClick={() => path && navigate(path)}
+            className={active ? 'active' : ''}
+          >
+            <Icon size={20} />
+            {label}
+          </button>
+        ))}
+      </nav>
     </div>
   )
 }

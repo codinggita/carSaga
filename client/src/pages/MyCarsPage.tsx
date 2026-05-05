@@ -30,7 +30,7 @@ export const MyCarsPage = () => {
   );
 
   return (
-    <div className="min-h-screen bg-[var(--color-bg-deep)] text-[var(--color-text-primary)] p-6 md:p-10 relative overflow-hidden">
+    <div className="min-h-screen bg-[var(--color-bg-deep)] text-[var(--color-text-primary)] p-4 sm:p-6 md:p-10 relative overflow-hidden">
       <div className="glow-orb w-[600px] h-[600px] bg-[var(--color-primary-light)] opacity-20 top-[-100px] right-[-100px]" />
 
       <header className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 max-w-5xl mx-auto relative z-10 gap-4">
@@ -39,7 +39,7 @@ export const MyCarsPage = () => {
             <ArrowLeft size={18} className="text-[#0f172a]" />
           </button>
           <div>
-            <h1 className="text-3xl font-extrabold tracking-tight mb-1 text-[#0f172a]">My Garage</h1>
+            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight mb-1 text-[#0f172a]">My Garage</h1>
             <p className="text-[var(--color-text-muted)] text-sm">Manage and review all your verified vehicles</p>
           </div>
         </div>
@@ -53,6 +53,17 @@ export const MyCarsPage = () => {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="bg-white border border-[var(--color-border-glass)] rounded-xl py-2.5 pl-10 pr-4 text-sm focus:outline-none focus:border-[var(--color-primary)] w-56 text-[#0f172a] placeholder-[var(--color-text-muted)] shadow-sm transition-all"
+            />
+          </div>
+          {/* Mobile Search */}
+          <div className="relative md:hidden w-full">
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--color-text-muted)]" />
+            <input
+              type="text"
+              placeholder="Search cars..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="bg-white border border-[var(--color-border-glass)] rounded-xl py-2.5 pl-10 pr-4 text-sm focus:outline-none focus:border-[var(--color-primary)] w-full text-[#0f172a] placeholder-[var(--color-text-muted)] shadow-sm transition-all"
             />
           </div>
           <button
@@ -87,18 +98,18 @@ export const MyCarsPage = () => {
               <div
                 key={car._id}
                 onClick={() => navigate(`/report/${car._id}`)}
-                className="flex items-center justify-between px-5 py-4 rounded-xl bg-white border border-gray-100 hover:bg-gray-50 hover:border-gray-200 cursor-pointer transition-all group shadow-sm"
+                className="flex flex-col sm:flex-row items-start sm:items-center justify-between px-4 sm:px-5 py-3 sm:py-4 rounded-xl bg-white border border-gray-100 hover:bg-gray-50 hover:border-gray-200 cursor-pointer transition-all group shadow-sm gap-3"
               >
-                <div className="flex items-center gap-5">
-                  <div className="w-16 h-16 rounded-lg bg-gray-50 flex items-center justify-center overflow-hidden border border-gray-100 shrink-0 shadow-sm relative group-hover:border-[var(--color-primary)]/50 transition-colors">
+                <div className="flex items-center gap-3 sm:gap-5">
+                  <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-lg bg-gray-50 flex items-center justify-center overflow-hidden border border-gray-100 shrink-0 shadow-sm relative group-hover:border-[var(--color-primary)]/50 transition-colors">
                     <img src={getCarImage(car.make, car.model, car.brandImage)} alt={`${car.make} ${car.model}`} className="w-full h-full object-cover" />
                   </div>
                   <div>
-                    <p className="text-lg font-bold text-[#0f172a]">{car.year} {car.make} {car.model}</p>
+                    <p className="text-sm sm:text-lg font-bold text-[#0f172a]">{car.year} {car.make} {car.model}</p>
                     <p className="text-sm text-[var(--color-text-secondary)] font-medium mt-0.5">Added on {new Date(car.createdAt).toLocaleDateString()}</p>
                   </div>
                 </div>
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2 sm:gap-4 ml-auto sm:ml-0">
                   <span className={`text-xs font-bold px-3 py-1.5 rounded-full capitalize ${
                     car.riskLevel === 'low' ? 'bg-emerald-50 text-emerald-600 border border-emerald-100' :
                     car.riskLevel === 'medium' ? 'bg-amber-50 text-amber-600 border border-amber-100' :
