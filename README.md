@@ -21,7 +21,7 @@
 ## 📸 Project Screenshots
 
 <p align="center">
-  <img src="client/public/screenshots/dashboard.png" alt="CarSaga Dashboard" width="100%" />
+  <img src="client/public/screenshots/Dashboard.png" alt="CarSaga Dashboard" width="100%" />
   <br />
   <em>CarSaga Dashboard — AI-powered used car verification at a glance</em>
 </p>
