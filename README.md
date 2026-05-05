@@ -99,6 +99,17 @@ Landing Page → Sign Up / Login → Upload Photos or Enter VIN
 
 ---
 
+## 🔗 Related Links
+
+| Resource | Link |
+|---|---|
+| 🎨 Figma Design | [View Design](https://www.figma.com/design/I4WSQhkRpO8OeMHZ74LbJA/Untitled?node-id=0-1&m=dev&t=twF7jXSbdBc32ii4-1) |
+| ▶️ Figma Prototype | [View Prototype](https://www.figma.com/proto/I4WSQhkRpO8OeMHZ74LbJA/Untitled?node-id=0-1&t=twF7jXSbdBc32ii4-1) |
+| 🚀 Live Demo | [View Live Demo](https://youtu.be/5tqipG4g9C4) |
+| 📃 Postman Documentation | [View Documentation](https://rituraj-jha-cg-1573523.postman.co/workspace/93a53237-fadf-4286-8ad9-c42332a8c5a1/documentation/53751018-9e668faa-4825-4f31-8fcb-c58dee0d480a)|
+
+---
+
 ## 🖥️ Key Screens
 
 ### 1. 🏠 Landing Page
@@ -553,17 +564,6 @@ Frontend runs on `http://localhost:5173` | Backend runs on `http://localhost:500
 | **Redux Toolkit** | Global state for auth, car data, chat history, reports |
 | **Formik + Yup** | Form handling and validation across auth, VIN input, booking forms |
 | **React Hot Toast / Sonner** | Toast notifications for async actions (upload success, report ready) |
-
----
-
-## 🔗 Related Links
-
-| Resource | Link |
-|---|---|
-| 🎨 Figma Design | [View Design](https://www.figma.com/design/I4WSQhkRpO8OeMHZ74LbJA/Untitled?node-id=0-1&m=dev&t=twF7jXSbdBc32ii4-1) |
-| ▶️ Figma Prototype | [View Prototype](https://www.figma.com/proto/I4WSQhkRpO8OeMHZ74LbJA/Untitled?node-id=0-1&t=twF7jXSbdBc32ii4-1) |
-| 🚀 Live Demo | [View Live Demo](https://youtu.be/5tqipG4g9C4) |
-| 📃 Postman Documentation | [View Documentation](https://rituraj-jha-cg-1573523.postman.co/workspace/93a53237-fadf-4286-8ad9-c42332a8c5a1/documentation/53751018-9e668faa-4825-4f31-8fcb-c58dee0d480a)|
 
 ---
 
