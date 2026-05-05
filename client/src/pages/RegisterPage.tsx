@@ -123,14 +123,14 @@ export const RegisterPage = () => {
         </div>
       </div>
 
-      <div className="flex-1 flex items-center justify-center p-6 lg:p-12">
+      <div className="flex-1 flex items-center justify-center p-4 sm:p-6 lg:p-12">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
           className="w-full max-w-md"
         >
-          <div className="glass-card p-10 space-y-7 relative overflow-hidden bg-white/70 shadow-xl border border-gray-200">
+          <div className="glass-card p-6 sm:p-10 space-y-6 sm:space-y-7 relative overflow-hidden bg-white/70 shadow-xl border border-gray-200">
             <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-[var(--color-primary)] via-[var(--color-warning)] to-transparent opacity-80" />
 
             <div className="text-center lg:text-left">

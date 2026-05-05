@@ -102,8 +102,19 @@ export const VerificationPage = () => {
 
 
   return (
-    <div className="min-h-screen flex bg-white text-[#0f172a]">
-      {/* Sidebar navigation wrapper for typical layout spacing (matches user image layout context) */}
+    <div className="min-h-screen flex flex-col sm:flex-row bg-white text-[#0f172a]">
+      {/* Mobile top header */}
+      <div className="sm:hidden flex items-center justify-between px-4 py-3 border-b border-gray-100 bg-white sticky top-0 z-30">
+        <div className="flex items-center gap-2 cursor-pointer" onClick={() => navigate('/')}>
+          <div className="w-7 h-7 rounded-lg bg-[var(--color-primary)] flex items-center justify-center">
+            <span className="text-white font-bold text-xs">CS</span>
+          </div>
+          <span className="text-base font-extrabold tracking-tight">Car<span className="text-[var(--color-primary)]">Saga</span></span>
+        </div>
+        <button onClick={() => navigate('/dashboard')} className="text-xs font-bold text-gray-500 hover:text-gray-900">Dashboard</button>
+      </div>
+
+      {/* Sidebar navigation wrapper */}
       <div className="w-[80px] md:w-[240px] hidden sm:flex shrink-0 border-r border-[var(--color-border-glass)] bg-gray-50 flex-col py-8 px-4 relative z-20">
         <div className="flex items-center gap-3 mb-10 px-2 cursor-pointer" onClick={() => navigate('/')}>
           <div className="w-8 h-8 rounded-lg bg-[var(--color-primary)] flex items-center justify-center shadow-[var(--color-primary-glow)]">
@@ -128,10 +139,10 @@ export const VerificationPage = () => {
         </nav>
       </div>
 
-      <div className="flex-1 flex flex-col md:flex-row p-6 md:p-10 gap-8 h-screen overflow-hidden relative bg-[var(--color-bg-deep)]">
+      <div className="flex-1 flex flex-col md:flex-row p-4 sm:p-6 md:p-10 gap-4 sm:gap-8 min-h-0 sm:h-screen overflow-auto sm:overflow-hidden relative bg-[var(--color-bg-deep)]">
         
         {/* Main Workspace Column */}
-        <div className="flex-1 flex flex-col h-full overflow-y-auto pr-2 pb-10 hide-scrollbar z-10">
+        <div className="flex-1 flex flex-col sm:h-full sm:overflow-y-auto sm:pr-2 pb-10 hide-scrollbar z-10">
           
           <div className="flex flex-col xl:flex-row justify-between items-start mb-8 gap-4">
             <div>
@@ -141,7 +152,7 @@ export const VerificationPage = () => {
                 </span>
                 <span className="text-[var(--color-text-muted)] text-xs font-mono font-medium tracking-wide">REQ-3942</span>
               </div>
-              <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-[#0f172a] mb-3">Initialize Scan</h1>
+              <h1 className="text-2xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-[#0f172a] mb-3">Initialize Scan</h1>
               <p className="text-[var(--color-text-secondary)] text-sm max-w-md font-medium leading-relaxed">
                 Upload high-resolution images or provide a VIN to begin deep neural analysis of the vehicle's history, structural integrity, and market valuation.
               </p>
@@ -173,7 +184,7 @@ export const VerificationPage = () => {
               <motion.div key="visual" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-6 flex-1 flex flex-col">
                 
                 {/* Registration & AI Guide Header Combined */}
-                <div className="flex flex-col gap-4 bg-white px-6 py-5 rounded-2xl shadow-sm border border-gray-100">
+                <div className="flex flex-col gap-4 bg-white px-4 sm:px-6 py-5 rounded-2xl shadow-sm border border-gray-100">
                   <div className="flex flex-col gap-4 border-b border-gray-100 pb-5">
                     <div className="flex flex-col gap-2">
                       <label htmlFor="reg-input" className="text-sm font-extrabold text-[#0f172a]">Registration Number <span className="text-red-500">*</span></label>
@@ -187,7 +198,7 @@ export const VerificationPage = () => {
                             setChallanInfo(null);
                           }}
                           placeholder="e.g. MH 12 AB 1234"
-                          className="flex-1 bg-gray-50 border border-gray-200 rounded-xl p-3 text-lg font-mono tracking-wider text-[#0f172a] focus:outline-none focus:border-[var(--color-primary)] focus:ring-1 focus:ring-[var(--color-primary)] transition-all placeholder-gray-400"
+                          className="flex-1 min-w-0 bg-gray-50 border border-gray-200 rounded-xl p-3 text-base sm:text-lg font-mono tracking-wider text-[#0f172a] focus:outline-none focus:border-[var(--color-primary)] focus:ring-1 focus:ring-[var(--color-primary)] transition-all placeholder-gray-400"
                         />
                         <button 
                           onClick={handleCheckChallan}
@@ -252,7 +263,7 @@ export const VerificationPage = () => {
                 </div>
 
                 {/* Upload Guide Grid */}
-                <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 shrink-0">
+                <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 shrink-0">
                   {GUIDE_SLOTS.map((slot) => {
                     const isUploaded = !!uploads[slot.id]
                     return (
@@ -348,7 +359,7 @@ export const VerificationPage = () => {
         </div>
 
         {/* Right Sidebar: Analysis Pipeline */}
-        <div className="w-80 lg:w-[350px] h-full flex flex-col relative rounded-3xl p-8 shrink-0 overflow-hidden bg-gradient-to-b from-[#e5f3ff] via-[#f7fbff] to-white border border-blue-50/50 shadow-sm z-10 hidden md:flex">
+        <div className="w-80 lg:w-[350px] h-full hidden md:flex flex-col relative rounded-3xl p-6 lg:p-8 shrink-0 overflow-hidden bg-gradient-to-b from-[#e5f3ff] via-[#f7fbff] to-white border border-blue-50/50 shadow-sm z-10">
           
           {/* Background Decor */}
           <div className="absolute top-0 right-0 w-[200px] h-[200px] bg-white rounded-full blur-[40px] opacity-70 pointer-events-none" />

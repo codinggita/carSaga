@@ -18,6 +18,16 @@
 
 ---
 
+## 📸 Project Screenshots
+
+<p align="center">
+  <img src="client/public/screenshots/dashboard.png" alt="CarSaga Dashboard" width="100%" />
+  <br />
+  <em>CarSaga Dashboard — AI-powered used car verification at a glance</em>
+</p>
+
+---
+
 ## 📌 Problem Statement
 
 > **"Why can't first-time used car buyers verify car histories, conditions, and future maintenance costs?"**
@@ -330,6 +340,9 @@ carSaga/
 │   │       ├── report.ts
 │   │       └── chat.ts
 │   │
+│   ├── public/
+│   │   ├── vite.svg
+│   │   └── screenshots/             # Project screenshots
 │   ├── index.html
 │   ├── vite.config.ts
 │   ├── tailwind.config.ts
@@ -390,6 +403,7 @@ carSaga/
 │   ├── package.json
 │   └── .env.example
 │
+
 ├── .github/
 │   └── workflows/
 │       └── ci.yml                   # GitHub Actions CI/CD

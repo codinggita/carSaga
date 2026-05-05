@@ -121,8 +121,8 @@ export const ReportPage = () => {
   return (
     <div className="min-h-screen bg-[var(--color-bg-deep)] text-[var(--color-text-primary)]">
       {/* Navbar */}
-      <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-2xl border-b border-[var(--color-border-glass)] px-6 py-3.5 shadow-sm">
-        <div className="max-w-7xl mx-auto flex justify-between items-center">
+      <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-2xl border-b border-[var(--color-border-glass)] px-4 sm:px-6 py-3 sm:py-3.5 shadow-sm">
+        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-0">
           <div className="flex items-center gap-4">
             <button onClick={() => navigate('/dashboard')} className="flex items-center gap-2 text-sm text-[var(--color-text-secondary)] hover:text-[#0f172a] transition-colors font-semibold">
               <ArrowLeft size={16} /> Dashboard
@@ -130,21 +130,21 @@ export const ReportPage = () => {
             <div className="h-5 w-[1px] bg-gray-200" />
             <span className="text-sm font-extrabold text-[#0f172a]">Report #{id?.substring(0, 8) || '...'}</span>
           </div>
-          <div className="flex gap-3">
-            <button onClick={() => navigate(`/chat?car=${id}`)} className="ghost-btn px-4 py-2 rounded-xl text-sm font-bold text-[#0f172a] flex items-center gap-2">
+          <div className="flex gap-2 sm:gap-3 w-full sm:w-auto overflow-x-auto hide-scrollbar">
+            <button onClick={() => navigate(`/chat?car=${id}`)} className="ghost-btn px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold text-[#0f172a] flex items-center gap-2 whitespace-nowrap shrink-0">
               <MessageSquare size={14} /> Ask Saga AI
             </button>
-            <button className="ghost-btn px-4 py-2 rounded-xl text-sm font-bold text-[#0f172a] flex items-center gap-2">
+            <button className="ghost-btn px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold text-[#0f172a] flex items-center gap-2 whitespace-nowrap shrink-0">
               <Share2 size={14} /> Share
             </button>
-            <button onClick={handleExportPDF} disabled={isExporting} className="liquid-glass-btn px-4 py-2 rounded-xl text-sm font-bold text-white flex items-center gap-2 disabled:opacity-70">
+            <button onClick={handleExportPDF} disabled={isExporting} className="liquid-glass-btn px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold text-white flex items-center gap-2 disabled:opacity-70 whitespace-nowrap shrink-0">
               {isExporting ? <><Loader2 size={14} className="animate-spin" /> Exporting...</> : <><Download size={14} /> Export PDF</>}
             </button>
           </div>
         </div>
       </nav>
 
-      <main ref={reportRef} className="max-w-7xl mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-3 gap-8 relative z-10">
+      <main ref={reportRef} className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8 grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8 relative z-10">
         <div className="glow-orb w-[600px] h-[600px] bg-[var(--color-primary-light)] opacity-20 top-[10%] left-[-100px] absolute pointer-events-none" />
         
         {/* Left: Main Content */}
@@ -153,7 +153,7 @@ export const ReportPage = () => {
           <div className="glass-card p-8 relative overflow-hidden bg-white">
             <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-[var(--color-primary)] via-[var(--color-emerald)] to-transparent opacity-80" />
 
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-6">
               <div>
                 <div className="flex items-center gap-3 mb-3">
                   <span className={`verified-badge px-3 py-1 text-xs font-extrabold flex items-center gap-1.5 ${
@@ -168,11 +168,11 @@ export const ReportPage = () => {
                     {carData?.riskLevel || 'Medium'} Risk
                   </span>
                 </div>
-                <h1 className="text-3xl font-extrabold tracking-tight mb-1 text-[#0f172a]">{carData?.year} {carData?.make} {carData?.model}</h1>
+                <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight mb-1 text-[#0f172a]">{carData?.year} {carData?.make} {carData?.model}</h1>
                 <p className="text-[var(--color-text-secondary)] text-sm font-mono font-medium drop-shadow-sm uppercase">Reg: {carData?.vin || 'N/A'}</p>
                 {summary && <p className="text-xs text-[var(--color-text-muted)] mt-2 max-w-lg leading-relaxed">{summary}</p>}
               </div>
-              <div className="flex gap-4">
+              <div className="flex gap-3 sm:gap-4 flex-wrap">
                 {overviewStats.map((stat, i) => (
                   <div key={i} className="kpi-card px-5 py-4 text-center min-w-[90px] bg-gray-50 border-gray-100 shadow-sm hover:border-gray-200">
                     <p className="text-2xl font-extrabold" style={{ color: stat.color }}>{stat.value}</p>

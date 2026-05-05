@@ -81,7 +81,7 @@ export const ChatPage = () => {
       </div>
 
       {/* HEADER: FIXED TO TOP */}
-      <header className="fixed top-0 left-0 right-0 h-20 bg-white/80 backdrop-blur-xl border-b border-gray-100 flex items-center z-[100] px-6 shadow-sm">
+      <header className="fixed top-0 left-0 right-0 h-16 sm:h-20 bg-white/80 backdrop-blur-xl border-b border-gray-100 flex items-center z-[100] px-4 sm:px-6 shadow-sm">
         <div className="w-full max-w-5xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-5">
             <button 
@@ -95,7 +95,7 @@ export const ChatPage = () => {
                 <Brain size={22} className="text-white" />
               </div>
               <div>
-                <h1 className="text-xl font-black text-slate-900 leading-tight">Saga AI</h1>
+                <h1 className="text-lg sm:text-xl font-black text-slate-900 leading-tight">Saga AI</h1>
                 <p className="text-[10px] font-bold text-[var(--color-primary)] uppercase tracking-widest flex items-center gap-1.5">
                   <span className="w-2 h-2 rounded-full bg-[var(--color-primary)] animate-pulse" />
                   Live Expert Mode
@@ -113,8 +113,8 @@ export const ChatPage = () => {
       </header>
 
       {/* MESSAGES AREA: SCROLLABLE MIDDLE */}
-      <main className="flex-1 overflow-y-auto pt-24 pb-48 px-6">
-        <div className="max-w-3xl mx-auto flex flex-col gap-10">
+      <main className="flex-1 overflow-y-auto pt-20 sm:pt-24 pb-44 sm:pb-48 px-4 sm:px-6">
+        <div className="max-w-3xl mx-auto flex flex-col gap-6 sm:gap-10">
           <AnimatePresence>
             {messages.map((msg) => (
               <motion.div
@@ -130,7 +130,7 @@ export const ChatPage = () => {
                 }`}>
                   {msg.role === 'user' ? <User size={18} /> : <Brain size={18} />}
                 </div>
-                <div className={`px-6 py-4 rounded-[2rem] text-[15px] leading-relaxed max-w-[80%] font-medium shadow-sm ${
+                <div className={`px-4 sm:px-6 py-3 sm:py-4 rounded-[1.5rem] sm:rounded-[2rem] text-sm sm:text-[15px] leading-relaxed max-w-[85%] sm:max-w-[80%] font-medium shadow-sm ${
                   msg.role === 'user' 
                     ? 'bg-[var(--color-primary)] text-white rounded-tr-sm shadow-[var(--color-primary-glow)]' 
                     : 'bg-white border border-gray-100 text-slate-800 rounded-tl-sm'
@@ -153,15 +153,15 @@ export const ChatPage = () => {
       </main>
 
       {/* INPUT DOCK: FIXED TO BOTTOM */}
-      <div className="fixed bottom-0 left-0 right-0 bg-gradient-to-t from-[var(--color-bg-deep)] via-[var(--color-bg-deep)]/95 to-transparent pt-10 pb-8 px-6 z-[100]">
-        <div className="max-w-3xl mx-auto flex flex-col gap-5">
+      <div className="fixed bottom-0 left-0 right-0 bg-gradient-to-t from-[var(--color-bg-deep)] via-[var(--color-bg-deep)]/95 to-transparent pt-6 sm:pt-10 pb-4 sm:pb-8 px-4 sm:px-6 z-[100]">
+        <div className="max-w-3xl mx-auto flex flex-col gap-3 sm:gap-5">
           {/* Quick Suggestions */}
-          <div className="flex flex-wrap gap-2 justify-center">
+          <div className="flex gap-2 overflow-x-auto hide-scrollbar pb-1 justify-start sm:justify-center sm:flex-wrap">
             {suggestions.map((s, idx) => (
               <button
                 key={idx}
                 onClick={() => handleSend(s)}
-                className="px-5 py-2.5 text-[11px] font-bold bg-white border border-gray-200 rounded-full text-slate-500 hover:text-[var(--color-primary)] hover:border-[var(--color-primary)] transition-all shadow-sm flex items-center gap-2 group"
+                className="px-4 sm:px-5 py-2 sm:py-2.5 text-[11px] font-bold bg-white border border-gray-200 rounded-full text-slate-500 hover:text-[var(--color-primary)] hover:border-[var(--color-primary)] transition-all shadow-sm flex items-center gap-2 group whitespace-nowrap shrink-0"
               >
                 <Sparkles size={12} className="text-[var(--color-primary)] group-hover:scale-110 transition-transform" />
                 {s}

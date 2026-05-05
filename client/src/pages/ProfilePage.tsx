@@ -121,7 +121,7 @@ export const ProfilePage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[var(--color-bg-deep)] text-[var(--color-text-primary)] p-6 md:p-10 relative overflow-hidden flex justify-center items-start font-inter">
+    <div className="min-h-screen bg-[var(--color-bg-deep)] text-[var(--color-text-primary)] p-4 sm:p-6 md:p-10 relative overflow-hidden flex justify-center items-start font-inter">
       <div className="glow-orb w-[600px] h-[600px] bg-[var(--color-primary-light)] opacity-20 top-[-100px] right-[-100px]" />
       <div className="glow-orb w-[400px] h-[400px] bg-[var(--color-emerald)] opacity-10 bottom-0 left-0" />
 
@@ -131,7 +131,7 @@ export const ProfilePage = () => {
             <ArrowLeft size={18} className="text-[#0f172a] group-hover:scale-110 transition-transform" />
           </button>
           <div>
-            <h1 className="text-3xl font-extrabold tracking-tight text-[#0f172a]">Settings & Profile</h1>
+            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[#0f172a]">Settings & Profile</h1>
             <p className="text-[var(--color-text-muted)] text-sm font-medium">Manage your account details and preferences</p>
           </div>
         </header>
